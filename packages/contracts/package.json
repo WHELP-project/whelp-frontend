@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "name": "@whelp/contracts",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "tsc && jest",
+    "build": "tsc"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "dependencies": {
+    "@cosmjs/cosmwasm-stargate": "^0.31.1"
+  },
+  "devDependencies": {
+    "typescript": "5.0.4"
+  }
+}

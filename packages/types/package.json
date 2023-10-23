@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "name": "@whelp/types",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "tsc && jest",
+    "build": "tsc"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "devDependencies": {
+    "@chain-registry/types": "^0.17.0",
+    "@cosmjs/amino": "^0.31.1",
+    "@cosmjs/cosmwasm-stargate": "^0.31.1",
+    "@cosmjs/proto-signing": "^0.31.1",
+    "@cosmjs/stargate": "^0.31.1",
+    "@keplr-wallet/types": "^0.12.36",
+    "typescript": "5.0.4"
+  }
+}
