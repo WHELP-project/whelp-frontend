@@ -1,0 +1,33 @@
+{
+  "name": "@whelp/whelp-frontend",
+  "description": "Whelp!",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "yarn workspaces foreach run build",
+    "storybook": "yarn workspace @whelp/ui storybook"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WHELP-project/whelp-frontend.git"
+  },
+  "author": "Whelp Project",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/WHELP-project/whelp-frontend/issues"
+  },
+  "homepage": "https://github.com/WHELP-project/whelp-frontend",
+  "workspaces": [
+    "packages/utils",
+    "packages/contracts",
+    "packages/state",
+    "packages/contracts",
+    "packages/ui",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/jest": "^29.5.2",
+    "jest": "^29.5.0"
+  },
+  "packageManager": "yarn@3.6.4"
+}
