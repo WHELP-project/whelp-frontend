@@ -80,6 +80,9 @@ This workspace contains all auto-generated contract APIs for interacting with Co
 
 - Build it: `yarn workspace contracts build`
 
+### Types
+The type workspace contains all used types over all workspaces.
+
 ## Development Guidelines
 
 - Please follow the standard coding guidelines and styles.

@@ -1,0 +1,30 @@
+{
+  "name": "@whelp/state",
+  "version": "0.0.1",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "tsc && jest",
+    "build": "tsc"
+  },
+  "np": {
+    "publish": false,
+    "tests": false
+  },
+  "author": "Whelp Group",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@whelp/contracts": "workspace:^",
+    "@whelp/types": "workspace:^",
+    "@whelp/utils": "workspace:^",
+    "@whelp/wallets": "workspace:^",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
+    "zustand": "^4.3.9"
+  }
+}

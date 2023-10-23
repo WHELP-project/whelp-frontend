@@ -1,0 +1,21 @@
+{
+  "version": "0.0.1",
+  "name": "@whelp/utils",
+  "files": [
+    "build/**/*"
+  ],
+  "scripts": {
+    "test": "tsc && jest",
+    "build": "tsc"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "dependencies": {
+    "@whelp/contracts": "workspace:^",
+    "@whelp/wallets": "workspace:^"
+  },
+  "devDependencies": {
+    "@whelp/types": "workspace:^",
+    "typescript": "5.0.4"
+  }
+}
