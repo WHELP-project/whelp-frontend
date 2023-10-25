@@ -59,7 +59,6 @@ export const createWalletActions = (
           }
 
           // Enable / Connect wallet
-          console.log(envConfig.chain_id);
           await WalletClient.enable(envConfig.chain_id);
 
           // Get account (Wallet address)
