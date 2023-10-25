@@ -9,9 +9,3 @@ export const TestnetConfig = {
   chain_id: "coreum-testnet-1",
   native_denom: "utestcore",
 };
-
-export const DevnetConfig = {
-  rpc_endpoint: "https://full-node.devnet-1.coreum.dev:26657",
-  chain_id: "coreum-devnet-1",
-  native_denom: "udevcore",
-};

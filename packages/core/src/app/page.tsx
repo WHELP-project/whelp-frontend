@@ -8,7 +8,10 @@ export default function Home() {
   const appStore = useAppStore();
 
   const doConnect = () => {
-    appStore.connectWallet(WalletTypes.WalletTypes.Leap);
+    appStore.connectWallet(
+      WalletTypes.WalletTypes.Leap,
+      process.env.ENVOIRONMENT === "prod" ? "prod" : "dev"
+    );
   };
 
   useEffect(() => {

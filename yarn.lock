@@ -6341,6 +6341,7 @@ __metadata:
     "@whelp/types": "workspace:^"
     "@whelp/utils": "workspace:^"
     "@whelp/wallets": "workspace:^"
+    chain-registry: ^1.20.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-query: ^3.39.3
@@ -7704,6 +7705,16 @@ __metadata:
   version: 2.4.0
   resolution: "case-sensitive-paths-webpack-plugin@npm:2.4.0"
   checksum: bcf469446eeee9ac0046e30860074ebb9aa4803aab9140e6bb72b600b23b1d70635690754be4504ce35cd99cdf05226bee8d894ba362a3f5485d5f6310fc6d02
+  languageName: node
+  linkType: hard
+
+"chain-registry@npm:^1.20.0":
+  version: 1.20.0
+  resolution: "chain-registry@npm:1.20.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+    "@chain-registry/types": ^0.17.0
+  checksum: 0b28cea3503a9a0f3028bdeb9dd5922fc6be10d112aa0b45218d0167e1d1c68d736d14d26110b33321ba99aa5abe4a3cc6473758307a149aceeea51f768ba5d3
   languageName: node
   linkType: hard
 
