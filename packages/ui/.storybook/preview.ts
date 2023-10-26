@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react";
 import { withThemeFromJSXProvider } from "@storybook/addon-styling";
 import { CssBaseline } from "@mui/material";
+import PhoenixThemeProvider from "../src/ThemeProvider/ThemeProvider";
 
 const customViewports = {
   iPhone12: {
@@ -75,7 +76,7 @@ export const decorators = [
   withThemeFromJSXProvider({
     themes: {},
     defaultTheme: "dark",
-
+    Provider: PhoenixThemeProvider,
     GlobalStyles: CssBaseline,
   }),
 ];
