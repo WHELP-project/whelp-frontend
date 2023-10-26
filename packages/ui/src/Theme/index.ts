@@ -1,4 +1,4 @@
-import { PaletteOptions, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import "@fontsource/inter";
 
 const createFontSize = ({
@@ -30,61 +30,6 @@ const createFontSize = ({
     },
   };
 };
-
-interface CustomPaletteOptions extends PaletteOptions {
-  bgWhite: string;
-  bgPrimary: string;
-  bgSecondary: string;
-  bgAlpha0: string;
-  bgAlpha25: string;
-  bgAlpha100: string;
-  bgAlpha200: string;
-  bgAlphaHover: string;
-  textLoud: string;
-  textMuted: string;
-  textNormal: string;
-  textSubdued: string;
-  textDisabled: string;
-  textBlack: string;
-  iconLoud: string;
-  iconMuted: string;
-  iconNormal: string;
-  iconSubdued: string;
-  iconDisabled: string;
-  strokePrimary: string;
-  strokeHover: string;
-  strokeSecondary: string;
-  primaryBtnBg: string;
-  primaryBtnBgHover: string;
-  secondaryBtnBg: string;
-  secondaryBtnBgHover: string;
-
-  green: {
-    dark: string;
-    base: string;
-    light: string;
-  };
-  yellow: {
-    dark: string;
-    base: string;
-    light: string;
-  };
-  orange: {
-    dark: string;
-    base: string;
-    light: string;
-  };
-  purple: {
-    dark: string;
-    base: string;
-    light: string;
-  };
-  red: {
-    dark: string;
-    base: string;
-    light: string;
-  };
-}
 
 // Create a custom theme using the extended interface
 const theme = createTheme({
@@ -120,7 +65,7 @@ const theme = createTheme({
     primaryBtnBgHover: "#29C772",
     secondaryBtnBg: "rgba(255, 255, 255, 0.02)",
     secondaryBtnBgHover: "rgba(255, 255, 255, 0.10)",
-  } as CustomPaletteOptions,
+  },
   typography: {
     fontFamily: "Inter",
     h1: createFontSize({
