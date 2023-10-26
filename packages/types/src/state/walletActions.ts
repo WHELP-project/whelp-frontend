@@ -1,10 +1,10 @@
-import { SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { WalletTypes } from "../wallet";
 
 export interface WalletActions {
-  connectWallet: (type: WalletTypes) => Promise<void>;
+  connectWallet: (type: WalletTypes, env: "dev" | "prod") => Promise<void>;
   disconnectWallet: () => void;
-  cosmWasmSigningClient: SigningCosmWasmClientOptions;
+  cosmWasmSigningClient: SigningCosmWasmClient | undefined;
   wallet: {
     address: string;
     isConnected?: boolean;

@@ -1989,6 +1989,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chain-registry/cosmostation@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "@chain-registry/cosmostation@npm:1.23.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+    "@chain-registry/types": ^0.17.0
+    "@chain-registry/utils": ^1.14.0
+    "@cosmostation/extension-client": 0.1.15
+  checksum: 7604da2d580bd8681c50c2ea9118a1e950b1479b85b8aef075aa1f673f2a904e8a884629079fae96adf82c0393dd59dca3117671cc1c30cb8287a70ce2db3457
+  languageName: node
+  linkType: hard
+
 "@chain-registry/keplr@npm:^1.25.1":
   version: 1.25.1
   resolution: "@chain-registry/keplr@npm:1.25.1"
@@ -2008,6 +2020,18 @@ __metadata:
   dependencies:
     "@babel/runtime": ^7.21.0
   checksum: 4a36ecb2b50da88af79bdb825fcfef9f6acebb4dd02cc4d09caacd10741006f9aebbf0672284caa5519261221b2736ab52e4ed16a126a68f4f64cbb931872661
+  languageName: node
+  linkType: hard
+
+"@chain-registry/utils@npm:^1.14.0":
+  version: 1.14.0
+  resolution: "@chain-registry/utils@npm:1.14.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+    "@chain-registry/types": ^0.17.0
+    bignumber.js: 9.1.1
+    sha.js: ^2.4.11
+  checksum: 7235e7b9d0b8f82375e6f4b94dcc82e37893f133ce612022af44dfc21d699ede0fadafb815c801a0fca7f3a1c4273b4246c99e793ae413c893dd773dc056ccba
   languageName: node
   linkType: hard
 
@@ -2182,6 +2206,13 @@ __metadata:
   version: 0.31.1
   resolution: "@cosmjs/utils@npm:0.31.1"
   checksum: 55e1bca211b73f2b72fc1e742f69f53e780824717f81914cc313bb5a997e47da11249c3dc944a08c5a210440eaefa9a4818977a44f8af6e7d3b5e2bda55c0304
+  languageName: node
+  linkType: hard
+
+"@cosmostation/extension-client@npm:0.1.15":
+  version: 0.1.15
+  resolution: "@cosmostation/extension-client@npm:0.1.15"
+  checksum: 5c366fb647c9e283d25b1f2cc57c04e1cd7773d75eb1ac1f0865fb1ba4c3951f8704a41b26cbadceb1ea6aa33f2d2d4f7e64571b312ff257990e12ffb34435e0
   languageName: node
   linkType: hard
 
@@ -6341,6 +6372,7 @@ __metadata:
     "@whelp/types": "workspace:^"
     "@whelp/utils": "workspace:^"
     "@whelp/wallets": "workspace:^"
+    chain-registry: ^1.20.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-query: ^3.39.3
@@ -6439,6 +6471,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@whelp/wallets@workspace:packages/wallets"
   dependencies:
+    "@chain-registry/cosmostation": ^1.23.0
     "@chain-registry/keplr": ^1.25.1
     "@cosmjs/amino": ^0.31.1
     "@cosmjs/cosmwasm-stargate": ^0.31.1
@@ -7322,6 +7355,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:9.1.1":
+  version: 9.1.1
+  resolution: "bignumber.js@npm:9.1.1"
+  checksum: ad243b7e2f9120b112d670bb3d674128f0bd2ca1745b0a6c9df0433bd2c0252c43e6315d944c2ac07b4c639e7496b425e46842773cf89c6a2dcd4f31e5c4b11e
+  languageName: node
+  linkType: hard
+
 "binary-extensions@npm:^2.0.0":
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
@@ -7704,6 +7744,16 @@ __metadata:
   version: 2.4.0
   resolution: "case-sensitive-paths-webpack-plugin@npm:2.4.0"
   checksum: bcf469446eeee9ac0046e30860074ebb9aa4803aab9140e6bb72b600b23b1d70635690754be4504ce35cd99cdf05226bee8d894ba362a3f5485d5f6310fc6d02
+  languageName: node
+  linkType: hard
+
+"chain-registry@npm:^1.20.0":
+  version: 1.20.0
+  resolution: "chain-registry@npm:1.20.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+    "@chain-registry/types": ^0.17.0
+  checksum: 0b28cea3503a9a0f3028bdeb9dd5922fc6be10d112aa0b45218d0167e1d1c68d736d14d26110b33321ba99aa5abe4a3cc6473758307a149aceeea51f768ba5d3
   languageName: node
   linkType: hard
 

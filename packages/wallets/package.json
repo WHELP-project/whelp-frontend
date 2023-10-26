@@ -11,6 +11,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "dependencies": {
+    "@chain-registry/cosmostation": "^1.23.0",
     "@chain-registry/keplr": "^1.25.1",
     "@cosmjs/amino": "^0.31.1",
     "@cosmjs/cosmwasm-stargate": "^0.31.1",
