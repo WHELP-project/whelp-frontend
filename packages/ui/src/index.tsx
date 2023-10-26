@@ -1,5 +1,4 @@
-import React from "react";
+import WhelpThemeProvider from "./ThemeProvider/ThemeProvider";
+export { WhelpThemeProvider as ThemeProvider };
 
-const TestComponent = () => <div>TestComponent</div>;
-
-export default TestComponent;
+export * from "./Button/Button";
