@@ -71,27 +71,35 @@ const Card = (props: CardProps) => {
           {props.content}
         </Grid>
         <Grid item xs={3}>
-          <Box sx={styles.LabelStyles}>
-            <Box
-              component="img"
-              src="/images/badge-24-px-base-arrow-up-right-01-sharp.png"
-              sx={props.percentage < 0 ? styles.ArrowStyles : {}}
-            />
-            <Typography
-              sx={{
-                fontSize: "0.875rem",
-                fontWeight: 600,
-                textAlign: "center",
-              }}
-            >
-              {props.percentage}%
-            </Typography>
-          </Box>
-          <Typography
-            sx={{ fontSize: "0.875rem", fontWeight: 600, textAlign: "center" }}
-          >
-            {props.percentageText}
-          </Typography>
+          {props.percentage && (
+            <>
+              <Box sx={styles.LabelStyles}>
+                <Box
+                  component="img"
+                  src="/images/badge-24-px-base-arrow-up-right-01-sharp.png"
+                  sx={props.percentage < 0 ? styles.ArrowStyles : {}}
+                />
+                <Typography
+                  sx={{
+                    fontSize: "0.875rem",
+                    fontWeight: 600,
+                    textAlign: "center",
+                  }}
+                >
+                  {props.percentage}%
+                </Typography>
+              </Box>
+              <Typography
+                sx={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  textAlign: "center",
+                }}
+              >
+                {props.percentageText}
+              </Typography>
+            </>
+          )}
         </Grid>
       </Grid>
     </Box>
