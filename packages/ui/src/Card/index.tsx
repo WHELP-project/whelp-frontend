@@ -51,6 +51,13 @@ const Card = (props: CardProps) => {
       borderRadius: "62.4375rem",
       justifyContent: "center",
     },
+    ArrowStyles: {
+      "-webkit-transform": "rotate(180deg) scale(-1, 1)",
+      "-moz-transform": "rotate(180deg) scale(-1, 1)",
+      " -ms-transform": "rotate(180deg) scale(-1, 1)",
+      "-o-transform": "rotate(180deg) scale(-1, 1)",
+      transform: "rotate(180deg) scale(-1, 1)",
+    },
   };
 
   return (
@@ -65,6 +72,11 @@ const Card = (props: CardProps) => {
         </Grid>
         <Grid item xs={3}>
           <Box sx={styles.LabelStyles}>
+            <Box
+              component="img"
+              src="/images/badge-24-px-base-arrow-up-right-01-sharp.png"
+              sx={props.percentage < 0 ? styles.ArrowStyles : {}}
+            />
             <Typography
               sx={{
                 fontSize: "0.875rem",
