@@ -3,6 +3,8 @@ import { Algo, OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { chainRegistryChainToKeplr } from "@chain-registry/keplr";
 import { StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { chainRegistryChainToCosmostation } from "@chain-registry/cosmostation";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { TestnetConfig } from "@whelp/utils";
 
 interface CosmostationWindow {
   cosmostation?: WalletTypes.CosmostationClient;
@@ -50,6 +52,13 @@ export class Cosmostation implements WalletTypes.Wallet {
         },
       });
     }
+  }
+
+  async getSigningCosmWasmClient(): Promise<SigningCosmWasmClient> {
+    return SigningCosmWasmClient.connectWithSigner(
+      TestnetConfig.rpc_endpoint,
+      this.getOfflineSigner(TestnetConfig.chain_id)
+    );
   }
 
   async getSimpleAccount(chainId: string) {

@@ -2,6 +2,8 @@ import { WalletTypes } from "@whelp/types";
 import { Algo, OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { chainRegistryChainToKeplr } from "@chain-registry/keplr";
 import { StdSignature, StdSignDoc } from "@cosmjs/amino";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { TestnetConfig } from "@whelp/utils";
 
 export class Leap implements WalletTypes.Wallet {
   readonly client: WalletTypes.LeapClient;
@@ -97,6 +99,13 @@ export class Leap implements WalletTypes.Wallet {
   getOfflineSignerDirect(chainId: string) {
     return this.client.getOfflineSigner(chainId) as OfflineDirectSigner;
   }
+
+  getSigningCosmWasmClient = async (): Promise<SigningCosmWasmClient> => {
+    return SigningCosmWasmClient.connectWithSigner(
+      TestnetConfig.rpc_endpoint,
+      this.getOfflineSigner(TestnetConfig.chain_id)
+    );
+  };
 
   async signAmino(
     chainId: string,

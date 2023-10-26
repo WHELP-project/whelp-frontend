@@ -1,4 +1,5 @@
 import { StateTypes, WalletTypes } from "@whelp/types";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { MainnetConfig, TestnetConfig } from "@whelp/utils";
 import {
   Cosmostation,
@@ -8,22 +9,21 @@ import {
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
 import { useAppStore } from "../store";
-import { AppStore } from "@whelp/types/build/state";
-import { Algo } from "@cosmjs/proto-signing";
 
-// Add chain is sometimes needed when connecting to a testnet
+// Helper function to find chain and asset based on the chain name
+const findChainAsset = (chainName: string) => {
+  const chain = chains.find((c) => c.chain_name === chainName)!;
+  const assetList = assets.find((asset) => asset.chain_name === chainName)!;
+  return { chain, assetList };
+};
+
+// Function to add a new chain to the wallet client
 const addChain = async (WalletClient: WalletTypes.Wallet) => {
-  const coreumTestnetChain = chains.find(
-    (chain) => chain.chain_name === "coreumtestnet"
-  )!;
-  const coreumTestnetAssetList = assets.find(
-    (asset) => asset.chain_name === "coreumtestnet"
-  )!;
-
+  const { chain, assetList } = findChainAsset("coreumtestnet");
   return await WalletClient.addChain?.({
     name: "coreumtestnet",
-    chain: { ...coreumTestnetChain, chain_name: "coreumtestnet" },
-    assetList: coreumTestnetAssetList,
+    chain: { ...chain, chain_name: "coreumtestnet" },
+    assetList,
     preferredEndpoints: {
       rpc: ["https://full-node.testnet-1.coreum.dev:26657"],
       rest: ["https://full-node.testnet-1.coreum.dev:1317"],
@@ -31,97 +31,99 @@ const addChain = async (WalletClient: WalletTypes.Wallet) => {
   });
 };
 
+// Function to update the global state
+const updateState = (
+  account: any,
+  walletType: WalletTypes.WalletTypes,
+  cosmWasmClient: SigningCosmWasmClient
+) => {
+  useAppStore.setState((state: StateTypes.AppStore) => ({
+    ...state,
+    wallet: {
+      address: account.address,
+      isConnected: true,
+      type: walletType,
+    },
+    cosmWasmSigningClient: cosmWasmClient,
+  }));
+};
+
+// Generic function to connect to a wallet
+const connectWalletGeneric = async (
+  walletClient: any,
+  envConfig: any,
+  walletType: WalletTypes.WalletTypes
+) => {
+  await walletClient.enable(envConfig.chain_id);
+  const account = await walletClient.getAccount(envConfig.chain_id);
+  const cosmWasmClient = await walletClient.getSigningCosmWasmClient();
+  updateState(account, walletType, cosmWasmClient);
+};
+
+// Main function to create wallet actions
 export const createWalletActions = (
   setState: StateTypes.SetStateType,
   getState: StateTypes.GetStateType
 ): StateTypes.WalletActions => {
   return {
+    // Initialize default state
     wallet: {
       address: "",
       isConnected: false,
       type: WalletTypes.WalletTypes.Leap,
     },
-    cosmWasmSigningClient: {},
+    cosmWasmSigningClient: undefined,
+
+    // Function to connect wallet
     connectWallet: async (
       walletId: WalletTypes.WalletTypes,
       env: "prod" | "dev"
     ) => {
-      // Check envoirment file if its prod or dev
+      // Determine environment configuration
       const envConfig = env === "prod" ? MainnetConfig : TestnetConfig;
 
-      let account: {
-        username: string;
-        address: string;
-        algo: Algo;
-        pubkey: Uint8Array;
-      };
-
-      // Check what kind of wallet it is
+      // Switch case for different wallet types
       switch (walletId) {
-        // Leap
+        // Case for Leap Wallet
         case WalletTypes.WalletTypes.Leap:
-          // Get the leap client
           const LeapClient = await getLeapFromExtension();
-          if (!LeapClient) {
-            throw new Error("No Leap client found");
-          }
+          if (!LeapClient) throw new Error("No Leap client found");
           const LeapWalletClient = new Leap(LeapClient);
 
-          // If is tesnet, add chain
-          if (env === "dev") {
-            await addChain(LeapWalletClient);
-          }
+          // Add chain if in dev environment
+          if (env === "dev") await addChain(LeapWalletClient);
 
-          // Enable / Connect wallet
-          await LeapWalletClient.enable(envConfig.chain_id);
-
-          // Get account (Wallet address)
-          account = await LeapWalletClient.getAccount(envConfig.chain_id);
-
-          useAppStore.setState((state: AppStore) => ({
-            ...state,
-            wallet: {
-              address: account.address,
-              isConnected: true,
-              type: WalletTypes.WalletTypes.Leap,
-            },
-          }));
+          // Generic wallet connection logic
+          await connectWalletGeneric(
+            LeapWalletClient,
+            envConfig,
+            WalletTypes.WalletTypes.Leap
+          );
           break;
 
-        // Cosmostation
+        // Case for Cosmostation Wallet
         case WalletTypes.WalletTypes.Cosmostation:
-          // Get Cosmostation client
           const CosmoStationClient = await getCosmostationFromExtension();
-          if (!CosmoStationClient) {
+          if (!CosmoStationClient)
             throw new Error("No Cosmostation client found");
-          }
           const CosmostationWalletClient = new Cosmostation(CosmoStationClient);
 
-          // If is testnet, add chain
-          if (env === "dev") {
-            await addChain(CosmostationWalletClient);
-          }
+          // Add chain if in dev environment
+          if (env === "dev") await addChain(CosmostationWalletClient);
 
-          // Enable / Connect wallet
-          await CosmostationWalletClient.ikeplr.enable(envConfig.chain_id);
-
-          // Get account (Wallet address)
-          account = await CosmostationWalletClient.getAccount(
-            envConfig.chain_id
+          // Generic wallet connection logic
+          await connectWalletGeneric(
+            CosmostationWalletClient,
+            envConfig,
+            WalletTypes.WalletTypes.Cosmostation
           );
-
-          useAppStore.setState((state: AppStore) => ({
-            ...state,
-            wallet: {
-              address: account.address,
-              isConnected: true,
-              type: WalletTypes.WalletTypes.Cosmostation,
-            },
-          }));
+          break;
 
         default:
+          break;
       }
     },
+    // Function to disconnect wallet (placeholder)
     disconnectWallet: () => {},
   };
 };
