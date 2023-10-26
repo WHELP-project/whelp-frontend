@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material";
 import React from "react";
 
-const PhoenixThemeProvider = ({ children }: { children: React.ReactNode }) => {
+const WhelpThemeProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -13,4 +13,4 @@ const PhoenixThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default PhoenixThemeProvider;
+export default WhelpThemeProvider;
