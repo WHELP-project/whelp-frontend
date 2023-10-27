@@ -51,6 +51,7 @@ const theme = createTheme({
     textSubdued: "rgba(255, 255, 255, 0.56)",
     textDisabled: "rgba(255, 255, 255, 0.40)",
     textBlack: "#0A0C0F",
+    textWhite: "#FFF",
     iconLoud: "#FFF",
     iconMuted: "rgba(255, 255, 255, 0.76)",
     iconNormal: "rgba(255, 255, 255, 0.64)",
@@ -58,8 +59,7 @@ const theme = createTheme({
     iconDisabled: "rgba(255, 255, 255, 0.32)",
     strokePrimary: "rgba(255, 255, 255, 0.10)",
     strokeHover: "#44CA83",
-    strokeSecondary:
-      "radial-gradient(100% 100% at 50% 0%, #56CF8F 0%, rgba(10, 11, 15, 0.00) 100%), rgba(255, 255, 255, 0.10)",
+    strokeSecondary: "rgba(255, 255, 255, 0.10)",
     primaryBtnBg:
       "linear-gradient(180deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.00) 100%), #44CA83",
     primaryBtnBgHover: "#29C772",
@@ -75,6 +75,13 @@ const theme = createTheme({
       lg: 40,
       xl: 44,
     }),
+    button: createFontSize({
+      xs: 16,
+      sm: 16,
+      md: 16,
+      lg: 16,
+      xl: 16
+    })
   },
 });
 
