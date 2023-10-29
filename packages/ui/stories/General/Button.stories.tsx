@@ -32,8 +32,6 @@ export const Secondary: Story = {
 export const Icon: Story = {
   args: {
     startIcon: <ArrowLeft style={{width: "24px", height: "24px"}} />,
-    endIcon: <ArrowRight style={{width: "24px", height: "24px"}} />,
-    label: "Icon Button",
     size: "medium",
     type: "secondary",
   },
