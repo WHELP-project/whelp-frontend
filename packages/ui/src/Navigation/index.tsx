@@ -75,7 +75,7 @@ const Navigation = ({ ...props }: UiTypes.NavigationProps) => {
       <Box
         sx={{
           pt: "0.56rem",
-          pb: "1.5rem",
+          pb: "1.13rem",
           borderBottom: `1px solid ${theme.palette.strokePrimary}`,
         }}
       >
