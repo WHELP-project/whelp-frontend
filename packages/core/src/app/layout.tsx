@@ -70,7 +70,11 @@ export default function RootLayout({
         <ThemeProvider>
           <LayoutProvider
             navMenu={navMenu}
-            pageTitle="Title"
+            pageTitle={
+              pathname === "/"
+                ? "Overview"
+                : pathname.charAt(1).toUpperCase() + pathname.slice(2)
+            }
             connectWallet={() => setOpen(true)}
             isConnected={appStore.wallet.isConnected}
             walletAddress={appStore.wallet.address}
