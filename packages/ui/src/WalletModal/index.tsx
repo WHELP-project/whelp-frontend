@@ -1,23 +1,12 @@
 "use client";
 
 import React from "react";
-import { WalletTypes } from "@whelp/types";
+import { UiTypes } from "@whelp/types";
 import theme from "../Theme";
 import { Avatar, Box, Modal, Typography } from "@mui/material";
 import { Remove } from "react-huge-icons/solid";
 
-interface WalletModalProps {
-  wallets: {
-    type: WalletTypes.WalletTypes;
-    name: string;
-    icon: string;
-    onClick: () => void;
-  }[];
-  open: boolean;
-  onClose: () => void;
-}
-
-const WalletModal = ({ ...props }: WalletModalProps) => {
+const WalletModal = ({ ...props }: UiTypes.WalletModalProps) => {
   const style = {
     position: "absolute" as "absolute",
     top: "50%",
