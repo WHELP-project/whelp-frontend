@@ -55,7 +55,7 @@ function CustomTabPanel(props: TabPanelProps) {
   );
 }
 
-const PoolLiquidity = ({
+const PoolLiquidityForm = ({
   addLiquidityProps,
   removeLiquidityProps,
   addLiquidityClick,
@@ -149,4 +149,4 @@ const PoolLiquidity = ({
   );
 };
 
-export { PoolLiquidity };
+export { PoolLiquidityForm };

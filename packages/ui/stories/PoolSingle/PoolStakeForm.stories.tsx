@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { TokenBox } from "../../src/PoolSingle";
+import { PoolStakeForm } from "../../src/PoolSingle";
 
 const token = {
   name: "USDT",
@@ -10,19 +10,24 @@ const token = {
 };
 
 // Default metadata of the story https://storybook.js.org/docs/react/api/csf#default-export
-const meta: Meta<typeof TokenBox> = {
-  title: "PoolSingle/TokenBox",
+const meta: Meta<typeof PoolStakeForm> = {
+  title: "PoolSingle/PoolStakeForm",
   // @ts-ignore
-  component: TokenBox,
+  component: PoolStakeForm,
 };
 
 export default meta;
 
 // The story type for the component https://storybook.js.org/docs/react/api/csf#named-story-exports
-type Story = StoryObj<typeof TokenBox>;
+type Story = StoryObj<typeof PoolStakeForm>;
 
 export const Primary: Story = {
   args: {
-    token: token,
+    tokenBoxProps: {
+      token: token,
+      onChange: () => {},
+      value: "0.00",
+      isStakeToken: true,
+    }
   },
 };

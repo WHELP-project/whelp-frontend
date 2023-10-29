@@ -15,65 +15,16 @@ interface TokenBoxProps {
   onChange: (value: string) => void;
   value: string | undefined;
   disabled?: boolean;
+  isStakeToken?: boolean;
 }
-
-const AssetButton = ({
-  token,
-  onClick,
-  hideDropdownButton = false,
-}: {
-  token: Token;
-  onClick?: () => void;
-  hideDropdownButton?: boolean;
-}) => {
-  return (
-    <Button
-      onClick={onClick}
-      sx={{
-        fontSize: "14px",
-        padding: "4px",
-        borderRadius: "8px",
-        background: hideDropdownButton
-          ? "none"
-          : "linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.03) 100%)",
-        display: "inline-flex",
-        color: "white",
-        "&:hover": {
-          background: hideDropdownButton ? "none" : "rgba(226, 87, 28, 0.08)",
-        },
-        cursor: hideDropdownButton ? "auto" : "pointer",
-        pointerEvents: hideDropdownButton ? "none" : "auto",
-      }}
-    >
-      <Box
-        component={"img"}
-        src={token.icon}
-        sx={{
-          maxWidth: "24px",
-          marginRight: "8px",
-        }}
-      />
-      {token.name}
-      <Box
-        component={"img"}
-        src="/CaretDown.svg"
-        sx={{
-          display: hideDropdownButton ? "none" : "block",
-        }}
-      />
-    </Button>
-  );
-};
-
 const TokenBox = ({
   token,
   onChange,
   value,
   disabled = false,
+  isStakeToken = false,
 }: TokenBoxProps) => {
-  const [tokenAmount, setTokenAmount] = React.useState(
-    Number(value) || 0.00
-  );
+  const [tokenAmount, setTokenAmount] = React.useState(Number(value) || 0.0);
 
   const [usdPrice, setUsdPrice] = React.useState(
     Number(value) * Number(token.usdValue) || 0
@@ -104,7 +55,7 @@ const TokenBox = ({
             component={"img"}
             src={token.icon}
             sx={{
-              maxWidth: "40px"
+              maxWidth: "40px",
             }}
           />
           <Box
@@ -121,7 +72,7 @@ const TokenBox = ({
                 fontWeight: "600",
               }}
             >
-              USDT
+              {token.name}
             </Typography>
             <Typography
               sx={{
@@ -132,29 +83,31 @@ const TokenBox = ({
               Available {token.amount}
             </Typography>
           </Box>
-          <Button
-            onClick={() => {
-              onChange(token.amount.toString());
-              setTokenAmount(token.amount);
-              setUsdPrice(token.amount * token.usdValue);
-            }}
-            sx={{
-              borderRadius: "999px",
-              opacity: 0.9,
-              background: "#F0660A",
-              color: "#FFF",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "14px",
-              lineHeight: "20px",
-              width: "44px",
-              height: "24px",
-              cursor: "pointer"
-            }}
-          >
-            Max
-          </Button>
+          {!isStakeToken && (
+            <Button
+              onClick={() => {
+                onChange(token.amount.toString());
+                setTokenAmount(token.amount);
+                setUsdPrice(token.amount * token.usdValue);
+              }}
+              sx={{
+                borderRadius: "999px",
+                opacity: 0.9,
+                background: "#F0660A",
+                color: "#FFF",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "14px",
+                lineHeight: "20px",
+                width: "44px",
+                height: "24px",
+                cursor: "pointer",
+              }}
+            >
+              Max
+            </Button>
+          )}
         </Grid>
         <Grid
           item
@@ -162,6 +115,7 @@ const TokenBox = ({
           sx={{
             display: "flex",
             alignItems: "flex-end",
+            justifyContent: "center",
             flexDirection: "column",
           }}
         >
@@ -213,16 +167,18 @@ const TokenBox = ({
               whiteSpace: "nowrap",
             }}
           />
-          <Typography
-            sx={{
-              color: theme.palette.textNormal,
-              fontSize: "20px",
-              fontWeight: 500,
-              lineHeight: "120%",
-            }}
-          >
-            ${usdPrice}
-          </Typography>
+          {!isStakeToken && (
+            <Typography
+              sx={{
+                color: theme.palette.textNormal,
+                fontSize: "20px",
+                fontWeight: 500,
+                lineHeight: "120%",
+              }}
+            >
+              ${usdPrice}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </Box>
