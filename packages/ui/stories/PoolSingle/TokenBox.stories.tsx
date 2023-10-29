@@ -26,9 +26,3 @@ export const Primary: Story = {
     token: token,
   },
 };
-
-export const Secondary: Story = {
-  args: {
-    token: token,
-  },
-};
