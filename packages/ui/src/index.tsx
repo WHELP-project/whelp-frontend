@@ -7,3 +7,4 @@ export * from "./WalletModal";
 export * from "./Navigation";
 export * from "./AppBar";
 export * from "./ConnectWalletButton";
+export * from "./LayoutProvider";

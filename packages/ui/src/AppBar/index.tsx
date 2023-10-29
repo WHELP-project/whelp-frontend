@@ -15,8 +15,8 @@ interface AppBarProps {
 const AppBar = ({ ...props }: AppBarProps) => {
   const styles = {
     display: "flex",
-    width: "84rem",
     height: "4.5rem",
+    width: "100%",
     padding: "1rem 2rem",
     justifyContent: "space-between",
     alignItems: "center",
