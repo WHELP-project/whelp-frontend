@@ -48,7 +48,7 @@ const Button = ({
       }}
       {...otherProps}
     >
-      {props.children || label}
+      {label}
     </MuiButton>
   );
 };
