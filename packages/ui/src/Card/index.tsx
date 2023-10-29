@@ -1,17 +1,9 @@
 import React from "react";
 import theme from "../Theme";
 import { Box, Grid, Typography } from "@mui/material";
+import { UiTypes } from "@whelp/types";
 
-interface CardProps {
-  title: string;
-  content: React.ReactElement;
-  warning?: boolean;
-  warningText?: string;
-  percentage?: number;
-  percentageText?: string;
-}
-
-const Card = (props: CardProps) => {
+const Card = (props: UiTypes.CardProps) => {
   const styles = {
     WrapperStyles: {
       display: "flex",
