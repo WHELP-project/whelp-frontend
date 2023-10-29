@@ -1,12 +1,13 @@
 import React from "react";
 import theme from "../Theme";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Tooltip, Typography } from "@mui/material";
 import { Button } from "../Button";
 import { ConnectWalletButton } from "../ConnectWalletButton";
 
 interface AppBarProps {
   title: string;
   connectWallet?: () => void;
+  disconnectWallet?: () => void;
   isConnected?: boolean;
   walletAddress?: string;
   walletIcon?: string;
@@ -40,21 +41,28 @@ const AppBar = ({ ...props }: AppBarProps) => {
         <ConnectWalletButton onClick={props.connectWallet} />
       ) : (
         <Box sx={{ display: "flex", gap: 2 }}>
-          <Box
-            sx={{
-              display: "flex",
-              height: "2.5rem",
-              padding: "0.625rem 1rem",
-              alignItems: "center",
-              gap: "0.5rem",
-              borderRadius: "0.75rem",
-              border: `1px solid ${theme.palette.strokePrimary}}`,
-              background: theme.palette.bgAlpha25,
-            }}
-          >
-            {props.walletAddress.slice(0, 6)}...{props.walletAddress.slice(-4)}
-          </Box>
-          <Avatar src={props.walletIcon} />
+          <Tooltip sx={{ pointer: "cursor" }} title="Click to copy">
+            <Box
+              onClick={() => navigator.clipboard.writeText(props.walletAddress)}
+              sx={{
+                display: "flex",
+                height: "2.5rem",
+                padding: "0.625rem 1rem",
+                alignItems: "center",
+                gap: "0.5rem",
+                borderRadius: "0.75rem",
+                border: `1px solid ${theme.palette.strokePrimary}}`,
+                background: theme.palette.bgAlpha25,
+                pointer: "cursor",
+              }}
+            >
+              {props.walletAddress.slice(0, 6)}...
+              {props.walletAddress.slice(-4)}
+            </Box>
+          </Tooltip>
+          <Tooltip title="Click to disconnect">
+            <Avatar onClick={props.disconnectWallet} src={props.walletIcon} />
+          </Tooltip>
         </Box>
       )}
     </Box>

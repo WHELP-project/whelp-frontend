@@ -7,6 +7,7 @@ interface LayoutProviderProps {
   children: React.ReactNode;
   pageTitle: string;
   connectWallet?: () => void;
+  disconnectWallet?: () => void;
   isConnected?: boolean;
   walletAddress?: string;
   walletIcon?: string;
@@ -21,6 +22,7 @@ const LayoutProvider = ({ ...props }: LayoutProviderProps) => {
         <AppBar
           title={props.pageTitle}
           connectWallet={props.connectWallet}
+          disconnectWallet={props.disconnectWallet}
           isConnected={props.isConnected}
           walletAddress={props.walletAddress}
           walletIcon={props.walletIcon}

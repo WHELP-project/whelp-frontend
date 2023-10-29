@@ -22,6 +22,7 @@ export default function RootLayout({
       icon: "/images/walletIcons/leap.png",
       onClick: () => {
         appStore.connectWallet(WalletTypes.WalletTypes.Leap, "prod");
+        setOpen(false);
       },
     },
     {
@@ -30,6 +31,7 @@ export default function RootLayout({
       icon: "/images/walletIcons/cosmostation.png",
       onClick: () => {
         appStore.connectWallet(WalletTypes.WalletTypes.Cosmostation, "prod");
+        setOpen(false);
       },
     },
   ];
@@ -76,6 +78,7 @@ export default function RootLayout({
                 : pathname.charAt(1).toUpperCase() + pathname.slice(2)
             }
             connectWallet={() => setOpen(true)}
+            disconnectWallet={() => appStore.disconnectWallet()}
             isConnected={appStore.wallet.isConnected}
             walletAddress={appStore.wallet.address}
             walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}

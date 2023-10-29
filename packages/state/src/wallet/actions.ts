@@ -124,6 +124,16 @@ export const createWalletActions = (
       }
     },
     // Function to disconnect wallet (placeholder)
-    disconnectWallet: () => {},
+    disconnectWallet: () => {
+      useAppStore.setState((state: StateTypes.AppStore) => ({
+        ...state,
+        wallet: {
+          address: "",
+          isConnected: false,
+          type: WalletTypes.WalletTypes.Leap,
+        },
+        cosmWasmSigningClient: undefined,
+      }));
+    },
   };
 };
