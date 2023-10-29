@@ -65,6 +65,9 @@ const theme = createTheme({
     primaryBtnBgHover: "#29C772",
     secondaryBtnBg: "rgba(255, 255, 255, 0.02)",
     secondaryBtnBgHover: "rgba(255, 255, 255, 0.10)",
+    purple: {
+      base: "#676CF6"
+    }
   },
   typography: {
     fontFamily: "Inter",

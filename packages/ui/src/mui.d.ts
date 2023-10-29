@@ -29,6 +29,9 @@ declare module "@mui/material/styles" {
     primaryBtnBgHover: string;
     secondaryBtnBg: string;
     secondaryBtnBgHover: string;
+    purple: {
+      base: string;
+    };
   }
 
   interface Palette {
@@ -59,5 +62,8 @@ declare module "@mui/material/styles" {
     primaryBtnBgHover: string;
     secondaryBtnBg: string;
     secondaryBtnBgHover: string;
+    purple: {
+      base: string;
+    };
   }
 }
