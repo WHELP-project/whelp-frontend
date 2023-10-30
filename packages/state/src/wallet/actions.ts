@@ -3,12 +3,14 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { MainnetConfig, TestnetConfig } from "@whelp/utils";
 import {
   Cosmostation,
+  Keplr,
   Leap,
   getCosmostationFromExtension,
+  getKeplrFromExtension,
   getLeapFromExtension,
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
-import { useAppStore } from "../store";
+import { useAppStore, usePersistStore } from "../store";
 
 // Helper function to find chain and asset based on the chain name
 const findChainAsset = (chainName: string) => {
@@ -119,13 +121,34 @@ export const createWalletActions = (
           );
           break;
 
+        // Case for Keplr Wallet
+        case WalletTypes.WalletTypes.Keplr:
+          const KeplrClient = await getKeplrFromExtension();
+          if (!KeplrClient) throw new Error("No Keplr client found");
+          const KeplrWalletClient = new Keplr(KeplrClient);
+
+          // Add chain if in dev environment
+          if (env === "dev") await addChain(KeplrWalletClient);
+
+          // Generic wallet connection logic
+          await connectWalletGeneric(
+            KeplrWalletClient,
+            envConfig,
+            WalletTypes.WalletTypes.Keplr
+          );
+          break;
         default:
           break;
       }
+
+      usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
+        type: getState().wallet.type,
+        isConnected: true,
+      }));
     },
     // Function to disconnect wallet (placeholder)
     disconnectWallet: () => {
-      useAppStore.setState((state: StateTypes.AppStore) => ({
+      setState((state: StateTypes.AppStore) => ({
         ...state,
         wallet: {
           address: "",
@@ -133,6 +156,11 @@ export const createWalletActions = (
           type: WalletTypes.WalletTypes.Leap,
         },
         cosmWasmSigningClient: undefined,
+      }));
+
+      usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
+        ...state,
+        isConnected: false,
       }));
     },
   };
