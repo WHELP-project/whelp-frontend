@@ -73,6 +73,7 @@ const WalletModal = ({ ...props }: UiTypes.WalletModalProps) => {
           </Typography>
           {props.wallets.map((wallet) => (
             <Box
+              key={wallet.name}
               sx={{
                 display: "flex",
                 padding: "1rem",
