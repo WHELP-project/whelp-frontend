@@ -3,7 +3,7 @@ import { TokenBox } from "../TokenBox/TokenBox";
 import React from "react";
 import theme from "../../Theme";
 import { Button } from "../../Button";
-import { UiTypes, Token } from "@whelp/types";
+import { UiTypes } from "@whelp/types";
 
 const PoolStakeForm = ({
   tokenBoxProps,
@@ -37,13 +37,14 @@ const PoolStakeForm = ({
         </Box>
         <Grid
           container
-          rowSpacing={1}
+          spacing={1}
           sx={{
-            marginBottom: "8px",
+            marginBottom: "16px",
           }}
         >
           <Grid item xs={3}>
             <Button
+              sx={{width: "100%"}}
               size="small"
               type="secondary"
               label="25%"
@@ -52,6 +53,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
+              sx={{width: "100%"}}
               size="small"
               type="secondary"
               label="50%"
@@ -60,6 +62,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
+              sx={{width: "100%"}}
               size="small"
               type="secondary"
               label="75%"
@@ -68,6 +71,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
+              sx={{width: "100%"}}
               size="small"
               type="secondary"
               label="100%"
@@ -75,7 +79,7 @@ const PoolStakeForm = ({
             />
           </Grid>
         </Grid>
-        <Button onClick={stakeClick} label="Stake" />
+        <Button sx={{width: "100%"}} onClick={stakeClick} label="Stake" />
       </Box>
 
       <Box
