@@ -5,13 +5,6 @@ import theme from "../../Theme";
 import { Button } from "../../Button";
 import { UiTypes } from "@whelp/types";
 
-interface PoolLiquidityProps {
-  addLiquidityProps: UiTypes.TokenBoxProps[];
-  removeLiquidityProps: UiTypes.TokenBoxProps;
-  addLiquidityClick: () => void;
-  removeLiquidityClick: () => void;
-}
-
 function a11yProps(index: number) {
   return {
     id: `simple-tab-${index}`,
@@ -46,7 +39,7 @@ const PoolLiquidityForm = ({
   removeLiquidityProps,
   addLiquidityClick,
   removeLiquidityClick,
-}: PoolLiquidityProps) => {
+}: UiTypes.PoolLiquidityProps) => {
   const [tabValue, setTabValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {

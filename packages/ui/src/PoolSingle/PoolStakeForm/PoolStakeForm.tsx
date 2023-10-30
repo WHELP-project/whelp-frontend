@@ -5,21 +5,13 @@ import theme from "../../Theme";
 import { Button } from "../../Button";
 import { UiTypes, Token } from "@whelp/types";
 
-interface PoolStakeProps {
-  tokenBoxProps: UiTypes.TokenBoxProps;
-  stakeRewards: number;
-  stakeClick: () => void;
-  claimClick: () => void;
-  changeStakePercentage: (percentage: number) => void;
-}
-
 const PoolStakeForm = ({
   tokenBoxProps,
   stakeRewards = 0,
   changeStakePercentage,
   stakeClick,
   claimClick,
-}: PoolStakeProps) => {
+}: UiTypes.PoolStakeProps) => {
   const setStakePercentage = (percent: number) => {
     changeStakePercentage(percent);
   };
@@ -63,7 +55,7 @@ const PoolStakeForm = ({
               size="small"
               type="secondary"
               label="50%"
-              onClick={() => setStakePercentage(25)}
+              onClick={() => setStakePercentage(50)}
             />
           </Grid>
           <Grid item xs={3}>
@@ -71,7 +63,7 @@ const PoolStakeForm = ({
               size="small"
               type="secondary"
               label="75%"
-              onClick={() => setStakePercentage(25)}
+              onClick={() => setStakePercentage(75)}
             />
           </Grid>
           <Grid item xs={3}>
@@ -79,7 +71,7 @@ const PoolStakeForm = ({
               size="small"
               type="secondary"
               label="100%"
-              onClick={() => setStakePercentage(25)}
+              onClick={() => setStakePercentage(100)}
             />
           </Grid>
         </Grid>
