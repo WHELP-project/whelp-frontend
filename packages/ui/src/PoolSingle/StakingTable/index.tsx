@@ -1,4 +1,5 @@
 import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
+import React from "react";
 import { UiTypes } from "@whelp/types";
 import theme from "../../Theme";
 

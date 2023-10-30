@@ -37,7 +37,7 @@ const theme = createTheme({
     mode: "dark",
     bgWhite: "#FFFFFF",
     bgPrimary:
-      "radial-gradient(52.99% 50% at 52.99% 50%, rgba(67, 199, 129, 0.20) 0%, rgba(10, 11, 15, 0.00) 100%), radial-gradient(99.73% 84.28% at 45.45% 13.09%, rgba(69, 202, 131, 0.06) 0%, rgba(7, 9, 12, 0.00) 100%), #08090D)",
+      "radial-gradient(52.99% 50% at 52.99% 50%, rgba(67, 199, 129, 0.20) 0%, rgba(10, 11, 15, 0.00) 100%), radial-gradient(99.73% 84.28% at 45.45% 13.09%, rgba(69, 202, 131, 0.06) 0%, rgba(7, 9, 12, 0.00) 100%), #08090D",
     bgSecondary: "#0A0F10",
     bgAlpha0: "rgba(255, 255, 255, 0.02)",
     bgAlpha25: "rgba(255, 255, 255, 0.04)",

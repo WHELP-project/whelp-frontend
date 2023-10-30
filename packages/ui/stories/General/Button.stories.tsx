@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../../src";
+import React from "react";
 import { ArrowLeft, ArrowRight } from "react-huge-icons/outline";
 
 // Default metadata of the story https://storybook.js.org/docs/react/api/csf#default-export
@@ -31,7 +32,7 @@ export const Secondary: Story = {
 
 export const Icon: Story = {
   args: {
-    startIcon: <ArrowLeft style={{width: "24px", height: "24px"}} />,
+    startIcon: <ArrowLeft style={{ width: "24px", height: "24px" }} />,
     size: "medium",
     type: "secondary",
   },
