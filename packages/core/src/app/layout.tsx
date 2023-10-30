@@ -1,9 +1,9 @@
 "use client";
 import { WalletTypes } from "@whelp/types";
 import { ThemeProvider, LayoutProvider, WalletModal } from "@whelp/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useAppStore } from "@whelp/state";
+import { useAppStore, usePersistStore } from "@whelp/state";
 
 export default function RootLayout({
   children,
@@ -13,7 +13,15 @@ export default function RootLayout({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const appStorePersist = usePersistStore();
   const appStore = useAppStore();
+
+  useEffect(() => {
+    if (appStorePersist.isConnected) {
+      appStore.connectWallet(appStorePersist.type, "dev");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const wallets = [
     {
@@ -21,7 +29,7 @@ export default function RootLayout({
       name: "Leap",
       icon: "/images/walletIcons/leap.png",
       onClick: () => {
-        appStore.connectWallet(WalletTypes.WalletTypes.Leap, "prod");
+        appStore.connectWallet(WalletTypes.WalletTypes.Leap, "dev");
         setOpen(false);
       },
     },
@@ -30,7 +38,7 @@ export default function RootLayout({
       name: "Cosmostation",
       icon: "/images/walletIcons/cosmostation.png",
       onClick: () => {
-        appStore.connectWallet(WalletTypes.WalletTypes.Cosmostation, "prod");
+        appStore.connectWallet(WalletTypes.WalletTypes.Cosmostation, "dev");
         setOpen(false);
       },
     },
@@ -39,7 +47,7 @@ export default function RootLayout({
       name: "Keplr",
       icon: "/images/walletIcons/keplr.png",
       onClick: () => {
-        appStore.connectWallet(WalletTypes.WalletTypes.Keplr, "prod");
+        appStore.connectWallet(WalletTypes.WalletTypes.Keplr, "dev");
         setOpen(false);
       },
     },

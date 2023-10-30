@@ -11,3 +11,8 @@ export interface WalletActions {
     type: WalletTypes;
   };
 }
+
+export interface WalletPersistActions {
+  type: WalletTypes;
+  isConnected?: boolean;
+}

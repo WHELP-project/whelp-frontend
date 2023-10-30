@@ -10,7 +10,7 @@ import {
   getLeapFromExtension,
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
-import { useAppStore } from "../store";
+import { useAppStore, usePersistStore } from "../store";
 
 // Helper function to find chain and asset based on the chain name
 const findChainAsset = (chainName: string) => {
@@ -56,7 +56,6 @@ const connectWalletGeneric = async (
   envConfig: any,
   walletType: WalletTypes.WalletTypes
 ) => {
-  console.log(walletClient);
   await walletClient.enable(envConfig.chain_id);
   const account = await walletClient.getAccount(envConfig.chain_id);
   const cosmWasmClient = await walletClient.getSigningCosmWasmClient();
@@ -141,10 +140,15 @@ export const createWalletActions = (
         default:
           break;
       }
+
+      usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
+        type: getState().wallet.type,
+        isConnected: true,
+      }));
     },
     // Function to disconnect wallet (placeholder)
     disconnectWallet: () => {
-      useAppStore.setState((state: StateTypes.AppStore) => ({
+      setState((state: StateTypes.AppStore) => ({
         ...state,
         wallet: {
           address: "",
@@ -152,6 +156,11 @@ export const createWalletActions = (
           type: WalletTypes.WalletTypes.Leap,
         },
         cosmWasmSigningClient: undefined,
+      }));
+
+      usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
+        ...state,
+        isConnected: false,
       }));
     },
   };
