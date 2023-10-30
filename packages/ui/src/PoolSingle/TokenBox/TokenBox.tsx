@@ -1,29 +1,15 @@
 import { Box, Button, Grid, Input, Typography } from "@mui/material";
 import React from "react";
 import theme from "../../Theme";
+import { UiTypes } from "@whelp/types";
 
-interface Token {
-  name: string;
-  icon: string;
-  usdValue: number;
-  amount: number;
-  category: string;
-}
-
-interface TokenBoxProps {
-  token: Token;
-  onChange: (value: string) => void;
-  value: string | undefined;
-  disabled?: boolean;
-  isStakeToken?: boolean;
-}
 const TokenBox = ({
   token,
   onChange,
   value,
   disabled = false,
   isStakeToken = false,
-}: TokenBoxProps) => {
+}: UiTypes.TokenBoxProps) => {
   const [tokenAmount, setTokenAmount] = React.useState(Number(value) || 0.0);
 
   const [usdPrice, setUsdPrice] = React.useState(
@@ -80,15 +66,15 @@ const TokenBox = ({
                 fontSize: "14px",
               }}
             >
-              Available {token.amount}
+              Available {token.balance}
             </Typography>
           </Box>
           {!isStakeToken && (
             <Button
               onClick={() => {
-                onChange(token.amount.toString());
-                setTokenAmount(token.amount);
-                setUsdPrice(token.amount * token.usdValue);
+                onChange(token.balance.toString());
+                setTokenAmount(token.balance);
+                setUsdPrice(token.balance * token.usdValue);
               }}
               sx={{
                 borderRadius: "999px",
@@ -129,7 +115,7 @@ const TokenBox = ({
             }}
             inputProps={{
               min: 0,
-              max: token.amount,
+              max: token.balance,
               style: {
                 textAlign: "right",
                 padding: 0,

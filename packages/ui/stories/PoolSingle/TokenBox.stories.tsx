@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { TokenBox } from "../../src/PoolSingle";
+import { Token } from "@whelp/types";
 
-const token = {
+const token: Token = {
   name: "USDT",
   icon: "cryptoIcons/usdt.svg",
-  amount: 100,
+  balance: 100,
   category: "Stable",
   usdValue: 1 * 100,
 };

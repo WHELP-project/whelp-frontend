@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { PoolLiquidityForm } from "../../src/PoolSingle";
+import { Token } from "@whelp/types";
 
-const token = {
+const token: Token = {
   name: "USDC",
   icon: "cryptoIcons/usdt.svg",
-  amount: 100,
+  balance: 100,
   category: "Stable",
   usdValue: 1 * 100,
 };
@@ -27,18 +28,18 @@ export const Primary: Story = {
       {
         token: token,
         onChange: () => {},
-        value: "0.00"
+        value: "0.00",
       },
       {
         token: token,
         onChange: () => {},
-        value: "0.00"
-      }
+        value: "0.00",
+      },
     ],
     removeLiquidityProps: {
       token: token,
       onChange: () => {},
-      value: "0.00"
-    }
+      value: "0.00",
+    },
   },
 };

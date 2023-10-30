@@ -3,25 +3,11 @@ import { TokenBox } from "../TokenBox/TokenBox";
 import React from "react";
 import theme from "../../Theme";
 import { Button } from "../../Button";
-
-interface Token {
-  name: string;
-  icon: string;
-  usdValue: number;
-  amount: number;
-  category: string;
-}
-
-interface TokenBoxProps {
-  token: Token;
-  onChange: (value: string) => void;
-  value: string | undefined;
-  disabled?: boolean;
-}
+import { UiTypes } from "@whelp/types";
 
 interface PoolLiquidityProps {
-  addLiquidityProps: TokenBoxProps[];
-  removeLiquidityProps: TokenBoxProps;
+  addLiquidityProps: UiTypes.TokenBoxProps[];
+  removeLiquidityProps: UiTypes.TokenBoxProps;
   addLiquidityClick: () => void;
   removeLiquidityClick: () => void;
 }
