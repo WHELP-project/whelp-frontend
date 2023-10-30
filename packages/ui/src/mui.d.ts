@@ -16,6 +16,7 @@ declare module "@mui/material/styles" {
     textSubdued: string;
     textDisabled: string;
     textBlack: string;
+    textWhite: string;
     iconLoud: string;
     iconMuted: string;
     iconNormal: string;
@@ -48,6 +49,7 @@ declare module "@mui/material/styles" {
     textSubdued: string;
     textDisabled: string;
     textBlack: string;
+    textWhite: string;
     iconLoud: string;
     iconMuted: string;
     iconNormal: string;
