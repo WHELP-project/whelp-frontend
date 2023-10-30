@@ -3,8 +3,10 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { MainnetConfig, TestnetConfig } from "@whelp/utils";
 import {
   Cosmostation,
+  Keplr,
   Leap,
   getCosmostationFromExtension,
+  getKeplrFromExtension,
   getLeapFromExtension,
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
@@ -54,6 +56,7 @@ const connectWalletGeneric = async (
   envConfig: any,
   walletType: WalletTypes.WalletTypes
 ) => {
+  console.log(walletClient);
   await walletClient.enable(envConfig.chain_id);
   const account = await walletClient.getAccount(envConfig.chain_id);
   const cosmWasmClient = await walletClient.getSigningCosmWasmClient();
@@ -119,6 +122,23 @@ export const createWalletActions = (
           );
           break;
 
+        // Case for Keplr Wallet
+        case WalletTypes.WalletTypes.Keplr:
+          const KeplrClient = await getKeplrFromExtension();
+          console.log(KeplrClient);
+          if (!KeplrClient) throw new Error("No Keplr client found");
+          const KeplrWalletClient = new Keplr(KeplrClient);
+
+          // Add chain if in dev environment
+          if (env === "dev") await addChain(KeplrWalletClient);
+
+          // Generic wallet connection logic
+          await connectWalletGeneric(
+            KeplrWalletClient,
+            envConfig,
+            WalletTypes.WalletTypes.Keplr
+          );
+          break;
         default:
           break;
       }

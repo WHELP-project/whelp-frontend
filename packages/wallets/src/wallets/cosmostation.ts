@@ -41,6 +41,9 @@ export class Cosmostation implements WalletTypes.Wallet {
   get ikeplr() {
     return this.client.providers.keplr;
   }
+  async enable(chainIds: string | string[]) {
+    await this.ikeplr.enable(chainIds);
+  }
 
   async suggestToken({ chainName, tokens, type }: WalletTypes.SuggestToken) {
     if (type === "cw20") {
