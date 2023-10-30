@@ -1,0 +1,9 @@
+<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="elements">
+<path id="Vector" d="M1.5 11C1.5 6.52166 1.5 4.28249 2.89124 2.89124C4.28249 1.5 6.52166 1.5 11 1.5C15.4783 1.5 17.7175 1.5 19.1088 2.89124C20.5 4.28249 20.5 6.52166 20.5 11C20.5 15.4783 20.5 17.7175 19.1088 19.1088C17.7175 20.5 15.4783 20.5 11 20.5C6.52166 20.5 4.28249 20.5 2.89124 19.1088C1.5 17.7175 1.5 15.4783 1.5 11Z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+<path id="Ellipse 1200" d="M9 14.5C9 15.3284 8.32843 16 7.5 16C6.67157 16 6 15.3284 6 14.5C6 13.6716 6.67157 13 7.5 13C8.32843 13 9 13.6716 9 14.5Z" stroke="white" stroke-width="1.5"/>
+<path id="Ellipse 1201" d="M16 7.5C16 6.67157 15.3284 6 14.5 6C13.6716 6 13 6.67157 13 7.5C13 8.32843 13.6716 9 14.5 9C15.3284 9 16 8.32843 16 7.5Z" stroke="white" stroke-width="1.5"/>
+<path id="Vector 6833" d="M7.5 13V6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+<path id="Vector 6834" d="M14.5 9V16" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+</g>
+</svg>

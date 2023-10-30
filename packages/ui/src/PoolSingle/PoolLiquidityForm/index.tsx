@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import { TokenBox } from "../TokenBox/TokenBox";
+import { TokenBox } from "../TokenBox";
 import React from "react";
 import theme from "../../Theme";
 import { Button } from "../../Button";
