@@ -30,5 +30,9 @@ export const Primary: Story = {
       value: "0.00",
       isStakeToken: true,
     },
+    stakeRewards: 20,
+    stakeClick: () => {},
+    claimClick: () => {},
+    changeStakePercentage: (percentage: number) => {},
   },
 };
