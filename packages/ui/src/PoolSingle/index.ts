@@ -1,5 +1,4 @@
-import { TokenBox } from "./TokenBox/TokenBox";
-import { PoolLiquidityForm } from "./PoolLiquidityForm/PoolLiquidityForm";
-import { PoolStakeForm } from "./PoolStakeForm/PoolStakeForm";
-
-export { TokenBox, PoolLiquidityForm, PoolStakeForm };
+export { TokenBox } from "./TokenBox";
+export { PoolLiquidityForm } from "./PoolLiquidityForm";
+export { PoolStakeForm } from "./PoolStakeForm";
+export { StakingTable } from "./StakingTable";
