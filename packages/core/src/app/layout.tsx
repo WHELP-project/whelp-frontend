@@ -34,6 +34,15 @@ export default function RootLayout({
         setOpen(false);
       },
     },
+    {
+      type: WalletTypes.WalletTypes.Keplr,
+      name: "Keplr",
+      icon: "/images/walletIcons/keplr.png",
+      onClick: () => {
+        appStore.connectWallet(WalletTypes.WalletTypes.Keplr, "prod");
+        setOpen(false);
+      },
+    },
   ];
 
   const navMenu = [
