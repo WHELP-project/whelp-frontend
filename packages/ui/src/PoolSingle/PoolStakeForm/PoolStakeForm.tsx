@@ -35,7 +35,9 @@ const PoolStakeForm = ({
   stakeClick,
   claimClick,
 }: PoolStakeProps) => {
-  const setStakePercentage = () => {}
+  const setStakePercentage = (percent: number) => {
+    changeStakePercentage(percent);
+  }
 
   return (
     <Box>
@@ -64,16 +66,16 @@ const PoolStakeForm = ({
           }}
         >
           <Grid item xs={3}>
-            <Button size="small" type="secondary" label="25%" onClick={() =>changeStakePercentage(25)} />
+            <Button size="small" type="secondary" label="25%" onClick={() => setStakePercentage(25)} />
           </Grid>
           <Grid item xs={3}>
-            <Button size="small" type="secondary" label="50%" />
+            <Button size="small" type="secondary" label="50%" onClick={() => setStakePercentage(25)} />
           </Grid>
           <Grid item xs={3}>
-            <Button size="small" type="secondary" label="75%" />
+            <Button size="small" type="secondary" label="75%" onClick={() => setStakePercentage(25)} />
           </Grid>
           <Grid item xs={3}>
-            <Button size="small" type="secondary" label="100%" />
+            <Button size="small" type="secondary" label="100%" onClick={() => setStakePercentage(25)} />
           </Grid>
         </Grid>
         <Button onClick={stakeClick} label="Stake" />
