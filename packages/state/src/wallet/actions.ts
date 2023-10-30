@@ -125,7 +125,6 @@ export const createWalletActions = (
         // Case for Keplr Wallet
         case WalletTypes.WalletTypes.Keplr:
           const KeplrClient = await getKeplrFromExtension();
-          console.log(KeplrClient);
           if (!KeplrClient) throw new Error("No Keplr client found");
           const KeplrWalletClient = new Keplr(KeplrClient);
 
