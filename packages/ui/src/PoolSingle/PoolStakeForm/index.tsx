@@ -11,6 +11,7 @@ const PoolStakeForm = ({
   changeStakePercentage,
   stakeClick,
   claimClick,
+  disabled = false,
 }: UiTypes.PoolStakeProps) => {
   const setStakePercentage = (percent: number) => {
     changeStakePercentage(percent);
@@ -79,7 +80,7 @@ const PoolStakeForm = ({
             />
           </Grid>
         </Grid>
-        <Button sx={{width: "100%"}} onClick={stakeClick} label="Stake" />
+        <Button disabled sx={{width: "100%"}} onClick={stakeClick} label="Stake" />
       </Box>
 
       <Box
