@@ -243,6 +243,7 @@ export const createWalletActions = (
             usdValue: 0,
             balance: balance,
             category: "",
+            decimals,
             tokenAddress: isCw20Token(asset)
               ? asset.cw20_token
               : asset.smart_token,
@@ -258,6 +259,7 @@ export const createWalletActions = (
         usdValue: 0,
         balance: balance,
         category: "",
+        decimals,
         tokenAddress: isCw20Token(asset) ? asset.cw20_token : asset.smart_token,
         type: isCw20Token(asset) ? "cw20" : "smart",
       };

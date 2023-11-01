@@ -48,6 +48,11 @@ export default function SwapPage() {
     {} as WhelpPoolTypes.AssetInfo
   );
 
+  // Token Values
+  const [tokenAValue, setTokenAValue] = useState<string>("");
+  const [tokenBValue, setTokenBValue] = useState<string>("");
+  const [tokenLPValue, setTokenLPValue] = useState<string>("");
+
   // Load initial data
   const init = async () => {
     const pairInfo = await poolQueryClient.pair();
@@ -62,6 +67,9 @@ export default function SwapPage() {
     setTokenA(asset_a_info);
     setTokenB(asset_b_info);
     setTokenLP(asset_lp_info);
+
+    setTokenAInfo(asset_a);
+    setTokenBInfo(asset_b);
   };
 
   const getPoolSigningClient = (): WhelpPoolClient => {
@@ -76,8 +84,8 @@ export default function SwapPage() {
   // Provide liquidity
   const provideLiquidity = async () => {
     const amounts: WhelpPoolTypes.Asset[] = [
-      { amount: "1000000", info: tokenAInfo },
-      { amount: "100000", info: tokenBInfo },
+      { amount: tokenAValue, info: tokenAInfo },
+      { amount: tokenBValue, info: tokenBInfo },
     ];
 
     const poolClient = getPoolSigningClient();
@@ -87,7 +95,7 @@ export default function SwapPage() {
   // Remove Liquidity
   const removeLiquidity = async () => {
     const poolClient = getPoolSigningClient();
-    await poolClient.removeLiquidity({ share: "1000000" });
+    // await poolClient.removeLiquidity({ share: "1000000" });
   };
 
   useEffect(() => {
@@ -96,25 +104,8 @@ export default function SwapPage() {
   }, []);
 
   const provideLiquidityProps = {
-    addLiquidityProps: [
-      {
-        token: tokenA,
-        onChange: () => {},
-        value: "0.00",
-      },
-      {
-        token: tokenB,
-        onChange: () => {},
-        value: "0.00",
-      },
-    ],
-    removeLiquidityProps: {
-      token: tokenLP,
-      onChange: () => {},
-      value: "0.00",
-    },
     addLiquidityClick: () => provideLiquidity,
-    removeLiquidityClick: () => {},
+    removeLiquidityClick: () => removeLiquidity,
   };
 
   const stakeProps = {
@@ -133,19 +124,19 @@ export default function SwapPage() {
   const infoCardDetails = [
     {
       title: "My Share",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "Lp Tokens",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "TVL",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "Swap Fee",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
   ];
   return (
@@ -243,7 +234,32 @@ export default function SwapPage() {
                     Provide Liquidity
                   </Typography>
                 </Box>
-                <PoolLiquidityForm {...provideLiquidityProps} />
+                <PoolLiquidityForm
+                  {...provideLiquidityProps}
+                  addLiquidityProps={[
+                    {
+                      token: tokenA,
+                      onChange: (e) => {
+                        setTokenAValue(e);
+                      },
+                      value: tokenAValue,
+                    },
+                    {
+                      token: tokenB,
+                      onChange: (e) => {
+                        setTokenBValue(e);
+                      },
+                      value: tokenBValue,
+                    },
+                  ]}
+                  removeLiquidityProps={{
+                    token: tokenLP,
+                    onChange: (e) => {
+                      setTokenLPValue(e);
+                    },
+                    value: tokenLPValue,
+                  }}
+                />
               </Grid>
               <Grid item xs={6}>
                 <Box sx={{ ml: "1.5rem" }}>
