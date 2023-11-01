@@ -1,6 +1,6 @@
 "use client";
 import { WalletTypes } from "@whelp/types";
-import { ThemeProvider, LayoutProvider, WalletModal } from "@whelp/ui";
+import { ThemeProvider, LayoutProvider, WalletModal, palette } from "@whelp/ui";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppStore, usePersistStore } from "@whelp/state";
@@ -92,7 +92,14 @@ export default function RootLayout({
             pageTitle={
               pathname === "/"
                 ? "Overview"
-                : pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                : (
+                    pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                  ).substring(
+                    0,
+                    (
+                      pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                    ).lastIndexOf("/")
+                  )
             }
             connectWallet={() => setOpen(true)}
             disconnectWallet={() => appStore.disconnectWallet()}
@@ -100,7 +107,7 @@ export default function RootLayout({
             walletAddress={appStore.wallet.address}
             walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}
           >
-            {children}
+            <main>{children}</main>
           </LayoutProvider>
           <WalletModal
             wallets={wallets}
