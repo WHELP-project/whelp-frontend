@@ -4,4 +4,7 @@ export interface Token {
   usdValue: number;
   balance: number;
   category: string;
+  decimals: number;
+  tokenAddress?: string;
+  type?: string;
 }

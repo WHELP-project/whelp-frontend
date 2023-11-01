@@ -17,11 +17,12 @@ export default function RootLayout({
   const appStore = useAppStore();
 
   useEffect(() => {
+    appStore.init();
     if (appStorePersist.isConnected) {
       appStore.connectWallet(appStorePersist.type, "dev");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appStore.wallet.address]);
 
   const wallets = [
     {

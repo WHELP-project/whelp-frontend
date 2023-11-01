@@ -1,6 +1,14 @@
-import { StateTypes, WalletTypes } from "@whelp/types";
-import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { MainnetConfig, TestnetConfig } from "@whelp/utils";
+import { StateTypes, WalletTypes, Token } from "@whelp/types";
+import {
+  SigningCosmWasmClient,
+  CosmWasmClient,
+} from "@cosmjs/cosmwasm-stargate";
+import {
+  MainnetConfig,
+  TestnetConfig,
+  isCw20Token,
+  isSmartToken,
+} from "@whelp/utils";
 import {
   Cosmostation,
   Keplr,
@@ -11,6 +19,7 @@ import {
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
 import { useAppStore, usePersistStore } from "../store";
+import { Cw20QueryClient, WhelpPoolTypes } from "@whelp/contracts";
 
 // Helper function to find chain and asset based on the chain name
 const findChainAsset = (chainName: string) => {
@@ -75,6 +84,18 @@ export const createWalletActions = (
       type: WalletTypes.WalletTypes.Leap,
     },
     cosmWasmSigningClient: undefined,
+    cosmWasmQueryClient: undefined,
+    tokens: [],
+
+    init: async () => {
+      const cosmWasmClient = await CosmWasmClient.connect(
+        TestnetConfig.rpc_endpoint
+      );
+      useAppStore.setState((state: StateTypes.AppStore) => ({
+        ...state,
+        cosmWasmQueryClient: cosmWasmClient,
+      }));
+    },
 
     // Function to connect wallet
     connectWallet: async (
@@ -162,6 +183,94 @@ export const createWalletActions = (
         ...state,
         isConnected: false,
       }));
+    },
+
+    // Fetch token
+    fetchTokenBalance: async (asset: WhelpPoolTypes.AssetInfo) => {
+      const cosmWasmClient = await CosmWasmClient.connect(
+        TestnetConfig.rpc_endpoint
+      );
+      let balance: number;
+      let denom: string;
+      let decimals: number;
+
+      if (isCw20Token(asset)) {
+        const cw20Client = new Cw20QueryClient(
+          cosmWasmClient,
+          asset.cw20_token
+        );
+        balance = Number(
+          (
+            await cw20Client.balance({
+              address: getState().wallet.address,
+            })
+          ).balance
+        );
+
+        const tokenInfo = await cw20Client.tokenInfo();
+
+        decimals = tokenInfo.decimals;
+        denom = tokenInfo.symbol;
+      } else {
+        const query = await cosmWasmClient.getBalance(
+          getState().wallet.address,
+          asset.smart_token
+        );
+        decimals = 6; // !TODO!
+        balance = Number(query.amount);
+        denom = query.denom;
+      }
+
+      // Update token balance
+      useAppStore.setState((state: StateTypes.AppStore) => {
+        const updatedTokens: Token[] = state.tokens.map((token: Token) =>
+          token.tokenAddress ===
+          (isCw20Token(asset) ? asset.cw20_token : asset.smart_token)
+            ? { ...token, balance, decimals }
+            : token
+        );
+        // If token couldnt be found, add it
+        if (
+          !updatedTokens.find(
+            (token: Token) =>
+              token.tokenAddress ===
+              (isCw20Token(asset) ? asset.cw20_token : asset.smart_token)
+          )
+        ) {
+          updatedTokens.push({
+            name: denom,
+            icon: "",
+            usdValue: 0,
+            balance: balance,
+            category: "",
+            tokenAddress: isCw20Token(asset)
+              ? asset.cw20_token
+              : asset.smart_token,
+            type: isCw20Token(asset) ? "cw20" : "smart",
+          });
+        }
+        return { tokens: updatedTokens };
+      });
+
+      return {
+        name: denom,
+        icon: "",
+        usdValue: 0,
+        balance: balance,
+        category: "",
+        tokenAddress: isCw20Token(asset) ? asset.cw20_token : asset.smart_token,
+        type: isCw20Token(asset) ? "cw20" : "smart",
+      };
+    },
+
+    // Fetch multiple tokens
+    fetchTokenBalances: async (assets: WhelpPoolTypes.AssetInfo[]) => {
+      const tokens = await Promise.all(
+        assets.map(
+          async (asset) => await useAppStore().fetchTokenBalance(asset)
+        )
+      );
+      return tokens;
     },
   };
 };

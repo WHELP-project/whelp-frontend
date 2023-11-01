@@ -1,5 +1,11 @@
 "use client";
 import { Box, Avatar, Typography, Grid } from "@mui/material";
+import {
+  WhelpPoolClient,
+  WhelpPoolQueryClient,
+  WhelpPoolTypes,
+} from "@whelp/contracts";
+import { useAppStore } from "@whelp/state";
 import { Token } from "@whelp/types";
 import {
   Button,
@@ -10,52 +16,110 @@ import {
   StakingTable,
 } from "@whelp/ui";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
 
+const typeSx = {
+  color: palette.textLoud,
+  fontSize: "2rem",
+  fontStyle: "normal",
+  fontWeight: 500,
+  lineHeight: "2.5rem",
+};
+
 export default function SwapPage() {
+  const poolAddress = ""; // !TODO: Mocked pool address
   const router = useRouter();
+  const appStore = useAppStore();
+  const poolQueryClient = new WhelpPoolQueryClient(
+    appStore.cosmWasmQueryClient!,
+    poolAddress
+  );
 
-  const typeSx = {
-    color: palette.textLoud,
-    fontSize: "2rem",
-    fontStyle: "normal",
-    fontWeight: 500,
-    lineHeight: "2.5rem",
+  // Tokens
+  const [tokenA, setTokenA] = useState<Token>({} as Token);
+  const [tokenB, setTokenB] = useState<Token>({} as Token);
+  const [tokenLP, setTokenLP] = useState<Token>({} as Token);
+
+  const [tokenAInfo, setTokenAInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+  const [tokenBInfo, setTokenBInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+
+  // Load initial data
+  const init = async () => {
+    const pairInfo = await poolQueryClient.pair();
+    const asset_a = pairInfo.asset_infos[0];
+    const asset_b = pairInfo.asset_infos[1];
+    const asset_lp = { smart_token: pairInfo.liquidity_token };
+
+    const asset_a_info = await appStore.fetchTokenBalance(asset_a);
+    const asset_b_info = await appStore.fetchTokenBalance(asset_b);
+    const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
+
+    setTokenA(asset_a_info);
+    setTokenB(asset_b_info);
+    setTokenLP(asset_lp_info);
   };
 
-  const mockToken: Token = {
-    name: "USDC",
-    icon: "/cryptoIcons/usdt.svg",
-    balance: 100,
-    category: "Stable",
-    usdValue: 1 * 100,
+  const getPoolSigningClient = (): WhelpPoolClient => {
+    const cosmWasmSigningClient = appStore.cosmWasmSigningClient!;
+    return new WhelpPoolClient(
+      cosmWasmSigningClient,
+      appStore.wallet.address,
+      poolAddress
+    );
   };
+
+  // Provide liquidity
+  const provideLiquidity = async () => {
+    const amounts: WhelpPoolTypes.Asset[] = [
+      { amount: "1000000", info: tokenAInfo },
+      { amount: "100000", info: tokenBInfo },
+    ];
+
+    const poolClient = getPoolSigningClient();
+    await poolClient.provideLiquidity({ assets: amounts });
+  };
+
+  // Remove Liquidity
+  const removeLiquidity = async () => {
+    const poolClient = getPoolSigningClient();
+    await poolClient.removeLiquidity({ share: "1000000" });
+  };
+
+  useEffect(() => {
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const provideLiquidityProps = {
     addLiquidityProps: [
       {
-        token: mockToken,
+        token: tokenA,
         onChange: () => {},
         value: "0.00",
       },
       {
-        token: mockToken,
+        token: tokenB,
         onChange: () => {},
         value: "0.00",
       },
     ],
     removeLiquidityProps: {
-      token: mockToken,
+      token: tokenLP,
       onChange: () => {},
       value: "0.00",
     },
-    addLiquidityClick: () => {},
+    addLiquidityClick: () => provideLiquidity,
     removeLiquidityClick: () => {},
   };
 
   const stakeProps = {
     tokenBoxProps: {
-      token: mockToken,
+      token: tokenLP,
       onChange: () => {},
       value: "0.00",
       isStakeToken: true,
