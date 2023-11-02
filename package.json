@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/WHELP-project/whelp-frontend",
   "workspaces": [
+    "packages/types",
     "packages/utils",
     "packages/contracts",
+    "packages/wallets",
     "packages/state",
-    "packages/contracts",
     "packages/ui",
     "packages/*"
   ],
