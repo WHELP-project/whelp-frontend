@@ -49,6 +49,12 @@ export default function SwapPage({
   const [tokenBInfo, setTokenBInfo] = useState<WhelpPoolTypes.AssetInfo>(
     {} as WhelpPoolTypes.AssetInfo
   );
+  const [tokenLPInfo, setTokenLPInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+
+  // Loading states
+  const [loadBalances, setLoadBalances] = useState<boolean>(false);
 
   // Token Values
   const [tokenAValue, setTokenAValue] = useState<string>("");
@@ -62,33 +68,34 @@ export default function SwapPage({
 
   // Load initial data
   const init = async () => {
-    if (appStore.wallet.address) {
-      const cosmWasmClient = await CosmWasmClient.connect(
-        TestnetConfig.rpc_endpoint
-      );
-      const _poolQueryClient = new WhelpPoolQueryClient(
-        cosmWasmClient,
-        poolAddress
-      );
-      setPoolQueryClient(_poolQueryClient);
-      if (!_poolQueryClient) return;
-      const pairInfo = await _poolQueryClient.pair();
+    setLoadBalances(true);
+    const cosmWasmClient = await CosmWasmClient.connect(
+      TestnetConfig.rpc_endpoint
+    );
+    const _poolQueryClient = new WhelpPoolQueryClient(
+      cosmWasmClient,
+      poolAddress
+    );
+    setPoolQueryClient(_poolQueryClient);
+    if (!_poolQueryClient) return;
+    const pairInfo = await _poolQueryClient.pair();
 
-      const asset_a = pairInfo.asset_infos[0];
-      const asset_b = pairInfo.asset_infos[1];
-      const asset_lp = { smart_token: pairInfo.liquidity_token };
+    const asset_a = pairInfo.asset_infos[0];
+    const asset_b = pairInfo.asset_infos[1];
+    const asset_lp = { smart_token: pairInfo.liquidity_token };
 
-      const asset_a_info = await appStore.fetchTokenBalance(asset_a);
-      const asset_b_info = await appStore.fetchTokenBalance(asset_b);
-      // const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
+    const asset_a_info = await appStore.fetchTokenBalance(asset_a);
+    const asset_b_info = await appStore.fetchTokenBalance(asset_b);
+    const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
 
-      setTokenA(asset_a_info);
-      setTokenB(asset_b_info);
-      //setTokenLP(asset_lp_info);
+    setTokenA(asset_a_info);
+    setTokenB(asset_b_info);
+    setTokenLP(asset_lp_info);
 
-      setTokenAInfo(asset_a);
-      setTokenBInfo(asset_b);
-    }
+    setTokenAInfo(asset_a);
+    setTokenBInfo(asset_b);
+    setTokenLPInfo(asset_lp);
+    setLoadBalances(false);
   };
 
   const getPoolSigningClient = (): WhelpPoolClient => {
@@ -112,6 +119,7 @@ export default function SwapPage({
 
     const poolClient = getPoolSigningClient();
     await poolClient.provideLiquidity({ assets: amounts });
+    appStore.fetchTokenBalance(tokenLPInfo);
   };
 
   // Remove Liquidity
@@ -150,7 +158,7 @@ export default function SwapPage({
     },
     {
       title: "Lp Tokens",
-      content: <Typography sx={typeSx}>-</Typography>,
+      content: <Typography sx={typeSx}>{tokenLP.balance}</Typography>,
     },
     {
       title: "TVL",
@@ -213,7 +221,7 @@ export default function SwapPage({
                   ml: "1rem",
                 }}
               >
-                USDT / USDC
+                {tokenA.name}/{tokenB.name}
               </Typography>
             </Box>
 
@@ -265,6 +273,7 @@ export default function SwapPage({
                         setTokenAValue(e);
                       },
                       value: tokenAValue,
+                      loading: loadBalances,
                     },
                     {
                       token: tokenB,
@@ -272,6 +281,7 @@ export default function SwapPage({
                         setTokenBValue(e);
                       },
                       value: tokenBValue,
+                      loading: loadBalances,
                     },
                   ]}
                   removeLiquidityProps={{
