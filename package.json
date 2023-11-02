@@ -23,6 +23,7 @@
     "packages/wallets",
     "packages/state",
     "packages/ui",
+    "packages/core",
     "packages/*"
   ],
   "devDependencies": {
