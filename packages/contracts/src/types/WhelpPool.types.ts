@@ -16,7 +16,6 @@ export type Uint128 = string;
 export interface InstantiateMsg {
   asset_infos: AssetInfo[];
   circuit_breaker?: string | null;
-  factory_addr: string;
   fee_config: FeeConfig;
   init_params?: Binary | null;
   staking_config: StakeConfig;
@@ -44,6 +43,9 @@ export type ExecuteMsg =
         receiver?: string | null;
         slippage_tolerance?: Decimal | null;
       };
+    }
+  | {
+      withdraw_liquidity: {};
     }
   | {
       swap: {
@@ -161,7 +163,7 @@ export interface ConfigResponse {
 }
 export type AssetInfoValidated =
   | {
-      cw20_token: string;
+      cw20_token: Addr;
     }
   | {
       smart_token: string;
@@ -189,7 +191,7 @@ export interface PairInfo {
   asset_infos: AssetInfoValidated[];
   contract_addr: Addr;
   fee_config: FeeConfig;
-  liquidity_token: Addr;
+  liquidity_token: string;
   pool_type: PoolType;
   staking_addr: Addr;
 }

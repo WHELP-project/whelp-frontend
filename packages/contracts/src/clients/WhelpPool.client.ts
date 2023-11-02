@@ -8,6 +8,7 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
   ExecuteResult,
+  DeliverTxResponse,
 } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
 import {
@@ -280,6 +281,11 @@ export interface WhelpPoolInterface extends WhelpPoolReadOnlyInterface {
     memo?: string,
     _funds?: Coin[]
   ) => Promise<ExecuteResult>;
+  withdrawLiquidity: (
+    _funds: Coin[],
+    fee?: number | StdFee | "auto",
+    memo?: string
+  ) => Promise<DeliverTxResponse>;
   swap: (
     {
       askAssetInfo,
@@ -374,6 +380,7 @@ export class WhelpPoolClient
     this.contractAddress = contractAddress;
     this.receive = this.receive.bind(this);
     this.provideLiquidity = this.provideLiquidity.bind(this);
+    this.withdrawLiquidity = this.withdrawLiquidity.bind(this);
     this.swap = this.swap.bind(this);
     this.updateConfig = this.updateConfig.bind(this);
     this.updateFees = this.updateFees.bind(this);
@@ -438,18 +445,19 @@ export class WhelpPoolClient
       },
       fee,
       memo,
-      [
-        {
-          // @ts-ignore
-          denom: assets[0].info.smart_token,
-          amount: assets[0].amount,
-        },
-        {
-          // @ts-ignore
-          denom: assets[1].info.smart_token,
-          amount: assets[1].amount,
-        },
-      ]
+      _funds
+    );
+  };
+  withdrawLiquidity = async (
+    _funds: Coin[],
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string
+  ): Promise<DeliverTxResponse> => {
+    return await this.client.sendTokens(
+      this.sender,
+      this.contractAddress,
+      _funds,
+      "auto"
     );
   };
   swap = async (

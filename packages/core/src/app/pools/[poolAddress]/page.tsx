@@ -128,7 +128,24 @@ export default function SwapPage({
       ];
 
       const poolClient = getPoolSigningClient();
-      await poolClient.provideLiquidity({ assets: amounts });
+      await poolClient.provideLiquidity(
+        { assets: amounts },
+        "auto",
+        undefined,
+        [
+          {
+            // @ts-ignore
+            denom: amounts[0].info.smart_token,
+            amount: amounts[0].amount,
+          },
+          {
+            // @ts-ignore
+            denom: amounts[1].info.smart_token,
+            amount: amounts[1].amount,
+          },
+        ]
+      );
+
       appStore.fetchTokenBalance(tokenLPInfo);
 
       // Set Status
@@ -144,13 +161,36 @@ export default function SwapPage({
       setStatusModalType("error");
       setStatusModalTxType("addLiquidity");
       setStatusModalTokens([]);
+      console.log(e);
     }
   };
 
   // Remove Liquidity
   const removeLiquidity = async () => {
-    const poolClient = getPoolSigningClient();
-    // await poolClient.removeLiquidity({ share: "1000000" });
+    try {
+      const amounts: WhelpPoolTypes.Asset[] = [
+        { amount: tokenLPValue, info: tokenLPInfo },
+      ];
+      const poolClient = getPoolSigningClient();
+      await poolClient.withdrawLiquidity([
+        {
+          // @ts-ignore
+          denom: amounts[0].info.smart_token,
+          amount: amounts[0].amount,
+        },
+      ]);
+      // Set Status
+      setStatusModalType("success");
+      setStatusModalTxType("withdrawLiquidity");
+      setStatusModalTokens([{ ...tokenLP, balance: Number(tokenLPValue) }]);
+      setStatusModalOpen(true);
+    } catch (e) {
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("withdrawLiquidity");
+      setStatusModalTokens([]);
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -160,7 +200,7 @@ export default function SwapPage({
 
   const provideLiquidityProps = {
     addLiquidityClick: () => provideLiquidity(),
-    removeLiquidityClick: () => removeLiquidity,
+    removeLiquidityClick: () => removeLiquidity(),
   };
 
   const stakeProps = {
