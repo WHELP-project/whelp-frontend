@@ -6,7 +6,7 @@ import {
   WhelpPoolTypes,
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
-import { Token } from "@whelp/types";
+import { Token, UiTypes } from "@whelp/types";
 import {
   Button,
   Card,
@@ -14,6 +14,7 @@ import {
   PoolLiquidityForm,
   PoolStakeForm,
   StakingTable,
+  StatusModal,
 } from "@whelp/ui";
 import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
@@ -55,6 +56,14 @@ export default function SwapPage({
 
   // Loading states
   const [loadBalances, setLoadBalances] = useState<boolean>(false);
+
+  // Status Modal states
+  const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false);
+  const [statusModalType, setStatusModalType] =
+    useState<UiTypes.Status>("success");
+  const [statusModalTxType, setStatusModalTxType] =
+    useState<UiTypes.TxType>("addLiquidity");
+  const [statusModalTokens, setStatusModalTokens] = useState<Token[]>([]);
 
   // Token Values
   const [tokenAValue, setTokenAValue] = useState<string>("");
@@ -109,17 +118,33 @@ export default function SwapPage({
 
   // Provide liquidity
   const provideLiquidity = async () => {
-    const amounts: WhelpPoolTypes.Asset[] = [
-      { amount: tokenAValue, info: tokenAInfo },
-      {
-        amount: tokenBValue,
-        info: tokenBInfo,
-      },
-    ];
+    try {
+      const amounts: WhelpPoolTypes.Asset[] = [
+        { amount: tokenAValue, info: tokenAInfo },
+        {
+          amount: tokenBValue,
+          info: tokenBInfo,
+        },
+      ];
 
-    const poolClient = getPoolSigningClient();
-    await poolClient.provideLiquidity({ assets: amounts });
-    appStore.fetchTokenBalance(tokenLPInfo);
+      const poolClient = getPoolSigningClient();
+      await poolClient.provideLiquidity({ assets: amounts });
+      appStore.fetchTokenBalance(tokenLPInfo);
+
+      // Set Status
+      setStatusModalType("success");
+      setStatusModalTxType("addLiquidity");
+      setStatusModalTokens([
+        { ...tokenA, balance: Number(tokenAValue) },
+        { ...tokenB, balance: Number(tokenBValue) },
+      ]);
+      setStatusModalOpen(true);
+    } catch (e) {
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("addLiquidity");
+      setStatusModalTokens([]);
+    }
   };
 
   // Remove Liquidity
@@ -350,6 +375,15 @@ export default function SwapPage({
           </Box>
         </Box>
       </Box>
+      <StatusModal
+        open={statusModalOpen}
+        onClose={() => {
+          setStatusModalOpen(false);
+        }}
+        status={statusModalType}
+        txType={statusModalTxType}
+        tokens={statusModalTokens}
+      />
     </>
   );
 }
