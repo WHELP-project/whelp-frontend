@@ -43,6 +43,7 @@ export default function SwapPage({
   const [tokenA, setTokenA] = useState<Token>({} as Token);
   const [tokenB, setTokenB] = useState<Token>({} as Token);
   const [tokenLP, setTokenLP] = useState<Token>({} as Token);
+  const [assetRatio, setAssetRatio] = useState<number>(0);
 
   const [tokenAInfo, setTokenAInfo] = useState<WhelpPoolTypes.AssetInfo>(
     {} as WhelpPoolTypes.AssetInfo
@@ -88,6 +89,12 @@ export default function SwapPage({
     setPoolQueryClient(_poolQueryClient);
     if (!_poolQueryClient) return;
     const pairInfo = await _poolQueryClient.pair();
+    const poolInfo = await _poolQueryClient.pool();
+
+    const ratio =
+      Number(poolInfo.assets[0].amount) / Number(poolInfo.assets[1].amount);
+
+    setAssetRatio(ratio);
 
     const asset_a = pairInfo.asset_infos[0];
     const asset_b = pairInfo.asset_infos[1];
@@ -336,6 +343,7 @@ export default function SwapPage({
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
+                        setTokenBValue((Number(e) * assetRatio).toString());
                       },
                       value: tokenAValue,
                       loading: loadBalances,
@@ -344,6 +352,7 @@ export default function SwapPage({
                       token: tokenB,
                       onChange: (e) => {
                         setTokenBValue(e);
+                        setTokenAValue((Number(e) * assetRatio).toString());
                       },
                       value: tokenBValue,
                       loading: loadBalances,

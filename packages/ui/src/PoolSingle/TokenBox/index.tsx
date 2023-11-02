@@ -11,8 +11,6 @@ const TokenBox = ({
   disabled = false,
   isStakeToken = false,
 }: UiTypes.TokenBoxProps) => {
-  const [tokenAmount, setTokenAmount] = React.useState(Number(value) || 0.0);
-
   const [usdPrice, setUsdPrice] = React.useState(
     Number(value) * Number(token.usdValue) || 0
   );
@@ -82,7 +80,6 @@ const TokenBox = ({
             <Button
               onClick={() => {
                 onChange(token.balance.toString());
-                setTokenAmount(token.balance);
                 setUsdPrice(token.balance * token.usdValue);
               }}
               sx={{
@@ -119,10 +116,9 @@ const TokenBox = ({
           ) : (
             <Input
               disabled={disabled}
-              value={tokenAmount}
+              value={value}
               onChange={(e) => {
                 onChange(e.target.value);
-                setTokenAmount(Number(e.target.value));
                 setUsdPrice(Number(e.target.value) * Number(token.usdValue));
               }}
               inputProps={{
