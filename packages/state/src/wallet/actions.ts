@@ -28,6 +28,14 @@ const findChainAsset = (chainName: string) => {
   return { chain, assetList };
 };
 
+const beautifyName = (name: string): string => {
+  let match = name.match(/[a-zA-Z]*[a-zA-Z]{2}/);
+  return match
+    ? match[0].replace(/^u/, "").charAt(0).toUpperCase() +
+        match[0].replace(/^u/, "").slice(1)
+    : "";
+};
+
 // Function to add a new chain to the wallet client
 const addChain = async (WalletClient: WalletTypes.Wallet) => {
   const { chain, assetList } = findChainAsset("coreumtestnet");
@@ -189,29 +197,39 @@ export const createWalletActions = (
           cosmWasmClient,
           asset.cw20_token
         );
-        balance = Number(
-          (
-            await cw20Client.balance({
-              address: getState().wallet.address,
-            })
-          ).balance
-        );
-
+        if (getState().wallet.address === "" || getState().wallet.address === undefined) {
+          balance = 0;
+        } else {
+          balance = Number(
+            (
+              await cw20Client.balance({
+                address: getState().wallet.address,
+              })
+            ).balance
+          );
+        }
         const tokenInfo = await cw20Client.tokenInfo();
 
         decimals = tokenInfo.decimals;
         denom = tokenInfo.symbol;
       } else {
-        const query = await cosmWasmClient.getBalance(
-          getState().wallet.address,
-          asset.smart_token
-        );
+        if (getState().wallet.address === "" || getState().wallet.address === undefined) {
+          balance = 0;
+        } else {
+          console.log(getState().wallet.address);
+          const query = await cosmWasmClient.getBalance(
+            getState().wallet.address,
+            asset.smart_token
+          );
+          balance = Number(query.amount);
+        }
 
         decimals = 6; // !TODO!
-        balance = Number(query.amount);
-        denom = query.denom;
+
+        denom = asset.smart_token;
       }
 
+      const prettyName = beautifyName(denom);
       // Update token balance
       useAppStore.setState((state: StateTypes.AppStore) => {
         const updatedTokens: Token[] = state.tokens.map((token: Token) =>
@@ -229,7 +247,7 @@ export const createWalletActions = (
           )
         ) {
           updatedTokens.push({
-            name: denom,
+            name: prettyName,
             icon: "",
             usdValue: 0,
             balance: balance,
@@ -245,7 +263,7 @@ export const createWalletActions = (
       });
 
       return {
-        name: denom,
+        name: prettyName,
         icon: "",
         usdValue: 0,
         balance: balance,

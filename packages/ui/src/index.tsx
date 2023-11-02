@@ -12,3 +12,4 @@ export * from "./AppBar";
 export * from "./ConnectWalletButton";
 export * from "./LayoutProvider";
 export * from "./PoolSingle";
+export * from "./StatusModal";

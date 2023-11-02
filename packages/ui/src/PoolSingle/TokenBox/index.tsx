@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Input, Typography } from "@mui/material";
+import { Box, Button, Grid, Input, Skeleton, Typography } from "@mui/material";
 import React from "react";
 import theme from "../../Theme";
 import { UiTypes } from "@whelp/types";
@@ -7,6 +7,7 @@ const TokenBox = ({
   token,
   onChange,
   value,
+  loading,
   disabled = false,
   isStakeToken = false,
 }: UiTypes.TokenBoxProps) => {
@@ -58,7 +59,11 @@ const TokenBox = ({
                 fontWeight: "600",
               }}
             >
-              {token.name}
+              {loading ? (
+                <Skeleton variant="rounded" width={100} />
+              ) : (
+                token.name
+              )}
             </Typography>
             <Typography
               sx={{
@@ -66,7 +71,11 @@ const TokenBox = ({
                 fontSize: "14px",
               }}
             >
-              Available {token.balance}
+              {loading ? (
+                <Skeleton variant="rounded" width={100} />
+              ) : (
+                "Available " + token.balance
+              )}
             </Typography>
           </Box>
           {!isStakeToken && (
@@ -105,54 +114,58 @@ const TokenBox = ({
             flexDirection: "column",
           }}
         >
-          <Input
-            disabled={disabled}
-            value={tokenAmount}
-            onChange={(e) => {
-              onChange(e.target.value);
-              setTokenAmount(Number(e.target.value));
-              setUsdPrice(Number(e.target.value) * Number(token.usdValue));
-            }}
-            inputProps={{
-              min: 0,
-              max: token.balance,
-              style: {
-                textAlign: "right",
-                padding: 0,
-              },
-            }}
-            type="number"
-            placeholder="0.00"
-            sx={{
-              width: "100%",
-              color: "#FFF",
-              fontSize: "20px",
-              fontWeight: 500,
-              lineHeight: "120%",
-              "&:before": {
-                content: "none",
-              },
-              "&:after": {
-                content: "none",
-              },
-              "&:focus-within fieldset, &:focus-visible fieldset": {
-                color: "white!important",
-              },
-              "& input[type=number]": {
-                "-moz-appearance": "textfield",
-              },
-              "& input[type=number]::-webkit-outer-spin-button": {
-                "-webkit-appearance": "none",
-                margin: 0,
-              },
-              "& input[type=number]::-webkit-inner-spin-button": {
-                "-webkit-appearance": "none",
-                margin: 0,
-              },
-              overflowX: "auto", // Enable horizontal scrolling
-              whiteSpace: "nowrap",
-            }}
-          />
+          {loading ? (
+            <Skeleton variant="rounded" width={100} height={70} />
+          ) : (
+            <Input
+              disabled={disabled}
+              value={tokenAmount}
+              onChange={(e) => {
+                onChange(e.target.value);
+                setTokenAmount(Number(e.target.value));
+                setUsdPrice(Number(e.target.value) * Number(token.usdValue));
+              }}
+              inputProps={{
+                min: 0,
+                max: token.balance,
+                style: {
+                  textAlign: "right",
+                  padding: 0,
+                },
+              }}
+              type="number"
+              placeholder="0.00"
+              sx={{
+                width: "100%",
+                color: "#FFF",
+                fontSize: "20px",
+                fontWeight: 500,
+                lineHeight: "120%",
+                "&:before": {
+                  content: "none",
+                },
+                "&:after": {
+                  content: "none",
+                },
+                "&:focus-within fieldset, &:focus-visible fieldset": {
+                  color: "white!important",
+                },
+                "& input[type=number]": {
+                  "-moz-appearance": "textfield",
+                },
+                "& input[type=number]::-webkit-outer-spin-button": {
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+                "& input[type=number]::-webkit-inner-spin-button": {
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+                overflowX: "auto", // Enable horizontal scrolling
+                whiteSpace: "nowrap",
+              }}
+            />
+          )}
           {!isStakeToken && (
             <Typography
               sx={{
@@ -162,7 +175,11 @@ const TokenBox = ({
                 lineHeight: "120%",
               }}
             >
-              ${usdPrice}
+              {loading ? (
+                <Skeleton variant="text" width={60} />
+              ) : (
+                "$" + usdPrice
+              )}
             </Typography>
           )}
         </Grid>

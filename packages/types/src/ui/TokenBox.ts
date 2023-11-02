@@ -6,4 +6,5 @@ export interface TokenBoxProps {
   value: string | undefined;
   disabled?: boolean;
   isStakeToken?: boolean;
+  loading?: boolean;
 }

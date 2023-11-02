@@ -6,7 +6,7 @@ import {
   WhelpPoolTypes,
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
-import { Token } from "@whelp/types";
+import { Token, UiTypes } from "@whelp/types";
 import {
   Button,
   Card,
@@ -14,6 +14,7 @@ import {
   PoolLiquidityForm,
   PoolStakeForm,
   StakingTable,
+  StatusModal,
 } from "@whelp/ui";
 import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
@@ -49,6 +50,20 @@ export default function SwapPage({
   const [tokenBInfo, setTokenBInfo] = useState<WhelpPoolTypes.AssetInfo>(
     {} as WhelpPoolTypes.AssetInfo
   );
+  const [tokenLPInfo, setTokenLPInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+
+  // Loading states
+  const [loadBalances, setLoadBalances] = useState<boolean>(false);
+
+  // Status Modal states
+  const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false);
+  const [statusModalType, setStatusModalType] =
+    useState<UiTypes.Status>("success");
+  const [statusModalTxType, setStatusModalTxType] =
+    useState<UiTypes.TxType>("addLiquidity");
+  const [statusModalTokens, setStatusModalTokens] = useState<Token[]>([]);
 
   // Token Values
   const [tokenAValue, setTokenAValue] = useState<string>("");
@@ -62,33 +77,34 @@ export default function SwapPage({
 
   // Load initial data
   const init = async () => {
-    if (appStore.wallet.address) {
-      const cosmWasmClient = await CosmWasmClient.connect(
-        TestnetConfig.rpc_endpoint
-      );
-      const _poolQueryClient = new WhelpPoolQueryClient(
-        cosmWasmClient,
-        poolAddress
-      );
-      setPoolQueryClient(_poolQueryClient);
-      if (!_poolQueryClient) return;
-      const pairInfo = await _poolQueryClient.pair();
+    setLoadBalances(true);
+    const cosmWasmClient = await CosmWasmClient.connect(
+      TestnetConfig.rpc_endpoint
+    );
+    const _poolQueryClient = new WhelpPoolQueryClient(
+      cosmWasmClient,
+      poolAddress
+    );
+    setPoolQueryClient(_poolQueryClient);
+    if (!_poolQueryClient) return;
+    const pairInfo = await _poolQueryClient.pair();
 
-      const asset_a = pairInfo.asset_infos[0];
-      const asset_b = pairInfo.asset_infos[1];
-      const asset_lp = { smart_token: pairInfo.liquidity_token };
+    const asset_a = pairInfo.asset_infos[0];
+    const asset_b = pairInfo.asset_infos[1];
+    const asset_lp = { smart_token: pairInfo.liquidity_token };
 
-      const asset_a_info = await appStore.fetchTokenBalance(asset_a);
-      const asset_b_info = await appStore.fetchTokenBalance(asset_b);
-      // const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
+    const asset_a_info = await appStore.fetchTokenBalance(asset_a);
+    const asset_b_info = await appStore.fetchTokenBalance(asset_b);
+    const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
 
-      setTokenA(asset_a_info);
-      setTokenB(asset_b_info);
-      //setTokenLP(asset_lp_info);
+    setTokenA(asset_a_info);
+    setTokenB(asset_b_info);
+    setTokenLP(asset_lp_info);
 
-      setTokenAInfo(asset_a);
-      setTokenBInfo(asset_b);
-    }
+    setTokenAInfo(asset_a);
+    setTokenBInfo(asset_b);
+    setTokenLPInfo(asset_lp);
+    setLoadBalances(false);
   };
 
   const getPoolSigningClient = (): WhelpPoolClient => {
@@ -102,16 +118,33 @@ export default function SwapPage({
 
   // Provide liquidity
   const provideLiquidity = async () => {
-    const amounts: WhelpPoolTypes.Asset[] = [
-      { amount: tokenAValue, info: tokenAInfo },
-      {
-        amount: tokenBValue,
-        info: tokenBInfo,
-      },
-    ];
+    try {
+      const amounts: WhelpPoolTypes.Asset[] = [
+        { amount: tokenAValue, info: tokenAInfo },
+        {
+          amount: tokenBValue,
+          info: tokenBInfo,
+        },
+      ];
 
-    const poolClient = getPoolSigningClient();
-    await poolClient.provideLiquidity({ assets: amounts });
+      const poolClient = getPoolSigningClient();
+      await poolClient.provideLiquidity({ assets: amounts });
+      appStore.fetchTokenBalance(tokenLPInfo);
+
+      // Set Status
+      setStatusModalType("success");
+      setStatusModalTxType("addLiquidity");
+      setStatusModalTokens([
+        { ...tokenA, balance: Number(tokenAValue) },
+        { ...tokenB, balance: Number(tokenBValue) },
+      ]);
+      setStatusModalOpen(true);
+    } catch (e) {
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("addLiquidity");
+      setStatusModalTokens([]);
+    }
   };
 
   // Remove Liquidity
@@ -150,7 +183,7 @@ export default function SwapPage({
     },
     {
       title: "Lp Tokens",
-      content: <Typography sx={typeSx}>-</Typography>,
+      content: <Typography sx={typeSx}>{tokenLP.balance}</Typography>,
     },
     {
       title: "TVL",
@@ -213,7 +246,7 @@ export default function SwapPage({
                   ml: "1rem",
                 }}
               >
-                USDT / USDC
+                {tokenA.name}/{tokenB.name}
               </Typography>
             </Box>
 
@@ -265,6 +298,7 @@ export default function SwapPage({
                         setTokenAValue(e);
                       },
                       value: tokenAValue,
+                      loading: loadBalances,
                     },
                     {
                       token: tokenB,
@@ -272,6 +306,7 @@ export default function SwapPage({
                         setTokenBValue(e);
                       },
                       value: tokenBValue,
+                      loading: loadBalances,
                     },
                   ]}
                   removeLiquidityProps={{
@@ -340,6 +375,15 @@ export default function SwapPage({
           </Box>
         </Box>
       </Box>
+      <StatusModal
+        open={statusModalOpen}
+        onClose={() => {
+          setStatusModalOpen(false);
+        }}
+        status={statusModalType}
+        txType={statusModalTxType}
+        tokens={statusModalTokens}
+      />
     </>
   );
 }

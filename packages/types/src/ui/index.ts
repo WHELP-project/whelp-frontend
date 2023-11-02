@@ -5,3 +5,4 @@ export * from "./TokenBox";
 export * from "./PoolStakeForm";
 export * from "./PoolLiquidityForm";
 export * from "./StakingTable";
+export * from "./StatusModalTypes";
