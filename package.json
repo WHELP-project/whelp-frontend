@@ -3,7 +3,7 @@
   "description": "Whelp!",
   "version": "0.0.1",
   "scripts": {
-    "build": "yarn workspaces foreach run build",
+    "build": "yarn workspace @whelp/types run build && yarn workspace @whelp/utils run build && yarn workspace @whelp/wallets run build && yarn workspace @whelp/contracts run build && yarn workspace @whelp/state run build && yarn workspace @whelp/ui run build && yarn workspace @whelp/core run build",
     "storybook": "yarn workspace @whelp/ui storybook"
   },
   "repository": {
