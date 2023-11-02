@@ -438,7 +438,18 @@ export class WhelpPoolClient
       },
       fee,
       memo,
-      _funds
+      [
+        {
+          // @ts-ignore
+          denom: assets[0].info.smart_token,
+          amount: assets[0].amount,
+        },
+        {
+          // @ts-ignore
+          denom: assets[1].info.smart_token,
+          amount: assets[1].amount,
+        },
+      ]
     );
   };
   swap = async (

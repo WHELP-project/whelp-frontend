@@ -17,7 +17,6 @@ export default function RootLayout({
   const appStore = useAppStore();
 
   useEffect(() => {
-    appStore.init();
     if (appStorePersist.isConnected) {
       appStore.connectWallet(appStorePersist.type, "dev");
     }

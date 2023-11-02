@@ -67,7 +67,8 @@ const connectWalletGeneric = async (
 ) => {
   await walletClient.enable(envConfig.chain_id);
   const account = await walletClient.getAccount(envConfig.chain_id);
-  const cosmWasmClient = await walletClient.getSigningCosmWasmClient();
+  const cosmWasmClient: SigningCosmWasmClient =
+    await walletClient.getSigningCosmWasmClient();
   updateState(account, walletType, cosmWasmClient);
 };
 
@@ -84,18 +85,7 @@ export const createWalletActions = (
       type: WalletTypes.WalletTypes.Leap,
     },
     cosmWasmSigningClient: undefined,
-    cosmWasmQueryClient: undefined,
     tokens: [],
-
-    init: async () => {
-      const cosmWasmClient = await CosmWasmClient.connect(
-        TestnetConfig.rpc_endpoint
-      );
-      useAppStore.setState((state: StateTypes.AppStore) => ({
-        ...state,
-        cosmWasmQueryClient: cosmWasmClient,
-      }));
-    },
 
     // Function to connect wallet
     connectWallet: async (
@@ -216,6 +206,7 @@ export const createWalletActions = (
           getState().wallet.address,
           asset.smart_token
         );
+
         decimals = 6; // !TODO!
         balance = Number(query.amount);
         denom = query.denom;

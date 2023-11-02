@@ -15,9 +15,11 @@ import {
   PoolStakeForm,
   StakingTable,
 } from "@whelp/ui";
+import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
 const typeSx = {
   color: palette.textLoud,
@@ -27,14 +29,14 @@ const typeSx = {
   lineHeight: "2.5rem",
 };
 
-export default function SwapPage() {
-  const poolAddress = ""; // !TODO: Mocked pool address
+export default function SwapPage({
+  params,
+}: {
+  params: { poolAddress: string };
+}) {
+  const poolAddress = params.poolAddress;
   const router = useRouter();
   const appStore = useAppStore();
-  const poolQueryClient = new WhelpPoolQueryClient(
-    appStore.cosmWasmQueryClient!,
-    poolAddress
-  );
 
   // Tokens
   const [tokenA, setTokenA] = useState<Token>({} as Token);
@@ -53,23 +55,40 @@ export default function SwapPage() {
   const [tokenBValue, setTokenBValue] = useState<string>("");
   const [tokenLPValue, setTokenLPValue] = useState<string>("");
 
+  // CosmWasmClient
+  const [poolQueryClient, setPoolQueryClient] = useState<
+    WhelpPoolQueryClient | undefined
+  >(undefined);
+
   // Load initial data
   const init = async () => {
-    const pairInfo = await poolQueryClient.pair();
-    const asset_a = pairInfo.asset_infos[0];
-    const asset_b = pairInfo.asset_infos[1];
-    const asset_lp = { smart_token: pairInfo.liquidity_token };
+    if (appStore.wallet.address) {
+      const cosmWasmClient = await CosmWasmClient.connect(
+        TestnetConfig.rpc_endpoint
+      );
+      const _poolQueryClient = new WhelpPoolQueryClient(
+        cosmWasmClient,
+        poolAddress
+      );
+      setPoolQueryClient(_poolQueryClient);
+      if (!_poolQueryClient) return;
+      const pairInfo = await _poolQueryClient.pair();
 
-    const asset_a_info = await appStore.fetchTokenBalance(asset_a);
-    const asset_b_info = await appStore.fetchTokenBalance(asset_b);
-    const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
+      const asset_a = pairInfo.asset_infos[0];
+      const asset_b = pairInfo.asset_infos[1];
+      const asset_lp = { smart_token: pairInfo.liquidity_token };
 
-    setTokenA(asset_a_info);
-    setTokenB(asset_b_info);
-    setTokenLP(asset_lp_info);
+      const asset_a_info = await appStore.fetchTokenBalance(asset_a);
+      const asset_b_info = await appStore.fetchTokenBalance(asset_b);
+      // const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
 
-    setTokenAInfo(asset_a);
-    setTokenBInfo(asset_b);
+      setTokenA(asset_a_info);
+      setTokenB(asset_b_info);
+      //setTokenLP(asset_lp_info);
+
+      setTokenAInfo(asset_a);
+      setTokenBInfo(asset_b);
+    }
   };
 
   const getPoolSigningClient = (): WhelpPoolClient => {
@@ -85,7 +104,10 @@ export default function SwapPage() {
   const provideLiquidity = async () => {
     const amounts: WhelpPoolTypes.Asset[] = [
       { amount: tokenAValue, info: tokenAInfo },
-      { amount: tokenBValue, info: tokenBInfo },
+      {
+        amount: tokenBValue,
+        info: tokenBInfo,
+      },
     ];
 
     const poolClient = getPoolSigningClient();
@@ -101,10 +123,10 @@ export default function SwapPage() {
   useEffect(() => {
     init();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appStore.wallet.address]);
 
   const provideLiquidityProps = {
-    addLiquidityClick: () => provideLiquidity,
+    addLiquidityClick: () => provideLiquidity(),
     removeLiquidityClick: () => removeLiquidity,
   };
 
