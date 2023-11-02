@@ -21,7 +21,7 @@ export default function RootLayout({
       appStore.connectWallet(appStorePersist.type, "dev");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appStore.wallet.address]);
 
   const wallets = [
     {

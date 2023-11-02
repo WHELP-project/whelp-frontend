@@ -1,5 +1,11 @@
 "use client";
 import { Box, Avatar, Typography, Grid } from "@mui/material";
+import {
+  WhelpPoolClient,
+  WhelpPoolQueryClient,
+  WhelpPoolTypes,
+} from "@whelp/contracts";
+import { useAppStore } from "@whelp/state";
 import { Token } from "@whelp/types";
 import {
   Button,
@@ -9,53 +15,124 @@ import {
   PoolStakeForm,
   StakingTable,
 } from "@whelp/ui";
+import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 
-export default function SwapPage() {
+const typeSx = {
+  color: palette.textLoud,
+  fontSize: "2rem",
+  fontStyle: "normal",
+  fontWeight: 500,
+  lineHeight: "2.5rem",
+};
+
+export default function SwapPage({
+  params,
+}: {
+  params: { poolAddress: string };
+}) {
+  const poolAddress = params.poolAddress;
   const router = useRouter();
+  const appStore = useAppStore();
 
-  const typeSx = {
-    color: palette.textLoud,
-    fontSize: "2rem",
-    fontStyle: "normal",
-    fontWeight: 500,
-    lineHeight: "2.5rem",
+  // Tokens
+  const [tokenA, setTokenA] = useState<Token>({} as Token);
+  const [tokenB, setTokenB] = useState<Token>({} as Token);
+  const [tokenLP, setTokenLP] = useState<Token>({} as Token);
+
+  const [tokenAInfo, setTokenAInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+  const [tokenBInfo, setTokenBInfo] = useState<WhelpPoolTypes.AssetInfo>(
+    {} as WhelpPoolTypes.AssetInfo
+  );
+
+  // Token Values
+  const [tokenAValue, setTokenAValue] = useState<string>("");
+  const [tokenBValue, setTokenBValue] = useState<string>("");
+  const [tokenLPValue, setTokenLPValue] = useState<string>("");
+
+  // CosmWasmClient
+  const [poolQueryClient, setPoolQueryClient] = useState<
+    WhelpPoolQueryClient | undefined
+  >(undefined);
+
+  // Load initial data
+  const init = async () => {
+    if (appStore.wallet.address) {
+      const cosmWasmClient = await CosmWasmClient.connect(
+        TestnetConfig.rpc_endpoint
+      );
+      const _poolQueryClient = new WhelpPoolQueryClient(
+        cosmWasmClient,
+        poolAddress
+      );
+      setPoolQueryClient(_poolQueryClient);
+      if (!_poolQueryClient) return;
+      const pairInfo = await _poolQueryClient.pair();
+
+      const asset_a = pairInfo.asset_infos[0];
+      const asset_b = pairInfo.asset_infos[1];
+      const asset_lp = { smart_token: pairInfo.liquidity_token };
+
+      const asset_a_info = await appStore.fetchTokenBalance(asset_a);
+      const asset_b_info = await appStore.fetchTokenBalance(asset_b);
+      // const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
+
+      setTokenA(asset_a_info);
+      setTokenB(asset_b_info);
+      //setTokenLP(asset_lp_info);
+
+      setTokenAInfo(asset_a);
+      setTokenBInfo(asset_b);
+    }
   };
 
-  const mockToken: Token = {
-    name: "USDC",
-    icon: "/cryptoIcons/usdt.svg",
-    balance: 100,
-    category: "Stable",
-    usdValue: 1 * 100,
+  const getPoolSigningClient = (): WhelpPoolClient => {
+    const cosmWasmSigningClient = appStore.cosmWasmSigningClient!;
+    return new WhelpPoolClient(
+      cosmWasmSigningClient,
+      appStore.wallet.address,
+      poolAddress
+    );
   };
+
+  // Provide liquidity
+  const provideLiquidity = async () => {
+    const amounts: WhelpPoolTypes.Asset[] = [
+      { amount: tokenAValue, info: tokenAInfo },
+      {
+        amount: tokenBValue,
+        info: tokenBInfo,
+      },
+    ];
+
+    const poolClient = getPoolSigningClient();
+    await poolClient.provideLiquidity({ assets: amounts });
+  };
+
+  // Remove Liquidity
+  const removeLiquidity = async () => {
+    const poolClient = getPoolSigningClient();
+    // await poolClient.removeLiquidity({ share: "1000000" });
+  };
+
+  useEffect(() => {
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appStore.wallet.address]);
 
   const provideLiquidityProps = {
-    addLiquidityProps: [
-      {
-        token: mockToken,
-        onChange: () => {},
-        value: "0.00",
-      },
-      {
-        token: mockToken,
-        onChange: () => {},
-        value: "0.00",
-      },
-    ],
-    removeLiquidityProps: {
-      token: mockToken,
-      onChange: () => {},
-      value: "0.00",
-    },
-    addLiquidityClick: () => {},
-    removeLiquidityClick: () => {},
+    addLiquidityClick: () => provideLiquidity(),
+    removeLiquidityClick: () => removeLiquidity,
   };
 
   const stakeProps = {
     tokenBoxProps: {
-      token: mockToken,
+      token: tokenLP,
       onChange: () => {},
       value: "0.00",
       isStakeToken: true,
@@ -69,19 +146,19 @@ export default function SwapPage() {
   const infoCardDetails = [
     {
       title: "My Share",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "Lp Tokens",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "TVL",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
     {
       title: "Swap Fee",
-      content: <Typography sx={typeSx}>$560</Typography>,
+      content: <Typography sx={typeSx}>-</Typography>,
     },
   ];
   return (
@@ -179,7 +256,32 @@ export default function SwapPage() {
                     Provide Liquidity
                   </Typography>
                 </Box>
-                <PoolLiquidityForm {...provideLiquidityProps} />
+                <PoolLiquidityForm
+                  {...provideLiquidityProps}
+                  addLiquidityProps={[
+                    {
+                      token: tokenA,
+                      onChange: (e) => {
+                        setTokenAValue(e);
+                      },
+                      value: tokenAValue,
+                    },
+                    {
+                      token: tokenB,
+                      onChange: (e) => {
+                        setTokenBValue(e);
+                      },
+                      value: tokenBValue,
+                    },
+                  ]}
+                  removeLiquidityProps={{
+                    token: tokenLP,
+                    onChange: (e) => {
+                      setTokenLPValue(e);
+                    },
+                    value: tokenLPValue,
+                  }}
+                />
               </Grid>
               <Grid item xs={6}>
                 <Box sx={{ ml: "1.5rem" }}>
