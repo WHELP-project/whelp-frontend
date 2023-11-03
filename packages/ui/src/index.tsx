@@ -6,6 +6,7 @@ const palette = theme.palette as { [key: string]: any };
 export { palette };
 export * from "./Button";
 export * from "./Card";
+export * from "./Modal";
 export * from "./WalletModal";
 export * from "./Navigation";
 export * from "./AppBar";
