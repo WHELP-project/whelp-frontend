@@ -6,4 +6,5 @@ export interface PoolStakeProps {
   stakeClick: () => void;
   claimClick: () => void;
   changeStakePercentage: (percentage: number) => void;
+  disabled: boolean;
 }

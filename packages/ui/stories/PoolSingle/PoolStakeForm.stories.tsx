@@ -32,3 +32,15 @@ export const Primary: Story = {
     },
   },
 };
+
+export const Secondary: Story = {
+  args: {
+    tokenBoxProps: {
+      token: token,
+      onChange: () => {},
+      value: "0.00",
+      isStakeToken: true,
+      disabled: true,
+    },
+  },
+};
