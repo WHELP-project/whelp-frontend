@@ -2,7 +2,7 @@
 
 import React from "react";
 import theme from "../Theme";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { UiTypes } from "@whelp/types";
 
 const NavLink = ({ ...props }: UiTypes.Menu) => (
@@ -58,8 +58,11 @@ const NavLink = ({ ...props }: UiTypes.Menu) => (
   </Box>
 );
 const Navigation = ({ ...props }: UiTypes.NavigationProps) => {
+  const theme = useTheme();
+  const largerThenMd = useMediaQuery(theme.breakpoints.up("md"));
+
   const styles = {
-    display: "flex",
+    display: !largerThenMd ? "none" : "flex",
     width: "6rem",
     padding: "0.5rem 0.75rem",
     flexDirection: "column",

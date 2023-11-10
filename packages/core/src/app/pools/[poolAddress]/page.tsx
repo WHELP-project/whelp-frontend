@@ -244,7 +244,7 @@ export default function SwapPage({
   return (
     <>
       {/* Main Container */}
-      <Box sx={{ p: "2rem 4rem" }}>
+      <Box sx={{ md: { p: "2rem 4rem" } }}>
         {/* Page Title */}
         <Box sx={{ background: palette.bgPrimary }}>
           <Box
@@ -285,12 +285,22 @@ export default function SwapPage({
               </Box>
               <Typography
                 sx={{
-                  fontSize: "1.5rem",
-                  fontStyle: "normal",
-                  fontWeight: 600,
-                  lineHeight: "2rem",
-                  color: palette.textLoud,
-                  ml: "1rem",
+                  md: {
+                    fontSize: "1.5rem",
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "2rem",
+                    color: palette.textLoud,
+                    ml: "1rem",
+                  },
+                  xs: {
+                    fontSize: "1rem",
+                    fontStyle: "normal",
+                    fontWeight: 600,
+                    lineHeight: "2rem",
+                    color: palette.textLoud,
+                    ml: "1rem",
+                  },
                 }}
               >
                 {tokenA.name}/{tokenB.name}
@@ -298,12 +308,14 @@ export default function SwapPage({
             </Box>
 
             {/* Cards */}
-            <Grid container>
+            <Grid container gap={{ xs: 1, md: 0 }}>
               {infoCardDetails.map((card, index) => (
                 <Grid
-                  sx={{ pl: index === 0 ? 0 : "1.5rem" }}
+                  sx={{ pl: { lg: index === 0 ? 0 : "1.5rem" } }}
                   item
-                  xs={3}
+                  lg={3}
+                  md={6}
+                  xs={12}
                   key={card.title}
                 >
                   <Card title={card.title} content={card.content} />
@@ -313,7 +325,7 @@ export default function SwapPage({
 
             {/* Provide Liquidity & Stake */}
             <Grid container>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Box
                   sx={{
                     display: "flex",
@@ -367,11 +379,12 @@ export default function SwapPage({
                   }}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Box sx={{ ml: "1.5rem" }}>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ ml: { md: "1.5rem" } }}>
                   <Box
                     sx={{
                       display: "flex",
+                      mt: { xs: "1rem", md: 0 },
                       padding: "0rem 1rem",
                       alignItems: "center",
                       gap: "0.5rem",

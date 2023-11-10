@@ -183,16 +183,20 @@ const StakingTable = ({ entries }: UiTypes.StakingTableProps) => {
     return <StakingTableEmpty />;
   }
   return (
-    <Box
-      sx={{
-        borderRadius: "1rem",
-        border: `1px solid ${theme.palette.strokePrimary}`,
-      }}
-    >
-      <TableHead />
-      {entries.map((entry, index) => (
-        <StakingTableEntry key={index} entry={entry} />
-      ))}
+    <Box sx={{ maxWidth: "100%" }}>
+      <Box
+        sx={{
+          width: { md: "100%", xs: "600px" },
+          overflowX: { md: "hidden", xs: "scroll" },
+          borderRadius: "1rem",
+          border: `1px solid ${theme.palette.strokePrimary}`,
+        }}
+      >
+        <TableHead />
+        {entries.map((entry, index) => (
+          <StakingTableEntry key={index} entry={entry} />
+        ))}
+      </Box>
     </Box>
   );
 };

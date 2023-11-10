@@ -3,16 +3,23 @@
 import React from "react";
 import { UiTypes } from "@whelp/types";
 import theme from "../Theme";
-import { Avatar, Box, Modal, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Modal,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Remove } from "react-huge-icons/solid";
 
 const WalletModal = ({ ...props }: UiTypes.WalletModalProps) => {
   const style = {
-    position: "absolute" as "absolute",
+    position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 500,
+    width: { md: 500, xs: "100%" },
     borderRadius: "1.5rem",
     border: `1px solid ${theme.palette.strokePrimary}`,
     background: theme.palette.bgSecondary,
