@@ -52,5 +52,8 @@ export const Main: Story = {
     onFromAmountChange: (amount: number) => console.log(amount),
     onToAmountChange: (amount: number) => console.log(amount),
     onSwap: () => console.log("Swap"),
+    slippageTolerance: 0.5,
+    setSlippageTolerance: (slippageTolerance: number) =>
+      console.log(slippageTolerance),
   },
 };
