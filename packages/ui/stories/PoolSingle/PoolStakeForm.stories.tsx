@@ -8,6 +8,7 @@ const token: Token = {
   balance: 100,
   category: "Stable",
   usdValue: 1 * 100,
+  decimals: 7,
 };
 
 // Default metadata of the story https://storybook.js.org/docs/react/api/csf#default-export
