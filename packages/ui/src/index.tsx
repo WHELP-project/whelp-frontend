@@ -30,3 +30,8 @@ export * from "./MobileNav";
  */
 export * from "./PoolSingle";
 export * from "./PoolMultiple";
+
+/**
+ * Swap Components
+ */
+export * from "./Swap";
