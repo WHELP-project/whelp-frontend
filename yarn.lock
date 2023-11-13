@@ -6632,6 +6632,7 @@ __metadata:
     "@storybook/react-webpack5": ^7.0.11
     "@storybook/testing-library": ^0.0.14-next.2
     "@types/react": ^18.0.27
+    "@whelp/types": "workspace:^"
     babel-loader: ^8.2.2
     classnames: ^2.3.2
     cross-env: ^7.0.3

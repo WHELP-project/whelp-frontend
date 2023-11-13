@@ -51,6 +51,7 @@
     "@storybook/react-webpack5": "^7.0.11",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "^18.0.27",
+    "@whelp/types": "workspace:^",
     "babel-loader": "^8.2.2",
     "postcss": "^8.4.21",
     "prop-types": "^15.8.1",
@@ -61,8 +62,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "storybook": "^7.0.11",
-    "typescript": "^5.0.4",
-    "@whelp/types": "workspace:^"
+    "typescript": "^5.0.4"
   },
   "peerDependencies": {
     "@emotion/react": "^11.11.1",
