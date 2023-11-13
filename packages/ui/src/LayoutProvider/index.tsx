@@ -3,19 +3,9 @@ import React from "react";
 import { Navigation } from "../Navigation";
 import { AppBar } from "../AppBar";
 import { MobileNav } from "../MobileNav";
+import { UiTypes } from "@whelp/types";
 
-interface LayoutProviderProps {
-  children: React.ReactNode;
-  pageTitle: string;
-  connectWallet?: () => void;
-  disconnectWallet?: () => void;
-  isConnected?: boolean;
-  walletAddress?: string;
-  walletIcon?: string;
-  navMenu: any[];
-}
-
-const LayoutProvider = ({ ...props }: LayoutProviderProps) => {
+const LayoutProvider = ({ ...props }: UiTypes.LayoutProviderProps) => {
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
 
   return (

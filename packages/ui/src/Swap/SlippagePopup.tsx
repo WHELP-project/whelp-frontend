@@ -1,20 +1,14 @@
 import { Box, Grid, Popover, Typography } from "@mui/material";
 import React from "react";
 import theme from "../Theme";
-
-interface SlippagePopupProps {
-  anchorEl: any;
-  onClose: () => void;
-  slippageTolerance: number;
-  setSlippageTolerance: (slippageTolerance: number) => void;
-}
+import { UiTypes } from "@whelp/types";
 
 const SlippagePopup = ({
   anchorEl,
   onClose,
   setSlippageTolerance,
   slippageTolerance,
-}: SlippagePopupProps) => {
+}: UiTypes.SlippagePopupProps) => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 

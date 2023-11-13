@@ -1,5 +1,4 @@
 import React from "react";
-import theme from "../Theme";
 import {
   Avatar,
   Box,
@@ -8,22 +7,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { Button } from "../Button";
 import { ConnectWalletButton } from "../ConnectWalletButton";
 import { MenuButton } from "./MenuButton";
+import { UiTypes } from "@whelp/types";
 
-interface AppBarProps {
-  title: string;
-  connectWallet?: () => void;
-  disconnectWallet?: () => void;
-  isConnected?: boolean;
-  walletAddress?: string;
-  walletIcon?: string;
-  mobileNavOpen?: boolean;
-  toggleMobileNav?: (open: boolean) => void;
-}
-
-const AppBar = ({ ...props }: AppBarProps) => {
+const AppBar = ({ ...props }: UiTypes.AppBarProps) => {
   const theme = useTheme();
   const largerThenMd = useMediaQuery(theme.breakpoints.up("md"));
 

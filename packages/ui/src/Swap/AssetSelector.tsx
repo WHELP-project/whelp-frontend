@@ -8,15 +8,9 @@ import {
 } from "@mui/material";
 import React from "react";
 import theme from "../Theme";
-import { Token } from "@whelp/types";
+import { UiTypes } from "@whelp/types";
 
-interface AssetSelectorProps {
-  selectedToken: Token;
-  tokens: Token[];
-  onSelect: (token: Token) => void;
-}
-
-const AssetSelector = (props: AssetSelectorProps) => {
+const AssetSelector = (props: UiTypes.AssetSelectorProps) => {
   return (
     <FormControl fullWidth>
       <Select

@@ -1,28 +1,12 @@
 import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
-import { Token } from "@whelp/types";
+import { UiTypes } from "@whelp/types";
 import React from "react";
 import theme from "../Theme";
 import { AssetSelector } from "./AssetSelector";
 import { Button } from "../Button";
 import { SlippagePopup } from "./SlippagePopup";
 
-interface SwapContainerProps {
-  from_token: Token;
-  to_token: Token;
-  from_amount: number;
-  to_amount: number;
-  tokens: Token[];
-  onFromTokenChange: (token: Token) => void;
-  onToTokenChange: (token: Token) => void;
-  onFromAmountChange: (amount: number) => void;
-  onToAmountChange: (amount: number) => void;
-  onSwap: () => void;
-  buttonDisabled?: boolean;
-  slippageTolerance: number;
-  setSlippageTolerance: (slippageTolerance: number) => void;
-}
-
-const SwapContainer = (props: SwapContainerProps) => {
+const SwapContainer = (props: UiTypes.SwapContainerProps) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
