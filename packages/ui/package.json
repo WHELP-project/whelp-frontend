@@ -61,7 +61,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "storybook": "^7.0.11",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "@whelp/types": "workspace:^"
   },
   "peerDependencies": {
     "@emotion/react": "^11.11.1",

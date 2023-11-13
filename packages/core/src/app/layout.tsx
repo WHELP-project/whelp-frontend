@@ -1,6 +1,12 @@
 "use client";
 import { WalletTypes } from "@whelp/types";
-import { ThemeProvider, LayoutProvider, WalletModal, palette } from "@whelp/ui";
+import {
+  ThemeProvider,
+  LayoutProvider,
+  WalletModal,
+  palette,
+  MobileNav,
+} from "@whelp/ui";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppStore, usePersistStore } from "@whelp/state";

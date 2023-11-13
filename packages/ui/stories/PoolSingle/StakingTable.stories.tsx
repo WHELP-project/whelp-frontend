@@ -16,6 +16,7 @@ const token: Token = {
   balance: 100,
   category: "Stable",
   usdValue: 1 * 100,
+  decimals: 7,
 };
 
 const entries: UiTypes.StakingTableEntry[] = [
