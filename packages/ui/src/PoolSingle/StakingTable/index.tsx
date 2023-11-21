@@ -75,11 +75,6 @@ const TableHead = () => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...HeadingStyles, textAlign: "center" }}>
-        Start Date
-      </Typography>
-    </Grid>
-    <Grid item xs={3}>
-      <Typography sx={{ ...HeadingStyles, textAlign: "center" }}>
         Apr
       </Typography>
     </Grid>
@@ -91,6 +86,11 @@ const TableHead = () => (
     <Grid item xs={3}>
       <Typography sx={{ ...HeadingStyles, textAlign: "end" }}>
         Amount
+      </Typography>
+    </Grid>
+    <Grid item xs={3}>
+      <Typography sx={{ ...HeadingStyles, textAlign: "end" }}>
+        Manage
       </Typography>
     </Grid>
   </Grid>
@@ -124,17 +124,12 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-        {entry.startDate}
-      </Typography>
-    </Grid>
-    <Grid item xs={3}>
-      <Typography sx={{ ...entryStyles, textAlign: "center" }}>
         {entry.APR} %
       </Typography>
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-        {entry.lockedPeriod}
+        {Number(entry.lockedPeriod) / 60 / 24} Days
       </Typography>
     </Grid>
     <Grid item xs={3}>
@@ -152,6 +147,7 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
             flexDirection: "column",
             textAlign: "end",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Typography sx={{ ...entryStyles, lineHeight: "1.2rem" }}>
@@ -167,13 +163,19 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
               lineHeight: "1.25rem",
             }}
           >
-            ${entry.lpToken.usdValue}
+            ${entry.lpToken.usdValue * entry.lpToken.balance}
           </Typography>
         </Box>
-        <IconButton>
-          <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
-        </IconButton>
       </Box>
+    </Grid>
+    <Grid
+      item
+      xs={3}
+      sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+    >
+      <IconButton>
+        <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
+      </IconButton>
     </Grid>
   </Grid>
 );
