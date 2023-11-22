@@ -75,11 +75,6 @@ const TableHead = () => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...HeadingStyles, textAlign: "center" }}>
-        Start Date
-      </Typography>
-    </Grid>
-    <Grid item xs={3}>
-      <Typography sx={{ ...HeadingStyles, textAlign: "center" }}>
         Apr
       </Typography>
     </Grid>
@@ -93,6 +88,11 @@ const TableHead = () => (
         Amount
       </Typography>
     </Grid>
+    <Grid item xs={3}>
+      <Typography sx={{ ...HeadingStyles, textAlign: "end" }}>
+        Manage
+      </Typography>
+    </Grid>
   </Grid>
 );
 
@@ -104,7 +104,13 @@ const entryStyles = {
   lineHeight: "2.5rem", // 150%
 };
 
-const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
+const StakingTableEntry = ({
+  entry,
+  unstake,
+}: {
+  entry: UiTypes.StakingTableEntry;
+  unstake: any;
+}) => (
   <Grid
     container
     columns={15}
@@ -124,17 +130,12 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-        {entry.startDate}
-      </Typography>
-    </Grid>
-    <Grid item xs={3}>
-      <Typography sx={{ ...entryStyles, textAlign: "center" }}>
         {entry.APR} %
       </Typography>
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-        {entry.lockedPeriod}
+        {Number(entry.lockedPeriod) / 60 / 24 / 60} Days
       </Typography>
     </Grid>
     <Grid item xs={3}>
@@ -152,6 +153,7 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
             flexDirection: "column",
             textAlign: "end",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Typography sx={{ ...entryStyles, lineHeight: "1.2rem" }}>
@@ -167,18 +169,31 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
               lineHeight: "1.25rem",
             }}
           >
-            ${entry.lpToken.usdValue}
+            ${entry.lpToken.usdValue * entry.lpToken.balance}
           </Typography>
         </Box>
-        <IconButton>
-          <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
-        </IconButton>
       </Box>
+    </Grid>
+    <Grid
+      item
+      xs={3}
+      sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+    >
+      <IconButton
+        onClick={() =>
+          unstake(
+            entry.lpToken.balance.toString(),
+            Number(entry.lockedPeriod)
+          )
+        }
+      >
+        <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
+      </IconButton>
     </Grid>
   </Grid>
 );
 
-const StakingTable = ({ entries }: UiTypes.StakingTableProps) => {
+const StakingTable = ({ entries, unstake }: UiTypes.StakingTableProps) => {
   if (entries.length === 0) {
     return <StakingTableEmpty />;
   }
@@ -194,7 +209,7 @@ const StakingTable = ({ entries }: UiTypes.StakingTableProps) => {
       >
         <TableHead />
         {entries.map((entry, index) => (
-          <StakingTableEntry key={index} entry={entry} />
+          <StakingTableEntry key={index} entry={entry} unstake={unstake} />
         ))}
       </Box>
     </Box>

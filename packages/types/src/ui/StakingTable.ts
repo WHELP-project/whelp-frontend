@@ -2,12 +2,12 @@ import { Token } from "../general";
 
 export interface StakingTableEntry {
   lpToken: Token;
-  startDate: string;
   APR: number;
   lockedPeriod: string;
-  unstake: (entry: StakingTableEntry) => void;
+  unstake: (tokenAmount: string, unbondingPeriod: number) => void;
 }
 
 export interface StakingTableProps {
   entries: StakingTableEntry[];
+  unstake: (tokenAmount: string, unbondingPeriod: number) => void;
 }
