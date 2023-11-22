@@ -104,7 +104,13 @@ const entryStyles = {
   lineHeight: "2.5rem", // 150%
 };
 
-const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
+const StakingTableEntry = ({
+  entry,
+  unstake,
+}: {
+  entry: UiTypes.StakingTableEntry;
+  unstake: any;
+}) => (
   <Grid
     container
     columns={15}
@@ -129,7 +135,7 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-        {Number(entry.lockedPeriod) / 60 / 24} Days
+        {Number(entry.lockedPeriod) / 60 / 24 / 60} Days
       </Typography>
     </Grid>
     <Grid item xs={3}>
@@ -173,14 +179,21 @@ const StakingTableEntry = ({ entry }: { entry: UiTypes.StakingTableEntry }) => (
       xs={3}
       sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
     >
-      <IconButton>
+      <IconButton
+        onClick={() =>
+          unstake(
+            entry.lpToken.balance.toString(),
+            Number(entry.lockedPeriod)
+          )
+        }
+      >
         <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
       </IconButton>
     </Grid>
   </Grid>
 );
 
-const StakingTable = ({ entries }: UiTypes.StakingTableProps) => {
+const StakingTable = ({ entries, unstake }: UiTypes.StakingTableProps) => {
   if (entries.length === 0) {
     return <StakingTableEmpty />;
   }
@@ -196,7 +209,7 @@ const StakingTable = ({ entries }: UiTypes.StakingTableProps) => {
       >
         <TableHead />
         {entries.map((entry, index) => (
-          <StakingTableEntry key={index} entry={entry} />
+          <StakingTableEntry key={index} entry={entry} unstake={unstake} />
         ))}
       </Box>
     </Box>

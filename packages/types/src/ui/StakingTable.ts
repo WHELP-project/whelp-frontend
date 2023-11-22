@@ -4,9 +4,10 @@ export interface StakingTableEntry {
   lpToken: Token;
   APR: number;
   lockedPeriod: string;
-  unstake: (entry: StakingTableEntry) => void;
+  unstake: (tokenAmount: string, unbondingPeriod: number) => void;
 }
 
 export interface StakingTableProps {
   entries: StakingTableEntry[];
+  unstake: (tokenAmount: string, unbondingPeriod: number) => void;
 }

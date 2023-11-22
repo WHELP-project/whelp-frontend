@@ -1,5 +1,13 @@
 "use client";
-import { Box, Avatar, Typography, Grid } from "@mui/material";
+import {
+  Box,
+  Avatar,
+  Typography,
+  Grid,
+  Alert,
+  Button as MuiButton,
+  Link,
+} from "@mui/material";
 import {
   WhelpPoolClient,
   WhelpPoolQueryClient,
@@ -18,6 +26,7 @@ import {
   PoolStakeForm,
   StakingTable,
   StatusModal,
+  UnbondingModal,
 } from "@whelp/ui";
 import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
@@ -84,6 +93,8 @@ export default function SwapPage({
   const [bondingDurations, setBondingDurations] = useState<number[]>([]);
   const [bondingDurationSelected, setBondingdurationSelected] =
     useState<number>(0);
+  const [stakingModalOpen, setStakingModalOpen] = useState<boolean>(false);
+  const [userClaims, setUserClaims] = useState<WhelpStakeTypes.Claim[]>([]);
 
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
@@ -158,6 +169,7 @@ export default function SwapPage({
   };
 
   const getUserStakes = async (address: string, token: Token) => {
+    // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
       TestnetConfig.rpc_endpoint
     );
@@ -166,22 +178,36 @@ export default function SwapPage({
       address
     );
 
+    // Get User Stakes
     const { stakes: userStakes } = await stakingQueryClient.allStaked({
       address: appStore.wallet.address,
     });
 
-    const tableEntries = userStakes.map((stake) => {
+    const _tableEntries = userStakes.map((stake) => {
       return {
         lpToken: { ...token, balance: stake.stake },
         APR: 0,
         lockedPeriod: stake.unbonding_period,
-        unstake: (entry: any) => {
-          console.log(entry);
+        unstake: (tokenAmount: string, unbondingPeriod: number) => {
+          unbond(tokenAmount, unbondingPeriod);
         },
       };
     });
 
+    // Filter for empty stakes
+    const tableEntries = _tableEntries.filter(
+      (entry) => Number(entry.lpToken.balance) > 0
+    );
+
+    // Get User claims
+    const { claims } = await stakingQueryClient.claims({
+      address: appStore.wallet.address,
+    });
+
+    console.log(claims);
+    // Set states
     setUserStakes(tableEntries);
+    setUserClaims(claims);
   };
 
   const getPoolSigningClient = (): WhelpPoolClient => {
@@ -221,6 +247,8 @@ export default function SwapPage({
         ]
       );
 
+      await getUserStakes(stakingAddress!, tokenLP);
+
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("stakeLp");
@@ -230,6 +258,35 @@ export default function SwapPage({
       setStatusModalOpen(true);
       setStatusModalType("error");
       setStatusModalTxType("stakeLp");
+      setStatusModalTokens([]);
+      console.log(e);
+    }
+  };
+
+  // Unstake
+  const unbond = async (tokenAmount: string, unbondingPeriod: number) => {
+    try {
+      const stakeClient = getStakeSigningClient();
+      await stakeClient.unbond(
+        {
+          tokens: tokenAmount,
+          unbondingPeriod: unbondingPeriod,
+        },
+        "auto",
+        undefined
+      );
+
+      await getUserStakes(stakingAddress!, tokenLP);
+
+      // Set Status
+      setStatusModalType("success");
+      setStatusModalTxType("unstakeLp");
+      setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
+      setStatusModalOpen(true);
+    } catch (e) {
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("unstakeLp");
       setStatusModalTokens([]);
       console.log(e);
     }
@@ -549,7 +606,26 @@ export default function SwapPage({
               </Typography>
             </Box>
             <Box sx={{ width: "100%" }}>
-              <StakingTable entries={userStakes} />
+              {userClaims.length > 0 && (
+                <Alert severity="info">
+                  <Box>
+                    You have unclaimed unbonding stakes. Click{" "}
+                    <Link
+                      onClick={() => setStakingModalOpen(true)}
+                      sx={{ cursor: "pointer" }}
+                    >
+                      here
+                    </Link>{" "}
+                    to claim them.
+                  </Box>
+                </Alert>
+              )}
+              <StakingTable
+                entries={userStakes}
+                unstake={(tokenAmount, unbondingPeriod) =>
+                  unbond(tokenAmount, unbondingPeriod)
+                }
+              />
             </Box>
           </Box>
         </Box>
@@ -562,6 +638,13 @@ export default function SwapPage({
         status={statusModalType}
         txType={statusModalTxType}
         tokens={statusModalTokens}
+      />
+      <UnbondingModal
+        open={stakingModalOpen}
+        onClose={() => setStakingModalOpen(false)}
+        claim={() => {}}
+        lpToken={tokenLP}
+        entries={userClaims}
       />
     </>
   );
