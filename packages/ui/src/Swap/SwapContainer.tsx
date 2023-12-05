@@ -105,11 +105,11 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                 tokens={props.tokens.filter(
                   (token) => token.name !== props.to_token.name
                 )}
-                onSelect={props.onToTokenChange}
+                onSelect={props.onFromTokenChange}
               />
               <Input
                 disabled={false}
-                value={0}
+                value={props.from_amount}
                 onChange={(e) => {
                   props.onFromAmountChange(Number(e.target.value));
                 }}
@@ -204,9 +204,9 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
               />
               <Input
                 disabled={false}
-                value={0}
+                value={props.to_amount}
                 onChange={(e) => {
-                  props.onFromAmountChange(Number(e.target.value));
+                  props.onToAmountChange(Number(e.target.value));
                 }}
                 inputProps={{
                   min: 0,

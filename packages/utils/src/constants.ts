@@ -11,3 +11,4 @@ export const TestnetConfig = {
 };
 
 export const WhelpFactoryAddress: string = "";
+export const WhelpMultihopAddress: string = "";
