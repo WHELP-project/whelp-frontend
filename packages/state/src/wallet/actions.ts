@@ -248,7 +248,7 @@ export const createWalletActions = (
         ) {
           updatedTokens.push({
             name: prettyName,
-            icon: "",
+            icon: "/cryptoIcons/btc.svg",
             usdValue: 0,
             balance: balance,
             category: "",
@@ -264,7 +264,7 @@ export const createWalletActions = (
 
       return {
         name: prettyName,
-        icon: "",
+        icon: "/cryptoIcons/btc.svg",
         usdValue: 0,
         balance: balance,
         category: "",
