@@ -1,6 +1,6 @@
 "use client";
 
-import { StatusModal, SwapContainer, SwapStats } from "@whelp/ui";
+import { LoaderVideo, StatusModal, SwapContainer, SwapStats } from "@whelp/ui";
 import { Token, UiTypes } from "@whelp/types";
 import { Box } from "@mui/material";
 import { use, useEffect, useState } from "react";
@@ -34,6 +34,7 @@ export default function SwapPage() {
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.5);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
   const [simulateLoading, setSimulateLoading] = useState<boolean>(false);
+  const [pageLoading, setPageLoading] = useState<boolean>(true);
 
   // Stat States
   const [exchangeRateText, setExchangeRateText] = useState<string>("-");
@@ -293,6 +294,7 @@ export default function SwapPage() {
       setAllTokens(tokens);
       setFromToken(searchToken ?? tokens[0]);
       setToToken(searchToken === tokens[1] ? tokens[0] : tokens[1]);
+      setPageLoading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appStore.wallet.address]);
@@ -307,64 +309,70 @@ export default function SwapPage() {
 
   return (
     <main>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          position: "relative",
-          gap: "2rem",
-          height: "calc(100vh - 72px)",
-        }}
-      >
-        {/* Swap Container */}
-        {fromToken && toToken && (
-          <SwapContainer
-            simulateLoading={simulateLoading}
-            from_token={fromToken}
-            to_token={toToken}
-            from_amount={fromAmount}
-            to_amount={toAmount}
-            tokens={allTokens}
-            onFromTokenChange={(token: Token) => setFromToken(token)}
-            onToTokenChange={(token: Token) => setToToken(token)}
-            onFromAmountChange={(amount: number) => setFromAmount(amount)}
-            onToAmountChange={(amount: number) => setToAmount(amount)}
-            onSwap={() => swap()}
-            slippageTolerance={slippageTolerance}
-            setSlippageTolerance={(slippageTolerance: number) =>
-              setSlippageTolerance(slippageTolerance)
-            }
-            swapLoading={swapLoading}
-            maxFromAmount={microAmountToAmount(fromToken)}
-            switchTokens={() => {
-              setFromToken(toToken);
-              setToToken(fromToken);
-            }}
-          />
-        )}
-        <SwapStats
-          exchangeRateText={exchangeRateText}
-          networkFeeText={networkFeeText}
-          route={route}
-          maximumSpreadText={maximumSpreadText}
-          simulateLoading={simulateLoading}
-        />
-        <Box sx={{ position: "absolute", width: "100%", zIndex: -1 }}>
+      {pageLoading ? (
+        <LoaderVideo variant={3} />
+      ) : (
+        <>
           <Box
-            component="img"
-            alt="Background img"
-            src="/images/swap_bg.png"
             sx={{
-              height: "100%",
-              width: "100%",
-              bottom: 0,
-              zIndex: -1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              position: "relative",
+              gap: "2rem",
+              height: "calc(100vh - 72px)",
             }}
-          />
-        </Box>
-      </Box>
+          >
+            {/* Swap Container */}
+            {fromToken && toToken && (
+              <SwapContainer
+                simulateLoading={simulateLoading}
+                from_token={fromToken}
+                to_token={toToken}
+                from_amount={fromAmount}
+                to_amount={toAmount}
+                tokens={allTokens}
+                onFromTokenChange={(token: Token) => setFromToken(token)}
+                onToTokenChange={(token: Token) => setToToken(token)}
+                onFromAmountChange={(amount: number) => setFromAmount(amount)}
+                onToAmountChange={(amount: number) => setToAmount(amount)}
+                onSwap={() => swap()}
+                slippageTolerance={slippageTolerance}
+                setSlippageTolerance={(slippageTolerance: number) =>
+                  setSlippageTolerance(slippageTolerance)
+                }
+                swapLoading={swapLoading}
+                maxFromAmount={microAmountToAmount(fromToken)}
+                switchTokens={() => {
+                  setFromToken(toToken);
+                  setToToken(fromToken);
+                }}
+              />
+            )}
+            <SwapStats
+              exchangeRateText={exchangeRateText}
+              networkFeeText={networkFeeText}
+              route={route}
+              maximumSpreadText={maximumSpreadText}
+              simulateLoading={simulateLoading}
+            />
+            <Box sx={{ position: "absolute", width: "100%", zIndex: -1 }}>
+              <Box
+                component="img"
+                alt="Background img"
+                src="/images/swap_bg.png"
+                sx={{
+                  height: "100%",
+                  width: "100%",
+                  bottom: 0,
+                  zIndex: -1,
+                }}
+              />
+            </Box>
+          </Box>
+        </>
+      )}
       <StatusModal
         open={statusModalOpen}
         onClose={() => {

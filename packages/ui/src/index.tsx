@@ -24,6 +24,7 @@ export * from "./ConnectWalletButton";
 export * from "./LayoutProvider";
 export * from "./StatusModal";
 export * from "./MobileNav";
+export * from "./Loader";
 
 /**
  * Pool Components
