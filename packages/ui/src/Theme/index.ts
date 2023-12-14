@@ -68,6 +68,9 @@ const theme = createTheme({
     purple: {
       base: "#676CF6",
     },
+    green: {
+      base: "#44CA83",
+    },
     background: {
       default: "#0A0F10",
     },

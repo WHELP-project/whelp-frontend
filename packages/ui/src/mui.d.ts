@@ -32,6 +32,9 @@ declare module "@mui/material/styles" {
     purple: {
       base: string;
     };
+    green: {
+      base: string;
+    };
   }
 
   interface Palette {
@@ -63,6 +66,9 @@ declare module "@mui/material/styles" {
     secondaryBtnBg: string;
     secondaryBtnBgHover: string;
     purple: {
+      base: string;
+    };
+    green: {
       base: string;
     };
   }
