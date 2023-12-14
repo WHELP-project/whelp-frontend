@@ -4,6 +4,7 @@ import { Remove } from "react-huge-icons/solid";
 import { WhelpStakeTypes } from "@whelp/contracts";
 import { Token } from "@whelp/types";
 import React from "react";
+import { microAmountToAmount } from "@whelp/utils";
 
 interface UnbondingModalProps {
   open: boolean;
@@ -81,7 +82,11 @@ const UnbondingModal = ({ ...props }: UnbondingModalProps) => {
                       ml: 1,
                     }}
                   >
-                    {entry.amount} {props.lpToken.name}
+                    {microAmountToAmount({
+                      ...props.lpToken,
+                      balance: Number(entry.amount),
+                    })}{" "}
+                    {props.lpToken.name}
                   </Typography>
                 </Box>
               </Box>

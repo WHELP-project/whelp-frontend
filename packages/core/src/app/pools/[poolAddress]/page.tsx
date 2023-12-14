@@ -18,6 +18,7 @@ import {
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
 import { Token, UiTypes } from "@whelp/types";
+import { amountToMicroAmount, microAmountToAmount } from "@whelp/utils";
 import {
   Button,
   Card,
@@ -241,7 +242,10 @@ export default function SwapPage({
           {
             // @ts-ignore
             denom: tokenLPInfo.smart_token,
-            amount: Number(stakingAmount).toFixed(0),
+            amount: amountToMicroAmount({
+              ...tokenLP,
+              balance: Number(stakingAmount),
+            }).toString(),
           },
         ]
       );
@@ -295,9 +299,18 @@ export default function SwapPage({
   const provideLiquidity = async () => {
     try {
       const amounts: WhelpPoolTypes.Asset[] = [
-        { amount: Number(tokenAValue).toFixed(0), info: tokenAInfo },
         {
-          amount: Number(tokenBValue).toFixed(0),
+          amount: amountToMicroAmount({
+            ...tokenA,
+            balance: Number(tokenAValue),
+          }).toString(),
+          info: tokenAInfo,
+        },
+        {
+          amount: amountToMicroAmount({
+            ...tokenB,
+            balance: Number(tokenBValue),
+          }).toString(),
           info: tokenBInfo,
         },
       ];
@@ -344,7 +357,13 @@ export default function SwapPage({
   const removeLiquidity = async () => {
     try {
       const amounts: WhelpPoolTypes.Asset[] = [
-        { amount: tokenLPValue, info: tokenLPInfo },
+        {
+          amount: amountToMicroAmount({
+            ...tokenLP,
+            balance: Number(tokenLPValue),
+          }).toString(),
+          info: tokenLPInfo,
+        },
       ];
       const poolClient = getPoolSigningClient();
       await poolClient.withdrawLiquidity([
@@ -357,7 +376,15 @@ export default function SwapPage({
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("withdrawLiquidity");
-      setStatusModalTokens([{ ...tokenLP, balance: Number(tokenLPValue) }]);
+      setStatusModalTokens([
+        {
+          ...tokenLP,
+          balance: microAmountToAmount({
+            ...tokenLP,
+            balance: Number(tokenLPValue),
+          }),
+        },
+      ]);
       setStatusModalOpen(true);
     } catch (e) {
       setStatusModalOpen(true);
@@ -385,7 +412,11 @@ export default function SwapPage({
     },
     {
       title: "Lp Tokens",
-      content: <Typography sx={typeSx}>{tokenLP.balance}</Typography>,
+      content: (
+        <Typography sx={typeSx}>
+          {microAmountToAmount({ ...tokenLP!, balance: tokenLP.balance })}
+        </Typography>
+      ),
     },
     {
       title: "TVL",
@@ -510,7 +541,7 @@ export default function SwapPage({
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
-                        setTokenBValue((Number(e) / assetRatio).toString());
+                        setTokenBValue((Number(e) / assetRatio).toFixed(3));
                       },
                       value: tokenAValue,
                       loading: loadBalances,
@@ -519,7 +550,7 @@ export default function SwapPage({
                       token: tokenB,
                       onChange: (e) => {
                         setTokenBValue(e);
-                        setTokenAValue((Number(e) * assetRatio).toString());
+                        setTokenAValue((Number(e) * assetRatio).toFixed(3));
                       },
                       value: tokenBValue,
                       loading: loadBalances,
@@ -574,7 +605,14 @@ export default function SwapPage({
                     claimClick={() => {}}
                     changeStakePercentage={(percentage: number) => {
                       setStakingAmount(
-                        ((percentage * tokenLP.balance) / 100).toFixed(2)
+                        (
+                          (percentage *
+                            microAmountToAmount({
+                              ...tokenLP!,
+                              balance: tokenLP.balance,
+                            })) /
+                          100
+                        ).toFixed(2)
                       );
                     }}
                   />

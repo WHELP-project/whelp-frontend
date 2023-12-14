@@ -1,6 +1,7 @@
 import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
 import React from "react";
 import { UiTypes } from "@whelp/types";
+import { microAmountToAmount } from "@whelp/utils";
 import theme from "../../Theme";
 
 const StakingTableEmpty = () => (
@@ -157,7 +158,7 @@ const StakingTableEntry = ({
           }}
         >
           <Typography sx={{ ...entryStyles, lineHeight: "1.2rem" }}>
-            {entry.lpToken.balance}
+            {microAmountToAmount(entry.lpToken)}
           </Typography>
           <Typography
             sx={{
@@ -181,10 +182,7 @@ const StakingTableEntry = ({
     >
       <IconButton
         onClick={() =>
-          unstake(
-            entry.lpToken.balance.toString(),
-            Number(entry.lockedPeriod)
-          )
+          unstake(entry.lpToken.balance.toString(), Number(entry.lockedPeriod))
         }
       >
         <Box component="img" alt="iconbutton" src="/images/controlIcon.svg" />
