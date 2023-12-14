@@ -35,3 +35,8 @@ export * from "./PoolMultiple";
  * Swap Components
  */
 export * from "./Swap";
+
+/**
+ * Dashboard Components
+ */
+export * from "./AssetList";
