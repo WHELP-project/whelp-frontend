@@ -295,7 +295,7 @@ export default function SwapPage() {
       setToToken(searchToken === tokens[1] ? tokens[0] : tokens[1]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appStore.wallet.address]);
 
   // Simulate Swap Hook
   useEffect(() => {
