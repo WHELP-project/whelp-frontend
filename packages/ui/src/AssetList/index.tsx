@@ -15,8 +15,7 @@ import { ArrowDown, ArrowUp } from "react-huge-icons/solid";
 import { useEffect, useState } from "react";
 import { splitNumber, microAmountToAmount } from "@whelp/utils";
 import { Repeat } from "@mui/icons-material";
-import React
- from "react";
+import React from "react";
 interface AssetListProps {
   entries: Token[];
   onClick: (token: Token) => void;
@@ -362,7 +361,7 @@ const AssetList = (params: AssetListProps) => {
         container
       >
         {entries.map((entry, index) => (
-          <Grid key={index} item xs={3}>
+          <Grid key={index} item xs={12} md={3}>
             <AssetListEntry token={entry} onClick={params.onClick} />
           </Grid>
         ))}
