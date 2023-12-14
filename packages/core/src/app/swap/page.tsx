@@ -219,7 +219,10 @@ export default function SwapPage() {
         );
 
         await cw20Contract.send({
-          amount: fromAmount.toString(),
+          amount: microAmountToAmount({
+            ...fromToken!,
+            balance: fromAmount,
+          }).toString(),
           contract: WhelpMultihopAddress,
           msg: toBase64(
             toUtf8(
@@ -250,7 +253,10 @@ export default function SwapPage() {
         undefined,
         [
           {
-            amount: fromAmount.toString(),
+            amount: amountToMicroAmount({
+              ...fromToken!,
+              balance: fromAmount,
+            }).toString(),
             denom: fromToken.tokenAddress!,
           },
         ]
