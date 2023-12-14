@@ -324,6 +324,10 @@ export default function SwapPage() {
             }
             swapLoading={swapLoading}
             maxFromAmount={microAmountToAmount(fromToken)}
+            switchTokens={() => {
+              setFromToken(toToken);
+              setToToken(fromToken);
+            }}
           />
         )}
         <SwapStats

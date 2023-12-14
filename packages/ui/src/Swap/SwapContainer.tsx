@@ -12,6 +12,7 @@ import theme from "../Theme";
 import { AssetSelector } from "./AssetSelector";
 import { Button } from "../Button";
 import { SlippagePopup } from "./SlippagePopup";
+import { SwapVert } from "@mui/icons-material";
 
 const SwapContainer = (props: UiTypes.SwapContainerProps) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -189,6 +190,36 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                   {props.maxFromAmount}
                 </Typography>
               </Box>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              onClick={props.switchTokens}
+              sx={{
+                my: "-2rem",
+                display: "flex",
+                maxWidth: "80%",
+                padding: "1rem",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "0.5rem",
+                borderRadius: "1rem",
+                border: `1px solid ${theme.palette.strokePrimary}`,
+                background: theme.palette.bgAlpha100,
+                "&:hover": {
+                  background: theme.palette.bgAlpha200,
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <SwapVert sx={{ height: 24, width: 24 }} />
             </Box>
           </Box>
 

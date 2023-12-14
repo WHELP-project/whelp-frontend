@@ -17,6 +17,7 @@ export interface SwapContainerProps {
   simulateLoading: boolean;
   swapLoading: boolean;
   maxFromAmount: number;
+  switchTokens: () => void;
 }
 
 export interface SlippagePopupProps {
