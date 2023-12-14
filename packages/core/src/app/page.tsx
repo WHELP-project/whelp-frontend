@@ -84,7 +84,7 @@ export default function Home() {
   useEffect(() => {
     fetchTokens().then((tokens) => setAllTokens(tokens));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [appStore.wallet.address]);
 
   return (
     <main>
