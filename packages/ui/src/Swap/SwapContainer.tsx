@@ -1,4 +1,11 @@
-import { Box, Divider, IconButton, Input, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Input,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 import { UiTypes } from "@whelp/types";
 import React from "react";
 import theme from "../Theme";
@@ -125,7 +132,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                 placeholder="0.00"
                 sx={{
                   width: "100%",
-                  color: theme.palette.textNormal, // Assuming textNormal is defined in your theme
+                  color: theme.palette.textNormal,
                   textAlign: "right",
                   fontSize: "1.5rem",
                   fontStyle: "normal",
@@ -155,6 +162,33 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                   whiteSpace: "nowrap",
                 }}
               />
+            </Box>
+            <Box sx={{ textAlign: "end", width: "100%", px: "1rem" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: theme.palette.textNormal,
+                    fontSize: "14px",
+                  }}
+                >
+                  Available:
+                </Typography>
+                <Typography
+                  sx={{
+                    color: theme.palette.textLoud,
+                    fontSize: "16px",
+                    ml: "0.5rem",
+                  }}
+                >
+                  {props.maxFromAmount}
+                </Typography>
+              </Box>
             </Box>
           </Box>
 
@@ -202,54 +236,58 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                 )}
                 onSelect={props.onToTokenChange}
               />
-              <Input
-                disabled={false}
-                value={props.to_amount}
-                onChange={(e) => {
-                  props.onToAmountChange(Number(e.target.value));
-                }}
-                inputProps={{
-                  min: 0,
-                  max: props.from_token.balance,
-                  style: {
+              {props.simulateLoading ? (
+                <Skeleton variant="text" width="100%" height="2rem" />
+              ) : (
+                <Input
+                  disabled={true}
+                  value={props.to_amount}
+                  onChange={(e) => {
+                    props.onToAmountChange(Number(e.target.value));
+                  }}
+                  inputProps={{
+                    min: 0,
+                    max: props.from_token.balance,
+                    style: {
+                      textAlign: "right",
+                      padding: 0,
+                    },
+                  }}
+                  type="number"
+                  placeholder="0.00"
+                  sx={{
+                    width: "100%",
+                    color: theme.palette.textNormal, // Assuming textNormal is defined in your theme
                     textAlign: "right",
-                    padding: 0,
-                  },
-                }}
-                type="number"
-                placeholder="0.00"
-                sx={{
-                  width: "100%",
-                  color: theme.palette.textNormal, // Assuming textNormal is defined in your theme
-                  textAlign: "right",
-                  fontSize: "1.5rem",
-                  fontStyle: "normal",
-                  fontWeight: 500,
-                  lineHeight: "1.75rem",
-                  "&:before": {
-                    content: "none",
-                  },
-                  "&:after": {
-                    content: "none",
-                  },
-                  "&:focus-within fieldset, &:focus-visible fieldset": {
-                    color: "white!important",
-                  },
-                  "& input[type=number]": {
-                    "-moz-appearance": "textfield",
-                  },
-                  "& input[type=number]::-webkit-outer-spin-button": {
-                    "-webkit-appearance": "none",
-                    margin: 0,
-                  },
-                  "& input[type=number]::-webkit-inner-spin-button": {
-                    "-webkit-appearance": "none",
-                    margin: 0,
-                  },
-                  overflowX: "auto", // Enable horizontal scrolling
-                  whiteSpace: "nowrap",
-                }}
-              />
+                    fontSize: "1.5rem",
+                    fontStyle: "normal",
+                    fontWeight: 500,
+                    lineHeight: "1.75rem",
+                    "&:before": {
+                      content: "none",
+                    },
+                    "&:after": {
+                      content: "none",
+                    },
+                    "&:focus-within fieldset, &:focus-visible fieldset": {
+                      color: "white!important",
+                    },
+                    "& input[type=number]": {
+                      "-moz-appearance": "textfield",
+                    },
+                    "& input[type=number]::-webkit-outer-spin-button": {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
+                    "& input[type=number]::-webkit-inner-spin-button": {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
+                    overflowX: "auto", // Enable horizontal scrolling
+                    whiteSpace: "nowrap",
+                  }}
+                />
+              )}
             </Box>
           </Box>
           <Button
@@ -258,6 +296,12 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             type="primary"
             label="Swap"
             fullWidth
+            loading={props.swapLoading}
+            disabled={
+              props.maxFromAmount < props.from_amount ||
+              props.from_amount === 0 ||
+              props.to_amount === 0
+            }
           />
         </Box>
       </Box>

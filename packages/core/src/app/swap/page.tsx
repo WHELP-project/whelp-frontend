@@ -1,9 +1,9 @@
 "use client";
 
-import { SwapContainer } from "@whelp/ui";
+import { StatusModal, SwapContainer, SwapStats } from "@whelp/ui";
 import { Token, UiTypes } from "@whelp/types";
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
   TestnetConfig,
@@ -13,10 +13,13 @@ import {
   tokenToTokenInfo,
 } from "@whelp/utils";
 import {
+  Cw20Client,
   WhelpFactoryQueryClient,
+  WhelpMultiHopClient,
   WhelpMultiHopQueryClient,
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
+import { toBase64, toUtf8 } from "@cosmjs/encoding";
 
 export default function SwapPage() {
   // Set States
@@ -27,6 +30,22 @@ export default function SwapPage() {
   const [toAmount, setToAmount] = useState<number>(0);
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.5);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
+  const [simulateLoading, setSimulateLoading] = useState<boolean>(false);
+
+  // Stat States
+  const [exchangeRateText, setExchangeRateText] = useState<string>("-");
+  const [networkFeeText, setNetworkFeeText] = useState<string>("-");
+  const [route, setRoute] = useState<string[]>([]);
+  const [maximumSpreadText, setMaximumSpreadText] = useState<string>("-");
+
+  // Status Modal States
+  const [statusModalOpen, setStatusModalOpen] = useState<boolean>(false);
+  const [statusModalType, setStatusModalType] =
+    useState<UiTypes.Status>("success");
+  const [statusModalTxType, setStatusModalTxType] =
+    useState<UiTypes.TxType>("addLiquidity");
+  const [statusModalTokens, setStatusModalTokens] = useState<Token[]>([]);
+  const [swapLoading, setSwapLoading] = useState<boolean>(false);
 
   // Init Store
   const appStore = useAppStore();
@@ -87,6 +106,8 @@ export default function SwapPage() {
 
   // Simulate Swap
   const simulateSwap = async () => {
+    // Set simulate loading
+    setSimulateLoading(true);
     // Get Multihop Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
       TestnetConfig.rpc_endpoint
@@ -107,17 +128,136 @@ export default function SwapPage() {
         };
       })
     );
-    console.log({
-      offerAmount: fromAmount.toString(),
-      operations,
-      referral: false,
-    });
+
     // Simulate Swap
     const result = await multiHopClient.simulateSwapOperations({
       offerAmount: fromAmount.toString(),
       operations,
       referral: false,
     });
+
+    // Set Stats Text
+    setExchangeRateText(
+      `${(Number(result.amount) / fromAmount).toFixed(2)} ${
+        toToken?.name
+      } per ${fromToken?.name}`
+    );
+    setNetworkFeeText(`${result.spread_amounts[0].amount} ${fromToken?.name}`);
+
+    const _route: string[] = [];
+    for (let i = 0; i < operations.length; i++) {
+      const op = operations[i];
+      const askAssetInfoName = (
+        await appStore.fetchTokenBalance(op.dex_swap.ask_asset_info)
+      ).name;
+      _route.push(askAssetInfoName);
+
+      if (i === operations.length - 1) {
+        const offerAssetInfoName = (
+          await appStore.fetchTokenBalance(op.dex_swap.offer_asset_info)
+        ).name;
+        _route.push(offerAssetInfoName);
+      }
+    }
+
+    setRoute(_route);
+    setMaximumSpreadText(`${slippageTolerance}%`);
+
+    // Set toAmount
+    setToAmount(Number(result.amount));
+    // Set simulate loading
+    setSimulateLoading(false);
+  };
+
+  // Get Signing Client
+  const getMultiHopSigningClient = (): WhelpMultiHopClient => {
+    const cosmWasmSigningClient = appStore.cosmWasmSigningClient!;
+    return new WhelpMultiHopClient(
+      cosmWasmSigningClient,
+      appStore.wallet.address,
+      WhelpMultihopAddress
+    );
+  };
+
+  // Do Swap
+  const swap = async () => {
+    setSwapLoading(true);
+    try {
+      const multiHopClient = getMultiHopSigningClient();
+      const { operations } = findBestPath(
+        tokenToTokenInfo(fromToken!),
+        tokenToTokenInfo(toToken!),
+        pools.map((pool) => {
+          return {
+            asset_a: pool.token_a.tokenAddress!,
+            asset_b: pool.token_b.tokenAddress!,
+          };
+        })
+      );
+
+      if (!fromToken) return;
+
+      // Cw20 Swap
+      if (fromToken.type === "cw20") {
+        const cw20Contract = new Cw20Client(
+          appStore.cosmWasmSigningClient!,
+          appStore.wallet.address,
+          fromToken.tokenAddress!
+        );
+
+        await cw20Contract.send({
+          amount: fromAmount.toString(),
+          contract: WhelpMultihopAddress,
+          msg: toBase64(
+            toUtf8(
+              JSON.stringify({
+                execute_swap_operations: {
+                  operations,
+                  max_spread: slippageTolerance,
+                },
+              })
+            )
+          ),
+        });
+        setStatusModalType("success");
+        setStatusModalTxType("swap");
+        setStatusModalTokens([
+          { ...fromToken, balance: Number(fromAmount) },
+          { ...toToken!, balance: Number(toAmount) },
+        ]);
+        setStatusModalOpen(true);
+        setSwapLoading(false);
+        return;
+      }
+
+      // Smart token swap
+      await multiHopClient.executeSwapOperations(
+        { operations, maxSpread: slippageTolerance.toString() },
+        "auto",
+        undefined,
+        [
+          {
+            amount: fromAmount.toString(),
+            denom: fromToken.tokenAddress!,
+          },
+        ]
+      );
+      setStatusModalType("success");
+      setStatusModalTxType("swap");
+      setStatusModalTokens([
+        { ...fromToken, balance: Number(fromAmount) },
+        { ...toToken!, balance: Number(toAmount) },
+      ]);
+      setStatusModalOpen(true);
+      setSwapLoading(false);
+    } catch (e) {
+      console.log(e);
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("swap");
+      setStatusModalTokens([]);
+      setSwapLoading(false);
+    }
   };
 
   // Init
@@ -131,6 +271,12 @@ export default function SwapPage() {
   }, []);
 
   // Simulate Swap Hook
+  useEffect(() => {
+    if (fromAmount > 0 && toToken) {
+      simulateSwap();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromToken, toToken, fromAmount]);
 
   return (
     <main>
@@ -139,13 +285,16 @@ export default function SwapPage() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "calc(100vh - 150px)",
+          flexDirection: "column",
           position: "relative",
+          gap: "2rem",
+          height: "calc(100vh - 72px)",
         }}
       >
         {/* Swap Container */}
         {fromToken && toToken && (
           <SwapContainer
+            simulateLoading={simulateLoading}
             from_token={fromToken}
             to_token={toToken}
             from_amount={fromAmount}
@@ -155,13 +304,22 @@ export default function SwapPage() {
             onToTokenChange={(token: Token) => setToToken(token)}
             onFromAmountChange={(amount: number) => setFromAmount(amount)}
             onToAmountChange={(amount: number) => setToAmount(amount)}
-            onSwap={() => simulateSwap()}
+            onSwap={() => swap()}
             slippageTolerance={slippageTolerance}
             setSlippageTolerance={(slippageTolerance: number) =>
               setSlippageTolerance(slippageTolerance)
             }
+            swapLoading={swapLoading}
+            maxFromAmount={fromToken.balance}
           />
         )}
+        <SwapStats
+          exchangeRateText={exchangeRateText}
+          networkFeeText={networkFeeText}
+          route={route}
+          maximumSpreadText={maximumSpreadText}
+          simulateLoading={simulateLoading}
+        />
         <Box sx={{ position: "absolute", width: "100%", zIndex: -1 }}>
           <Box
             component="img"
@@ -176,6 +334,15 @@ export default function SwapPage() {
           />
         </Box>
       </Box>
+      <StatusModal
+        open={statusModalOpen}
+        onClose={() => {
+          setStatusModalOpen(false);
+        }}
+        status={statusModalType}
+        txType={statusModalTxType}
+        tokens={statusModalTokens}
+      />
     </main>
   );
 }

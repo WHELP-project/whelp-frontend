@@ -5,6 +5,7 @@ type Pool = {
   asset_a: string;
   asset_b: string;
 };
+
 export function findBestPath(
   fromAsset: AssetInfo,
   toAsset: AssetInfo,
@@ -16,8 +17,9 @@ export function findBestPath(
   // @ts-ignore
   const toAssetAddress: string = toAsset.cw20_token || toAsset.smart_token;
   const operations: SwapOperation[] = [];
-  // Helper function to avoid duplicate operations
-  const addOperation = (ask: AssetInfo, offer: AssetInfo) => {
+
+  // Helper function to correctly add operations
+  const addOperation = (offer: AssetInfo, ask: AssetInfo) => {
     if (
       !operations.some(
         (op) =>
@@ -27,8 +29,8 @@ export function findBestPath(
     ) {
       operations.push({
         dex_swap: {
-          ask_asset_info: ask,
           offer_asset_info: offer,
+          ask_asset_info: ask,
         },
       });
     }
@@ -62,7 +64,7 @@ export function findBestPath(
           commonAsset !== fromAssetAddress &&
           commonAsset !== toAssetAddress
         ) {
-          // Figure if commonAsset is a CW20 or Smart token (if it starts with core1 or testcore1)
+          // Determine commonAssetInfo based on the asset's prefix
           const commonAssetInfo = commonAsset.startsWith("testcore1")
             ? { cw20_token: commonAsset }
             : { smart_token: commonAsset };

@@ -204,7 +204,6 @@ export default function SwapPage({
       address: appStore.wallet.address,
     });
 
-    console.log(claims);
     // Set states
     setUserStakes(tableEntries);
     setUserClaims(claims);
@@ -296,9 +295,9 @@ export default function SwapPage({
   const provideLiquidity = async () => {
     try {
       const amounts: WhelpPoolTypes.Asset[] = [
-        { amount: tokenAValue, info: tokenAInfo },
+        { amount: Number(tokenAValue).toFixed(0), info: tokenAInfo },
         {
-          amount: tokenBValue,
+          amount: Number(tokenBValue).toFixed(0),
           info: tokenBInfo,
         },
       ];
@@ -312,12 +311,12 @@ export default function SwapPage({
           {
             // @ts-ignore
             denom: amounts[0].info.smart_token,
-            amount: amounts[0].amount,
+            amount: Number(amounts[0].amount).toFixed(0),
           },
           {
             // @ts-ignore
             denom: amounts[1].info.smart_token,
-            amount: amounts[1].amount,
+            amount: Number(amounts[1].amount).toFixed(0),
           },
         ]
       );
@@ -511,7 +510,7 @@ export default function SwapPage({
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
-                        setTokenBValue((Number(e) * assetRatio).toString());
+                        setTokenBValue((Number(e) / assetRatio).toString());
                       },
                       value: tokenAValue,
                       loading: loadBalances,
