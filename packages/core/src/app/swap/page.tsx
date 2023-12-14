@@ -22,6 +22,7 @@ import {
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
 import { toBase64, toUtf8 } from "@cosmjs/encoding";
+import { useSearchParams } from "next/navigation";
 
 export default function SwapPage() {
   // Set States
@@ -51,6 +52,10 @@ export default function SwapPage() {
 
   // Init Store
   const appStore = useAppStore();
+
+  // Check if token query
+  const searchParams = useSearchParams();
+  const _searchToken = searchParams.get("fromToken");
 
   // Get pools to fetch all tokens from it
   const getPools = async () => {
@@ -282,9 +287,12 @@ export default function SwapPage() {
   // Init
   useEffect(() => {
     fetchTokens().then((tokens) => {
+      const searchToken = tokens.find(
+        (token) => token.tokenAddress === _searchToken
+      );
       setAllTokens(tokens);
-      setFromToken(tokens[0]);
-      setToToken(tokens[1]);
+      setFromToken(searchToken ?? tokens[0]);
+      setToToken(searchToken === tokens[1] ? tokens[0] : tokens[1]);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

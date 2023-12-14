@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { AssetList, Card } from "@whelp/ui";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { palette } from "@whelp/ui";
+import { useRouter } from "next/navigation";
 
 const CardTitleStyles = {
   color: "#FFFF",
@@ -25,6 +26,9 @@ export default function Home() {
   // Some States
   const [allTokens, setAllTokens] = useState<Token[]>([]);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
+
+  // Router
+  const router = useRouter();
 
   // Get pools to fetch all tokens from it
   const getPools = async () => {
@@ -129,7 +133,7 @@ export default function Home() {
           <Divider sx={{ my: "1.5rem", background: palette.strokePrimary }} />
           <AssetList
             entries={allTokens}
-            onClick={(token) => console.log(token)}
+            onClick={(token) => router.push(`/swap?fromToken=${token.tokenAddress}`)}
           />
         </Box>
       </Box>
