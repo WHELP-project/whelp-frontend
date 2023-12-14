@@ -2,6 +2,7 @@ import { Box, Button, Grid, Input, Skeleton, Typography } from "@mui/material";
 import React from "react";
 import theme from "../../Theme";
 import { UiTypes } from "@whelp/types";
+import { microAmountToAmount } from "@whelp/utils";
 
 const TokenBox = ({
   token,
@@ -72,15 +73,15 @@ const TokenBox = ({
               {loading ? (
                 <Skeleton variant="rounded" width={100} />
               ) : (
-                "Available " + token.balance
+                "Available " + microAmountToAmount(token)
               )}
             </Typography>
           </Box>
           {!isStakeToken && (
             <Button
               onClick={() => {
-                onChange(token.balance.toString());
-                setUsdPrice(token.balance * token.usdValue);
+                onChange(microAmountToAmount(token).toString());
+                setUsdPrice(microAmountToAmount(token) * token.usdValue);
               }}
               sx={{
                 borderRadius: "999px",
@@ -123,7 +124,7 @@ const TokenBox = ({
               }}
               inputProps={{
                 min: 0,
-                max: token.balance,
+                max: microAmountToAmount(token),
                 style: {
                   textAlign: "right",
                   padding: 0,

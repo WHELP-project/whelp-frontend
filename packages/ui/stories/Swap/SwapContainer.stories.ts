@@ -55,5 +55,7 @@ export const Main: Story = {
     slippageTolerance: 0.5,
     setSlippageTolerance: (slippageTolerance: number) =>
       console.log(slippageTolerance),
+    swapLoading: true,
+    maxFromAmount: 100,
   },
 };

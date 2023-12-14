@@ -32,6 +32,16 @@ export const SuccessProvideLiquidity: Story = {
   },
 };
 
+export const SuccessSwap: Story = {
+  args: {
+    open: true,
+    onClose: () => {},
+    txType: "swap",
+    status: "success",
+    tokens: [token, token],
+  },
+};
+
 export const ErrorProvideLiquidity: Story = {
   args: {
     open: true,

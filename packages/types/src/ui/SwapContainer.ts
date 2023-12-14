@@ -14,6 +14,10 @@ export interface SwapContainerProps {
   buttonDisabled?: boolean;
   slippageTolerance: number;
   setSlippageTolerance: (slippageTolerance: number) => void;
+  simulateLoading: boolean;
+  swapLoading: boolean;
+  maxFromAmount: number;
+  switchTokens: () => void;
 }
 
 export interface SlippagePopupProps {
@@ -27,4 +31,12 @@ export interface AssetSelectorProps {
   selectedToken: Token;
   tokens: Token[];
   onSelect: (token: Token) => void;
+}
+
+export interface SwapStatsProps {
+  exchangeRateText: string;
+  networkFeeText: string;
+  route: string[];
+  maximumSpreadText: string;
+  simulateLoading: boolean;
 }

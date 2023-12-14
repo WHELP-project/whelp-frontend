@@ -101,7 +101,14 @@ const PoolEntry = ({ entry }: { entry: UiTypes.Pool }) => {
       </Grid>
       <Grid item xs={3}>
         <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-          <Button type="secondary" size="small" label="Manage" />
+          <Button
+            onClick={() =>
+              (window.location.href = `/pools/${entry.poolAddress}`)
+            }
+            type="secondary"
+            size="small"
+            label="Manage"
+          />
         </Typography>
       </Grid>
     </Grid>

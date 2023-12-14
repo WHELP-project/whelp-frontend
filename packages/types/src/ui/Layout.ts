@@ -21,6 +21,7 @@ export interface ButtonProps
       label?: string;
       iconBefore?: string;
       iconAfter?: string;
+      loading?: boolean;
     }
   > {
   label?: string;

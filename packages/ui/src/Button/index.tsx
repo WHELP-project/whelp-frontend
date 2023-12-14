@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  CircularProgress,
   Button as MuiButton,
   ButtonProps as MuiButtonProps,
 } from "@mui/material";
@@ -9,6 +10,7 @@ import theme from "../Theme";
 const Button = ({
   type = "primary",
   size = "medium",
+  loading = false,
   label,
   ...props
 }: UiTypes.ButtonProps) => {
@@ -54,7 +56,7 @@ const Button = ({
   return (
     <MuiButton
       size={size}
-      disabled={props.disabled}
+      disabled={props.disabled || loading}
       //  @ts-ignore
       sx={{
         ...styles,
@@ -62,7 +64,7 @@ const Button = ({
       }}
       {...otherProps}
     >
-      {label}
+      {!loading ? label : <CircularProgress color="success" />}
     </MuiButton>
   );
 };

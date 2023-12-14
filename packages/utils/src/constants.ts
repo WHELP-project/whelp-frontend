@@ -9,3 +9,8 @@ export const TestnetConfig = {
   chain_id: "coreum-testnet-1",
   native_denom: "utestcore",
 };
+
+export const WhelpFactoryAddress: string =
+  "testcore1jj9uftnlpjxchxs62z4hxfy94wdztrjezl49m634xv9ct9j2qh4qzkr9q8";
+export const WhelpMultihopAddress: string =
+  "testcore1xzr93z44m5demwazn2g5c97w8kqdelmqr6s6xk3zhwlka54845csug808s";
