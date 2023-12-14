@@ -9,7 +9,9 @@ import {
   TestnetConfig,
   WhelpFactoryAddress,
   WhelpMultihopAddress,
+  amountToMicroAmount,
   findBestPath,
+  microAmountToAmount,
   tokenToTokenInfo,
 } from "@whelp/utils";
 import {
@@ -131,18 +133,27 @@ export default function SwapPage() {
 
     // Simulate Swap
     const result = await multiHopClient.simulateSwapOperations({
-      offerAmount: fromAmount.toString(),
+      offerAmount: amountToMicroAmount({
+        ...fromToken!,
+        balance: fromAmount,
+      }).toString(),
       operations,
       referral: false,
     });
 
     // Set Stats Text
     setExchangeRateText(
-      `${(Number(result.amount) / fromAmount).toFixed(2)} ${
-        toToken?.name
-      } per ${fromToken?.name}`
+      `${(
+        microAmountToAmount({ ...toToken!, balance: Number(result.amount) }) /
+        fromAmount
+      ).toFixed(2)} ${toToken?.name} per ${fromToken?.name}`
     );
-    setNetworkFeeText(`${result.spread_amounts[0].amount} ${fromToken?.name}`);
+    setNetworkFeeText(
+      `${microAmountToAmount({
+        ...fromToken!,
+        balance: Number(result.spread_amounts[0].amount),
+      })} ${fromToken?.name}`
+    );
 
     const _route: string[] = [];
     for (let i = 0; i < operations.length; i++) {
@@ -160,11 +171,13 @@ export default function SwapPage() {
       }
     }
 
-    setRoute(_route);
+    setRoute(_route.reverse());
     setMaximumSpreadText(`${slippageTolerance}%`);
 
     // Set toAmount
-    setToAmount(Number(result.amount));
+    setToAmount(
+      microAmountToAmount({ ...toToken!, balance: Number(result.amount) })
+    );
     // Set simulate loading
     setSimulateLoading(false);
   };
@@ -310,7 +323,7 @@ export default function SwapPage() {
               setSlippageTolerance(slippageTolerance)
             }
             swapLoading={swapLoading}
-            maxFromAmount={fromToken.balance}
+            maxFromAmount={microAmountToAmount(fromToken)}
           />
         )}
         <SwapStats
