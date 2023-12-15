@@ -22,7 +22,6 @@ const AppBar = ({ ...props }: UiTypes.AppBarProps) => {
     padding: "1rem 2rem",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: largerThenMd ? "62.8125rem" : 0,
     borderBottom: `1px solid ${theme.palette.strokePrimary}`,
   };
   return (

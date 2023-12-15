@@ -185,7 +185,7 @@ const AssetList = (params: AssetListProps) => {
     <>
       <Box
         sx={{
-          display: "flex",
+          display: {md: "flex", xs: "block"},
           justifyContent: "space-between",
           alignItems: "center",
           mb: "1rem",

@@ -308,16 +308,32 @@ export default function SwapPage() {
   }, [fromToken, toToken, fromAmount]);
 
   return (
-    <main>
+    <main style={{ position: "relative" }}>
+      <Box sx={{ position: "absolute", width: "100%", zIndex: -1 }}>
+        <Box
+          component="img"
+          alt="Background img"
+          src="/images/swap_bg.png"
+          sx={{
+            height: "100%",
+            width: "100%",
+            top: 0,
+            zIndex: -1,
+          }}
+        />
+      </Box>
       {pageLoading ? (
         <LoaderVideo variant={3} />
       ) : (
         <>
           <Box
             sx={{
-              display: "flex",
+              display: "block",
               justifyContent: "center",
               alignItems: "center",
+              margin: "auto",
+              maxWidth: "650px",
+              mt: "2rem",
               flexDirection: "column",
               position: "relative",
               gap: "2rem",
@@ -357,19 +373,6 @@ export default function SwapPage() {
               maximumSpreadText={maximumSpreadText}
               simulateLoading={simulateLoading}
             />
-            <Box sx={{ position: "absolute", width: "100%", zIndex: -1 }}>
-              <Box
-                component="img"
-                alt="Background img"
-                src="/images/swap_bg.png"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  bottom: 0,
-                  zIndex: -1,
-                }}
-              />
-            </Box>
           </Box>
         </>
       )}
