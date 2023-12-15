@@ -8,7 +8,7 @@ const SwapStats = (props: UiTypes.SwapStatsProps) => {
     <Box
       sx={{
         background: theme.palette.bgPrimary,
-        maxWidth: "32rem",
+        maxWidth: "100%",
       }}
     >
       <Box
@@ -18,7 +18,7 @@ const SwapStats = (props: UiTypes.SwapStatsProps) => {
           border: `1px solid ${theme.palette.strokeSecondary}`,
           background: theme.palette.bgAlpha0,
           backdropFilter: "blur(20px)",
-          maxWidth: "32rem",
+          maxWidth: "100%",
         }}
       >
         <Typography

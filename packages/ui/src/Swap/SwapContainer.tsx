@@ -33,7 +33,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
       <Box
         sx={{
           background: theme.palette.bgPrimary,
-          maxWidth: "32rem",
+          maxWidth: "100%",
         }}
       >
         <Box
@@ -43,7 +43,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             border: `1px solid ${theme.palette.strokeSecondary}`,
             background: theme.palette.bgAlpha0,
             backdropFilter: "blur(20px)",
-            maxWidth: "32rem",
+            maxWidth: "100%",
           }}
         >
           <Box
@@ -100,6 +100,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
               sx={{
                 display: "flex",
                 width: "25rem",
+                maxWidth: "100%",
                 padding: "0.25rem 1rem 0.25rem 0.25rem",
                 alignItems: "center",
                 gap: "1.5rem",
@@ -252,6 +253,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
               sx={{
                 display: "flex",
                 width: "25rem",
+                maxWidth: "100%",
                 padding: "0.25rem 1rem 0.25rem 0.25rem",
                 alignItems: "center",
                 gap: "1.5rem",
