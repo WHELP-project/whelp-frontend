@@ -103,28 +103,28 @@ export default function Home() {
         >
           <Box sx={{ background: palette.bgPrimary }}>
             <Grid container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <Card
                   title={"Total Balance"}
                   content={<Typography sx={CardTitleStyles}>$0</Typography>}
                   warning={false}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <Card
                   title={"Total Balance"}
                   content={<Typography sx={CardTitleStyles}>$0</Typography>}
                   warning={false}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <Card
                   title={"Total Balance"}
                   content={<Typography sx={CardTitleStyles}>$0</Typography>}
                   warning={false}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={12} md={3}>
                 <Card
                   title={"Total Balance"}
                   content={<Typography sx={CardTitleStyles}>$0</Typography>}
