@@ -99,7 +99,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             <Box
               sx={{
                 display: "flex",
-                width: "25rem",
+                width: "100%",
                 maxWidth: "100%",
                 padding: "0.25rem 1rem 0.25rem 0.25rem",
                 alignItems: "center",
@@ -252,7 +252,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             <Box
               sx={{
                 display: "flex",
-                width: "25rem",
+                width: "100%",
                 maxWidth: "100%",
                 padding: "0.25rem 1rem 0.25rem 0.25rem",
                 alignItems: "center",
