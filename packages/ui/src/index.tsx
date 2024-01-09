@@ -25,6 +25,7 @@ export * from "./LayoutProvider";
 export * from "./StatusModal";
 export * from "./MobileNav";
 export * from "./Loader";
+export * from "./IbcDepositModal";
 
 /**
  * Pool Components
