@@ -4,23 +4,10 @@ import React from "react";
 import { Box, Input, Modal, Typography } from "@mui/material";
 import { Button, palette } from "..";
 import { Remove } from "react-huge-icons/solid";
-import { Token } from "@whelp/types";
+import { UiTypes } from "@whelp/types";
 import theme from "../Theme";
 
-interface IbcDepositModalProps {
-  open: boolean;
-  fromToken: Token;
-  fromAddress: string;
-  toToken: Token;
-  toAddress: string;
-  availableAmount: number;
-  amount: number;
-  onAmountChange: (amount: number) => void;
-  onClose: () => void;
-  onClick: () => void;
-}
-
-const IbcDepositModal = ({ ...props }: IbcDepositModalProps) => {
+const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
   const style = {
     position: "absolute",
     top: "50%",

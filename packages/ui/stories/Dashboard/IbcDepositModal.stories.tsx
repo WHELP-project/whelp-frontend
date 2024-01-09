@@ -40,6 +40,7 @@ export const Primary: Story = {
     toAddress: "cosmos14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",
     amount: 100,
     availableAmount: 300,
+    onAmountChange: (amount: number) => {},
     onClose: () => {},
     onClick: () => {}
   },
