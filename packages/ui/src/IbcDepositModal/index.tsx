@@ -46,6 +46,15 @@ const IbcDepositModal = ({ ...props }: IbcDepositModalProps) => {
     background: theme.palette.bgAlpha0,
   };
 
+  const boxLabelStyle = {
+    color: theme.palette.textLoud,
+    fontFamily: "Inter",
+    fontSize: "0.875rem",
+    fontStyle: "normal",
+    fontWeight: 500,
+    lineHeight: "1.25rem",
+  };
+
   function shortAddress(inputString: string): string {
     const first = inputString.substring(0, 15);
     const last = inputString.slice(-3);
@@ -96,14 +105,7 @@ const IbcDepositModal = ({ ...props }: IbcDepositModalProps) => {
           >
             <Box sx={boxStyle}>
               <Typography
-                sx={{
-                  color: theme.palette.textLoud,
-                  fontFamily: "Inter",
-                  fontSize: "0.875rem",
-                  fontStyle: "normal",
-                  fontWeight: 500,
-                  lineHeight: "1.25rem",
-                }}
+                sx={boxLabelStyle}
               >
                 From
               </Typography>
@@ -111,14 +113,7 @@ const IbcDepositModal = ({ ...props }: IbcDepositModalProps) => {
             </Box>
             <Box sx={boxStyle}>
               <Typography
-                sx={{
-                  color: theme.palette.textLoud,
-                  fontFamily: "Inter",
-                  fontSize: "0.875rem",
-                  fontStyle: "normal",
-                  fontWeight: 500,
-                  lineHeight: "1.25rem",
-                }}
+                sx={boxLabelStyle}
               >
                 To
               </Typography>
@@ -134,14 +129,7 @@ const IbcDepositModal = ({ ...props }: IbcDepositModalProps) => {
               }}
             >
               <Typography
-                sx={{
-                  color: theme.palette.textLoud,
-                  fontFamily: "Inter",
-                  fontSize: "0.875rem",
-                  fontStyle: "normal",
-                  fontWeight: 500,
-                  lineHeight: "1.25rem",
-                }}
+                sx={boxLabelStyle}
               >
                 Select Amount
               </Typography>
