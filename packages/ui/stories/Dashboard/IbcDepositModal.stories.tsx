@@ -35,6 +35,7 @@ export const Primary: Story = {
   args: {
     open: true,
     fromToken: token,
+    type: "DEPOSIT",
     fromAddress: "cosmos14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",
     toToken: token2,
     toAddress: "cosmos14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Box, Input, Modal, Typography } from "@mui/material";
-import { Button, palette } from "..";
+import { Button } from "..";
 import { Remove } from "react-huge-icons/solid";
 import { UiTypes } from "@whelp/types";
 import theme from "../Theme";
@@ -187,7 +187,7 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
             />
           </Box>
 
-          <Button sx={{ width: "100%" }} label="Deposit" />
+          <Button sx={{ width: "100%" }} label={props.type} />
         </Box>
       </Box>
     </Modal>

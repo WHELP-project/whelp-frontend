@@ -2,6 +2,7 @@ import { Token } from "../general";
 
 export interface IbcDepositModalProps {
   open: boolean;
+  type: "DEPOSIT" | "WITHDRAW";
   fromToken: Token;
   fromAddress: string;
   toToken: Token;
