@@ -91,19 +91,29 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
             }}
           >
             <Box sx={boxStyle}>
-              <Typography
-                sx={boxLabelStyle}
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
               >
-                From
-              </Typography>
+                <Typography sx={boxLabelStyle}>From</Typography>
+                <Typography sx={boxLabelStyle}>{props.fromToken.name}</Typography>
+              </Box>
               {shortAddress(props.fromAddress)}
             </Box>
             <Box sx={boxStyle}>
-              <Typography
-                sx={boxLabelStyle}
+            <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
               >
-                To
-              </Typography>
+                <Typography sx={boxLabelStyle}>To</Typography>
+                <Typography sx={boxLabelStyle}>{props.toToken.name}</Typography>
+              </Box>
               {shortAddress(props.toAddress)}
             </Box>
           </Box>
@@ -115,11 +125,7 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
                 width: "100%",
               }}
             >
-              <Typography
-                sx={boxLabelStyle}
-              >
-                Select Amount
-              </Typography>
+              <Typography sx={boxLabelStyle}>Select Amount</Typography>
               <Typography
                 sx={{
                   color: theme.palette.textLoud,
