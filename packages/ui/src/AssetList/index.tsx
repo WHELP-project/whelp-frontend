@@ -16,24 +16,21 @@ import { useEffect, useState } from "react";
 import { splitNumber, microAmountToAmount } from "@whelp/utils";
 import { Repeat } from "@mui/icons-material";
 import React from "react";
-interface AssetListProps {
-  entries: Token[];
-  onClick: (token: Token) => void;
-}
 
 const AssetListEntry = ({
   token,
   onClick,
+  onIbcClick
 }: {
   token: Token;
   onClick: (token: Token) => void;
+  onIbcClick: (token: Token) => void;
 }) => {
   const tokenBalance = microAmountToAmount(token);
   const tokenBalanceSplit = splitNumber(tokenBalance, token.decimals);
   return (
     <>
       <Box
-        onClick={() => onClick(token)}
         sx={{
           display: "flex",
           padding: "1.5rem",
@@ -110,6 +107,7 @@ const AssetListEntry = ({
         <Box
           className="hover-box"
           sx={{
+            display: "flex",
             position: "absolute",
             height: "1rem",
             background: palette.green.base,
@@ -117,12 +115,11 @@ const AssetListEntry = ({
             width: "100%",
             overflow: "hidden",
             borderRadius: "0 0 1rem 1rem",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: "space-around"
           }}
         >
           <Typography
+            onClick={() => onClick(token)}
             sx={{
               color: palette.textBlack,
               fontFamily: "Inter",
@@ -134,13 +131,26 @@ const AssetListEntry = ({
           >
             <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> Quick Swap
           </Typography>
+          <Typography
+            onClick={() => onIbcClick(token)}
+            sx={{
+              color: palette.textBlack,
+              fontFamily: "Inter",
+              fontSize: "0.75rem",
+              fontStyle: "normal",
+              fontWeight: "500",
+              lineHeight: "1rem",
+            }}
+          >
+            <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> IBC
+          </Typography>
         </Box>
       </Box>
     </>
   );
 };
 
-const AssetList = (params: AssetListProps) => {
+const AssetList = (params: UiTypes.AssetListProps) => {
   // Filter States
   const [search, setSearch] = useState<string>();
   const [_sortBy, _setSortBy] = useState<string>("value_asc");
@@ -185,7 +195,7 @@ const AssetList = (params: AssetListProps) => {
     <>
       <Box
         sx={{
-          display: {md: "flex", xs: "block"},
+          display: { md: "flex", xs: "block" },
           justifyContent: "space-between",
           alignItems: "center",
           mb: "1rem",
@@ -362,7 +372,7 @@ const AssetList = (params: AssetListProps) => {
       >
         {entries.map((entry, index) => (
           <Grid key={index} item xs={12} md={3}>
-            <AssetListEntry token={entry} onClick={params.onClick} />
+            <AssetListEntry token={entry} onClick={params.onClick} onIbcClick={params.onIbcClick} />
           </Grid>
         ))}
       </Grid>
