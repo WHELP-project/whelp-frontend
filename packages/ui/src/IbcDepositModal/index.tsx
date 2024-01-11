@@ -99,7 +99,6 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
                 }}
               >
                 <Typography sx={boxLabelStyle}>From</Typography>
-                <Typography sx={boxLabelStyle}>{props.fromToken.name}</Typography>
               </Box>
               {shortAddress(props.fromAddress)}
             </Box>
@@ -112,7 +111,6 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
                 }}
               >
                 <Typography sx={boxLabelStyle}>To</Typography>
-                <Typography sx={boxLabelStyle}>{props.toToken.name}</Typography>
               </Box>
               {shortAddress(props.toAddress)}
             </Box>
