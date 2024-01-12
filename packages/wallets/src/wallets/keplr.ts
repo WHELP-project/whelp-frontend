@@ -47,10 +47,10 @@ export class Keplr implements WalletTypes.Wallet {
 
   async getSigningStargateClient(envConfig: any): Promise<SigningStargateClient> {
     return SigningStargateClient.connectWithSigner(
-      envConfig.rpc_endpoint,
-      this.getOfflineSigner(envConfig.chain_id),
+      TestnetConfig.rpc_endpoint,
+      this.getOfflineSigner(TestnetConfig.chain_id),
       {
-        gasPrice: envConfig.gasPrice,
+        gasPrice: GasPrice.fromString("0.025utestcore"),
       }
     );
   }
