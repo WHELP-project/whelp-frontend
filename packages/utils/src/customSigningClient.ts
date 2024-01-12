@@ -24,7 +24,7 @@ const getConfig = (assetName: string) => {
     String(feeToken?.average_gas_price) + feeToken?.denom
   );
 
-  const assetListAssetName = assetName === "juno" ? "juno-network" : assetName;
+  const assetListAssetName = assetName;
   const rpc = (assetListAssetName === "cosmos") ? "https://rpc.cosmos.directory:443/cosmoshub" : "";
 
   return { ...chain, gasPrice, rpc_endpoint: rpc };

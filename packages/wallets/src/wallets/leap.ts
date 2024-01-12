@@ -4,7 +4,7 @@ import { chainRegistryChainToKeplr } from "@chain-registry/keplr";
 import { StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { TestnetConfig } from "@whelp/utils";
-import { GasPrice } from "@cosmjs/stargate";
+import { GasPrice, SigningStargateClient } from "@cosmjs/stargate";
 
 export class Leap implements WalletTypes.Wallet {
   readonly client: WalletTypes.LeapClient;
@@ -107,6 +107,16 @@ export class Leap implements WalletTypes.Wallet {
       this.getOfflineSigner(TestnetConfig.chain_id),
       {
         gasPrice: GasPrice.fromString("0.025utestcore"),
+      }
+    );
+  }
+
+  async getSigningStargateClient(envConfig: any): Promise<SigningStargateClient> {
+    return SigningStargateClient.connectWithSigner(
+      envConfig.rpc_endpoint,
+      this.getOfflineSigner(envConfig.chain_id),
+      {
+        gasPrice: envConfig.gasPrice,
       }
     );
   }
