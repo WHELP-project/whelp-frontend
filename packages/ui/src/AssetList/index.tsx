@@ -142,7 +142,7 @@ const AssetListEntry = ({
               lineHeight: "1rem",
             }}
           >
-            <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> IBC
+            <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> IBC Transfer
           </Typography>
         </Box>
       </Box>
