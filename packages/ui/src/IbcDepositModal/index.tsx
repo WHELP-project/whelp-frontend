@@ -1,13 +1,19 @@
 "use client";
 
 import React from "react";
-import { Box, Input, Modal, Typography } from "@mui/material";
+import { Box, Input, Modal, Tab, Tabs, Typography } from "@mui/material";
 import { Button } from "..";
 import { Remove } from "react-huge-icons/solid";
 import { UiTypes } from "@whelp/types";
 import theme from "../Theme";
 
 const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -72,6 +78,16 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
             gap: "2rem",
           }}
         >
+          <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Deposit" />
+                <Tab label="Withdraw" />
+              </Tabs>
+          </Box>
           <Typography
             sx={{
               color: theme.palette.textLoud,
@@ -81,7 +97,7 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
               lineHeight: "1.75rem",
             }}
           >
-            Deposit
+            {value === 0 ? "Deposit" : "Withdraw"}
           </Typography>
           <Box
             sx={{
@@ -100,10 +116,10 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
               >
                 <Typography sx={boxLabelStyle}>From</Typography>
               </Box>
-              {shortAddress(props.fromAddress)}
+              {shortAddress(value === 0 ? props.fromAddress : props.toAddress)}
             </Box>
             <Box sx={boxStyle}>
-            <Box
+              <Box
                 sx={{
                   width: "100%",
                   display: "flex",
@@ -112,7 +128,7 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
               >
                 <Typography sx={boxLabelStyle}>To</Typography>
               </Box>
-              {shortAddress(props.toAddress)}
+              {shortAddress(value === 0 ? props.toAddress : props.fromAddress)}
             </Box>
           </Box>
           <Box sx={{ ...boxStyle, width: "100%" }}>
@@ -135,10 +151,17 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  props.onAmountChange(props.availableAmount);
+                  props.onAmountChange(
+                    value === 0
+                      ? props.availableAmountDeposit
+                      : props.availableAmountWithdraw
+                  );
                 }}
               >
-                Available: {props.availableAmount}
+                Available:{" "}
+                {value === 0
+                  ? props.availableAmountDeposit
+                  : props.availableAmountWithdraw}
               </Typography>
             </Box>
             <Input
@@ -149,7 +172,10 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
               }}
               inputProps={{
                 min: 0,
-                max: props.fromToken.balance,
+                max:
+                  value === 0
+                    ? props.availableAmountDeposit
+                    : props.availableAmountWithdraw,
                 style: {
                   textAlign: "right",
                   padding: 0,
@@ -191,7 +217,10 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
             />
           </Box>
 
-          <Button sx={{ width: "100%" }} label={props.type} />
+          <Button
+            sx={{ width: "100%" }}
+            label={value === 0 ? "Deposit" : "Withdraw"}
+          />
         </Box>
       </Box>
     </Modal>

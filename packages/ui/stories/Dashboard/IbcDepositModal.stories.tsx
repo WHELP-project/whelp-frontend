@@ -34,15 +34,14 @@ type Story = StoryObj<typeof IbcDepositModal>;
 export const Primary: Story = {
   args: {
     open: true,
-    fromToken: token,
-    type: "DEPOSIT",
     fromAddress: "cosmos14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",
-    toToken: token2,
-    toAddress: "cosmos14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",
+    toAddress: "foo14tla02hwpc2smx74rsv87vdkh3k6cm84gfrc9y",
     amount: 100,
-    availableAmount: 300,
+    availableAmountDeposit: 300,
+    availableAmountWithdraw: 400,
     onAmountChange: (amount: number) => {},
     onClose: () => {},
-    onClick: () => {}
+    onDepositClick: () => {},
+    onWithdrawClick: () => {},
   },
 };
