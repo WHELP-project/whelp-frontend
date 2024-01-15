@@ -38,16 +38,13 @@ const beautifyName = (name: string): string => {
 };
 
 // Function to add a new chain to the wallet client
-const addChain = async (WalletClient: WalletTypes.Wallet) => {
-  const { chain, assetList } = findChainAsset("coreumtestnet");
+const addChain = async (WalletClient: WalletTypes.Wallet, chainAsset: string) => {
+  const { chain, assetList } = findChainAsset(chainAsset);
+
   return await WalletClient.addChain?.({
-    name: "coreumtestnet",
-    chain: { ...chain, chain_name: "coreumtestnet" },
-    assetList,
-    preferredEndpoints: {
-      rpc: ["https://full-node.testnet-1.coreum.dev:26657"],
-      rest: ["https://full-node.testnet-1.coreum.dev:1317"],
-    },
+    name: chainAsset,
+    chain: chain,
+    assetList
   });
 };
 
