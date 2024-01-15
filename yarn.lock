@@ -6534,6 +6534,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@whelp/asset-list@workspace:packages/asset-list":
+  version: 0.0.0-use.local
+  resolution: "@whelp/asset-list@workspace:packages/asset-list"
+  dependencies:
+    typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
 "@whelp/contracts@workspace:^, @whelp/contracts@workspace:packages/contracts":
   version: 0.0.0-use.local
   resolution: "@whelp/contracts@workspace:packages/contracts"
