@@ -257,6 +257,8 @@ export default function SwapPage({
       setStatusModalTxType("stakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(stakingAmount) }]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -286,6 +288,8 @@ export default function SwapPage({
       setStatusModalTxType("unstakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -344,6 +348,8 @@ export default function SwapPage({
         { ...tokenB, balance: Number(tokenBValue) },
       ]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -386,6 +392,8 @@ export default function SwapPage({
         },
       ]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
