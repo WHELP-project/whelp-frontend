@@ -1,18 +1,10 @@
 {
   "tokens": [
     {
-      "id": "cosmos",
-      "name": "ATOM",
-      "symbol": "ATOM",
-      "chain_id": "cosmoshub-4",
-      "rpc": "https://rpc.cosmos.directory:443/cosmoshub",
-      "denom": "uatom",
-      "decimals": 6,
+      "id": "osmosis",
       "channel": "channel-2188",
       "coreum_channel": "channel-2",
-      "coreum_denom": "",
-      "logoURI": "https://raw.githubusercontent.com/cosmos/chain-registry/master/cosmoshub/images/atom.png",
-      "tags": "ibc"
+      "coreum_denom": ""
     }
   ]
 }
