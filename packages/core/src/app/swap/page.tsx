@@ -23,7 +23,6 @@ import {
 import { useAppStore } from "@whelp/state";
 import { toBase64, toUtf8 } from "@cosmjs/encoding";
 import { useSearchParams } from "next/navigation";
-import { tokenToTokenInfo } from "../../../../utils/src/token";
 
 export default function SwapPage() {
   // Set States
