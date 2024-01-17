@@ -308,6 +308,8 @@ export default function SwapPage({
       const stakeClient = getStakeSigningClient();
       await stakeClient.withdrawRewards({});
 
+      // TODO: Modal
+
       // Wait for the next Block
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
