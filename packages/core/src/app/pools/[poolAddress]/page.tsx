@@ -101,15 +101,6 @@ export default function SwapPage({
   const [stakingModalOpen, setStakingModalOpen] = useState<boolean>(false);
   const [userClaims, setUserClaims] = useState<WhelpStakeTypes.Claim[]>([]);
 
-  const [addLiquidityButtonDisabled, setAddLiquidityButtonDisabled] =
-    useState<boolean>(false);
-
-  const [removeLiquidityButtonDisabled, setRemoveLiquidityButtonDisabled] =
-    useState<boolean>(false);
-
-  const [stakeButtonDisabled, setStakeButtonDisabled] =
-    useState<boolean>(false);
-
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
     WhelpPoolQueryClient | undefined
@@ -429,31 +420,6 @@ export default function SwapPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appStore.wallet.address]);
 
-  useEffect(() => {
-    setAddLiquidityButtonDisabled(
-      !(appStore.wallet.address && tokenAValue !== "" && tokenBValue !== "")
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appStore.wallet.address, tokenAValue, tokenBValue]);
-
-  useEffect(() => {
-    setRemoveLiquidityButtonDisabled(
-      !(appStore.wallet.address && tokenLPValue !== "")
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appStore.wallet.address, tokenLPValue]);
-
-  useEffect(() => {
-    setStakeButtonDisabled(
-      !(
-        appStore.wallet.address &&
-        stakingAmount !== "" &&
-        Number(stakingAmount) > tokenLP.balance
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appStore.wallet.address, stakingAmount]);
-
   const provideLiquidityProps = {
     addLiquidityClick: () => provideLiquidity(),
     removeLiquidityClick: () => removeLiquidity(),
@@ -590,8 +556,22 @@ export default function SwapPage({
                 </Box>
                 <PoolLiquidityForm
                   {...provideLiquidityProps}
-                  addLiquidityButtonDisabled={addLiquidityButtonDisabled}
-                  removeLiquidityButtonDisabled={removeLiquidityButtonDisabled}
+                  addLiquidityButtonDisabled={
+                    !(
+                      appStore.wallet.address &&
+                      Number(tokenAValue) > 0 &&
+                      Number(tokenAValue) <= microAmountToAmount(tokenA) &&
+                      Number(tokenBValue) > 0 &&
+                      Number(tokenBValue) <= microAmountToAmount(tokenB)
+                    )
+                  }
+                  removeLiquidityButtonDisabled={
+                    !(
+                      appStore.wallet.address &&
+                      Number(tokenLPValue) > 0 &&
+                      Number(tokenLPValue) <= microAmountToAmount(tokenLP)
+                    )
+                  }
                   addLiquidityProps={[
                     {
                       token: tokenA,
@@ -647,7 +627,13 @@ export default function SwapPage({
                     </Typography>
                   </Box>
                   <PoolStakeForm
-                    disabled={stakeButtonDisabled}
+                    disabled={
+                      !(
+                        appStore.wallet.address &&
+                        Number(stakingAmount) > 0 &&
+                        Number(stakingAmount) <= microAmountToAmount(tokenLP)
+                      )
+                    }
                     tokenBoxProps={{
                       token: tokenLP,
                       onChange: (e) => {
@@ -669,7 +655,7 @@ export default function SwapPage({
                               balance: tokenLP.balance,
                             })) /
                           100
-                        ).toFixed(2)
+                        ).toFixed(5)
                       );
                     }}
                   />
