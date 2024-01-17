@@ -296,6 +296,7 @@ export default function SwapPage({
 
       await getUserStakes(stakingAddress!, tokenLP);
 
+      setUnstakeModalOpen(false);
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("unstakeLp");
@@ -304,6 +305,8 @@ export default function SwapPage({
 
       setTimeout(() => appStore.fetchTokenBalance(tokenLPInfo), 1000);
     } catch (e) {
+      setUnstakeModalOpen(false);
+
       setStatusModalOpen(true);
       setStatusModalType("error");
       setStatusModalTxType("unstakeLp");
