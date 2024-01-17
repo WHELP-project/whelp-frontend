@@ -733,10 +733,10 @@ export default function SwapPage({
       <UnstakeModal
         open={unstakeModalOpen}
         disabled={
-          !(unstakeAmount > 0 && unstakeAmount >= availableUnstakeAmount)
+          !(unstakeAmount > 0 && unstakeAmount <= availableUnstakeAmount)
         }
         amount={unstakeAmount}
-        onAmountChange={(amount) => {
+        onAmountChange={(amount: any) => {
           setUnstakeAmount(amount);
         }}
         availableAmount={availableUnstakeAmount}
