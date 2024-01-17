@@ -16,6 +16,7 @@ import {
   getCosmostationFromExtension,
   getKeplrFromExtension,
   getLeapFromExtension,
+  getWalletClient,
 } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
 import { useAppStore, usePersistStore } from "../store";
@@ -37,16 +38,13 @@ const beautifyName = (name: string): string => {
 };
 
 // Function to add a new chain to the wallet client
-const addChain = async (WalletClient: WalletTypes.Wallet) => {
-  const { chain, assetList } = findChainAsset("coreumtestnet");
+const addChain = async (WalletClient: WalletTypes.Wallet, chainAsset: string) => {
+  const { chain, assetList } = findChainAsset(chainAsset);
+
   return await WalletClient.addChain?.({
-    name: "coreumtestnet",
-    chain: { ...chain, chain_name: "coreumtestnet" },
-    assetList,
-    preferredEndpoints: {
-      rpc: ["https://full-node.testnet-1.coreum.dev:26657"],
-      rest: ["https://full-node.testnet-1.coreum.dev:1317"],
-    },
+    name: chainAsset,
+    chain: chain,
+    assetList
   });
 };
 
@@ -103,62 +101,13 @@ export const createWalletActions = (
       // Determine environment configuration
       const envConfig = env === "prod" ? MainnetConfig : TestnetConfig;
 
-      // Switch case for different wallet types
-      switch (walletId) {
-        // Case for Leap Wallet
-        case WalletTypes.WalletTypes.Leap:
-          const LeapClient = await getLeapFromExtension();
-          if (!LeapClient) throw new Error("No Leap client found");
-          const LeapWalletClient = new Leap(LeapClient);
+      const walletClient = await getWalletClient(walletId);
 
-          // Add chain if in dev environment
-          if (env === "dev") await addChain(LeapWalletClient);
-
-          // Generic wallet connection logic
-          await connectWalletGeneric(
-            LeapWalletClient,
-            envConfig,
-            WalletTypes.WalletTypes.Leap
-          );
-          break;
-
-        // Case for Cosmostation Wallet
-        case WalletTypes.WalletTypes.Cosmostation:
-          const CosmoStationClient = await getCosmostationFromExtension();
-          if (!CosmoStationClient)
-            throw new Error("No Cosmostation client found");
-          const CosmostationWalletClient = new Cosmostation(CosmoStationClient);
-
-          // Add chain if in dev environment
-          if (env === "dev") await addChain(CosmostationWalletClient);
-
-          // Generic wallet connection logic
-          await connectWalletGeneric(
-            CosmostationWalletClient,
-            envConfig,
-            WalletTypes.WalletTypes.Cosmostation
-          );
-          break;
-
-        // Case for Keplr Wallet
-        case WalletTypes.WalletTypes.Keplr:
-          const KeplrClient = await getKeplrFromExtension();
-          if (!KeplrClient) throw new Error("No Keplr client found");
-          const KeplrWalletClient = new Keplr(KeplrClient);
-
-          // Add chain if in dev environment
-          if (env === "dev") await addChain(KeplrWalletClient);
-
-          // Generic wallet connection logic
-          await connectWalletGeneric(
-            KeplrWalletClient,
-            envConfig,
-            WalletTypes.WalletTypes.Keplr
-          );
-          break;
-        default:
-          break;
-      }
+      await connectWalletGeneric(
+        walletClient,
+        envConfig,
+        walletId,
+      );
 
       usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
         type: getState().wallet.type,

@@ -2,7 +2,7 @@ import { chainRegistryChainToKeplr } from "@chain-registry/keplr";
 import { OfflineAminoSigner, StdSignature, StdSignDoc } from "@cosmjs/amino";
 import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { Algo, OfflineDirectSigner } from "@cosmjs/proto-signing";
-import { GasPrice } from "@cosmjs/stargate";
+import { GasPrice, SigningStargateClient } from "@cosmjs/stargate";
 import {
   BroadcastMode,
   Keplr as K,
@@ -37,6 +37,16 @@ export class Keplr implements WalletTypes.Wallet {
 
   async getSigningCosmWasmClient(): Promise<SigningCosmWasmClient> {
     return SigningCosmWasmClient.connectWithSigner(
+      TestnetConfig.rpc_endpoint,
+      this.getOfflineSigner(TestnetConfig.chain_id),
+      {
+        gasPrice: GasPrice.fromString("0.025utestcore"),
+      }
+    );
+  }
+
+  async getSigningStargateClient(envConfig: any): Promise<SigningStargateClient> {
+    return SigningStargateClient.connectWithSigner(
       TestnetConfig.rpc_endpoint,
       this.getOfflineSigner(TestnetConfig.chain_id),
       {

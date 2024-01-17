@@ -18,7 +18,11 @@ import {
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
 import { Token, UiTypes } from "@whelp/types";
-import { amountToMicroAmount, microAmountToAmount } from "@whelp/utils";
+import {
+  amountToMicroAmount,
+  microAmountToAmount,
+  tokenToTokenInfo,
+} from "@whelp/utils";
 import {
   Button,
   Card,
@@ -257,6 +261,8 @@ export default function SwapPage({
       setStatusModalTxType("stakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(stakingAmount) }]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -286,6 +292,8 @@ export default function SwapPage({
       setStatusModalTxType("unstakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -334,7 +342,11 @@ export default function SwapPage({
         ]
       );
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(tokenA),
+        tokenToTokenInfo(tokenB),
+        tokenLPInfo,
+      ]);
 
       // Set Status
       setStatusModalType("success");
@@ -344,6 +356,8 @@ export default function SwapPage({
         { ...tokenB, balance: Number(tokenBValue) },
       ]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalance(tokenLPInfo);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -386,6 +400,12 @@ export default function SwapPage({
         },
       ]);
       setStatusModalOpen(true);
+
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(tokenA),
+        tokenToTokenInfo(tokenB),
+        tokenLPInfo,
+      ]);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");

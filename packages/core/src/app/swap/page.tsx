@@ -137,55 +137,59 @@ export default function SwapPage() {
       })
     );
 
-    // Simulate Swap
-    const result = await multiHopClient.simulateSwapOperations({
-      offerAmount: amountToMicroAmount({
-        ...fromToken!,
-        balance: fromAmount,
-      }).toString(),
-      operations,
-      referral: false,
-    });
+    try {
+      // Simulate Swap
+      const result = await multiHopClient.simulateSwapOperations({
+        offerAmount: amountToMicroAmount({
+          ...fromToken!,
+          balance: fromAmount,
+        }).toString(),
+        operations,
+        referral: false,
+      });
 
-    // Set Stats Text
-    setExchangeRateText(
-      `${(
-        microAmountToAmount({ ...toToken!, balance: Number(result.amount) }) /
-        fromAmount
-      ).toFixed(2)} ${toToken?.name} per ${fromToken?.name}`
-    );
-    setNetworkFeeText(
-      `${microAmountToAmount({
-        ...fromToken!,
-        balance: Number(result.spread_amounts[0].amount),
-      })} ${fromToken?.name}`
-    );
+      // Set Stats Text
+      setExchangeRateText(
+        `${(
+          microAmountToAmount({ ...toToken!, balance: Number(result.amount) }) /
+          fromAmount
+        ).toFixed(2)} ${toToken?.name} per ${fromToken?.name}`
+      );
+      setNetworkFeeText(
+        `${microAmountToAmount({
+          ...fromToken!,
+          balance: Number(result.spread_amounts[0].amount),
+        })} ${fromToken?.name}`
+      );
 
-    const _route: string[] = [];
-    for (let i = 0; i < operations.length; i++) {
-      const op = operations[i];
-      const askAssetInfoName = (
-        await appStore.fetchTokenBalance(op.dex_swap.ask_asset_info)
-      ).name;
-      _route.push(askAssetInfoName);
-
-      if (i === operations.length - 1) {
-        const offerAssetInfoName = (
-          await appStore.fetchTokenBalance(op.dex_swap.offer_asset_info)
+      const _route: string[] = [];
+      for (let i = 0; i < operations.length; i++) {
+        const op = operations[i];
+        const askAssetInfoName = (
+          await appStore.fetchTokenBalance(op.dex_swap.ask_asset_info)
         ).name;
-        _route.push(offerAssetInfoName);
+        _route.push(askAssetInfoName);
+
+        if (i === operations.length - 1) {
+          const offerAssetInfoName = (
+            await appStore.fetchTokenBalance(op.dex_swap.offer_asset_info)
+          ).name;
+          _route.push(offerAssetInfoName);
+        }
       }
+
+      setRoute(_route.reverse());
+      setMaximumSpreadText(`${slippageTolerance}%`);
+
+      // Set toAmount
+      setToAmount(
+        microAmountToAmount({ ...toToken!, balance: Number(result.amount) })
+      );
+      // Set simulate loading
+      setSimulateLoading(false);
+    } catch (error) {
+      console.log(error);
     }
-
-    setRoute(_route.reverse());
-    setMaximumSpreadText(`${slippageTolerance}%`);
-
-    // Set toAmount
-    setToAmount(
-      microAmountToAmount({ ...toToken!, balance: Number(result.amount) })
-    );
-    // Set simulate loading
-    setSimulateLoading(false);
   };
 
   // Get Signing Client
@@ -249,6 +253,12 @@ export default function SwapPage() {
         ]);
         setStatusModalOpen(true);
         setSwapLoading(false);
+
+        appStore.fetchTokenBalances([
+          tokenToTokenInfo(fromToken),
+          tokenToTokenInfo(toToken as Token),
+        ]);
+
         return;
       }
 
@@ -275,6 +285,11 @@ export default function SwapPage() {
       ]);
       setStatusModalOpen(true);
       setSwapLoading(false);
+
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(fromToken),
+        tokenToTokenInfo(toToken as Token),
+      ]);
     } catch (e) {
       console.log(e);
       setStatusModalOpen(true);

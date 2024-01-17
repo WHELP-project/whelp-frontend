@@ -1,0 +1,10 @@
+{
+  "tokens": [
+    {
+      "id": "osmosis",
+      "channel": "channel-2188",
+      "coreum_channel": "channel-2",
+      "coreum_denom": ""
+    }
+  ]
+}

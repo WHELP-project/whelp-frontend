@@ -2,14 +2,20 @@
 
 import { useAppStore } from "@whelp/state";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { TestnetConfig, WhelpFactoryAddress } from "@whelp/utils";
+import {
+  TestnetConfig,
+  WhelpFactoryAddress,
+  getCustomClient,
+  amountToMicroAmount,
+} from "@whelp/utils";
 import { WhelpFactoryQueryClient } from "@whelp/contracts";
 import { Token, UiTypes } from "@whelp/types";
 import { useEffect, useState } from "react";
-import { AssetList, Card, LoaderVideo } from "@whelp/ui";
+import { AssetList, Card, LoaderVideo, IbcDepositModal } from "@whelp/ui";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { palette } from "@whelp/ui";
 import { useRouter } from "next/navigation";
+import { SigningStargateClient } from "@cosmjs/stargate";
 
 const CardTitleStyles = {
   color: "#FFFF",
@@ -27,6 +33,14 @@ export default function Home() {
   const [allTokens, setAllTokens] = useState<Token[]>([]);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
   const [pageLoaded, setPageLoaded] = useState<boolean>(false);
+
+  const [ibcModalOpen, setIbcModalOpen] = useState<boolean>(false);
+  const [ibcModalAmount, setIbcModalAmount] = useState<number>(0.0);
+
+  const [ibcAddress, setIbcAddress] = useState<string>("");
+  const [ibcSigningClient, setIbcSigningClient] = useState<
+    SigningStargateClient | undefined
+  >(undefined);
 
   // Router
   const router = useRouter();
@@ -91,59 +105,142 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appStore.wallet.address]);
 
+  const onIbcClick = async (token: Token) => {
+    const customClient = await getCustomClient(appStore.wallet.type, "cosmos");
+
+    if (customClient) {
+      setIbcSigningClient(customClient.client);
+      setIbcAddress(customClient.account.address);
+    }
+
+    setIbcModalOpen(true);
+  };
+
+  const onDeposit = async () => {
+    try {
+      const OneDayFromNowInSeconds = Math.floor(Date.now() / 1000) + 86400;
+
+      const coinToSend = {
+        denom: "",
+        amount: 2,
+      };
+
+      if (!ibcSigningClient) return;
+      /*
+      await ibcSigningClient.sendIbcTokens(
+        ibcAddress,
+        appStore.wallet.address,
+        coinToSend,
+        "transfer",
+        asset.channel,
+        undefined,
+        OneDayFromNowInSeconds,
+        "auto"
+      );
+      */
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onWithdraw = async () => {
+    try {
+      const OneDayFromNowInSeconds = Math.floor(Date.now() / 1000) + 86400;
+
+      const coinToSend = {
+        denom: "",
+        amount: 2,
+      };
+
+      if (!ibcSigningClient) return;
+
+      /*
+      await ibcSigningClient.sendIbcTokens(
+        appStore.wallet.address,
+        ibcAddress,
+        coinToSend,
+        "transfer",
+        "0",
+        undefined,
+        OneDayFromNowInSeconds,
+        "auto"
+      );
+      */
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <main>
-      {pageLoaded ? (
-        <Box
-          sx={{
-            maxWidth: "1216px",
-            margin: "0 auto",
-            padding: "2rem",
-          }}
-        >
-          <Box sx={{ background: palette.bgPrimary }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={3}>
-                <Card
-                  title={"Total Balance"}
-                  content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                  warning={false}
-                />
+    <>
+      <main>
+        {pageLoaded ? (
+          <Box
+            sx={{
+              maxWidth: "1216px",
+              margin: "0 auto",
+              padding: "2rem",
+            }}
+          >
+            <Box sx={{ background: palette.bgPrimary }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={3}>
+                  <Card
+                    title={"Total Balance"}
+                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    warning={false}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Card
+                    title={"Total Balance"}
+                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    warning={false}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Card
+                    title={"Total Balance"}
+                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    warning={false}
+                  />
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <Card
+                    title={"Total Balance"}
+                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    warning={false}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={3}>
-                <Card
-                  title={"Total Balance"}
-                  content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                  warning={false}
-                />
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <Card
-                  title={"Total Balance"}
-                  content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                  warning={false}
-                />
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <Card
-                  title={"Total Balance"}
-                  content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                  warning={false}
-                />
-              </Grid>
-            </Grid>
-            <Divider sx={{ my: "1.5rem", background: palette.strokePrimary }} />
-            <AssetList
-              entries={allTokens}
-              onClick={(token) =>
-                router.push(`/swap?fromToken=${token.tokenAddress}`)
-              }
-            />
+              <Divider
+                sx={{ my: "1.5rem", background: palette.strokePrimary }}
+              />
+              <AssetList
+                entries={allTokens}
+                onClick={(token) =>
+                  router.push(`/swap?fromToken=${token.tokenAddress}`)
+                }
+                onIbcClick={onIbcClick}
+              />
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <LoaderVideo variant={1} />
-      )}
-    </main>
+        ) : (
+          <LoaderVideo variant={1} />
+        )}
+      </main>
+      <IbcDepositModal
+        open={ibcModalOpen}
+        fromAddress={appStore.wallet.address}
+        toAddress={"foo"}
+        availableAmountDeposit={300}
+        availableAmountWithdraw={500}
+        amount={ibcModalAmount}
+        onAmountChange={(amount: number) => setIbcModalAmount(amount)}
+        onClose={() => setIbcModalOpen(false)}
+        onDepositClick={onDeposit}
+        onWithdrawClick={onWithdraw}
+      />
+    </>
   );
 }

@@ -1,0 +1,22 @@
+{
+  "name": "@whelp/asset-list",
+  "description": "Whelp assets list",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "rm -rf build && tsc",
+    "prepublishOnly": "npm run build",
+    "publish:dev": "npm publish --dry-run",
+    "publish:prod": "npm publish"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  },
+  "files": [
+    "build"
+  ]
+}
