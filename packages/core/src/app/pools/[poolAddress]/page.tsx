@@ -18,7 +18,11 @@ import {
 } from "@whelp/contracts";
 import { useAppStore } from "@whelp/state";
 import { Token, UiTypes } from "@whelp/types";
-import { amountToMicroAmount, microAmountToAmount } from "@whelp/utils";
+import {
+  amountToMicroAmount,
+  microAmountToAmount,
+  tokenToTokenInfo,
+} from "@whelp/utils";
 import {
   Button,
   Card,
@@ -338,7 +342,11 @@ export default function SwapPage({
         ]
       );
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(tokenA),
+        tokenToTokenInfo(tokenB),
+        tokenLPInfo,
+      ]);
 
       // Set Status
       setStatusModalType("success");
@@ -393,7 +401,11 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(tokenA),
+        tokenToTokenInfo(tokenB),
+        tokenLPInfo,
+      ]);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
