@@ -124,7 +124,7 @@ const TokenBox = ({
               }}
               inputProps={{
                 min: 0,
-                max: microAmountToAmount(token),
+                max: microAmountToAmount(token).toString(),
                 style: {
                   textAlign: "right",
                   padding: 0,

@@ -26,7 +26,6 @@ export * from "./StatusModal";
 export * from "./MobileNav";
 export * from "./Loader";
 export * from "./IbcDepositModal";
-export * from "./UnstakeModal";
 
 /**
  * Pool Components

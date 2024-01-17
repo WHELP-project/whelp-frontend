@@ -2,10 +2,10 @@
 
 import React from "react";
 import { Box, Input, Modal, Typography } from "@mui/material";
-import { Button } from "..";
+import { Button } from "../..";
 import { Remove } from "react-huge-icons/solid";
 import { UiTypes } from "@whelp/types";
-import theme from "../Theme";
+import theme from "../../Theme";
 
 const UnstakeModal = ({ ...props }: UiTypes.UnstakeModalProps) => {
   const style = {
@@ -111,7 +111,7 @@ const UnstakeModal = ({ ...props }: UiTypes.UnstakeModalProps) => {
               }}
               inputProps={{
                 min: 0,
-                max: props.availableAmount,
+                max: props.availableAmount.toString(),
                 style: {
                   textAlign: "right",
                   padding: 0,
