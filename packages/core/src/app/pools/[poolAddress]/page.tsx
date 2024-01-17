@@ -108,7 +108,6 @@ export default function SwapPage({
   const [availableUnstakeAmount, setAvailableUnstakeAmount] =
     useState<number>(0);
   const [unbondingPeriod, setUnbondingPeriod] = useState<number>(0);
-  const [unstakeDisabled, setUnstakeDisabled] = useState<boolean>(true);
 
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
@@ -733,11 +732,12 @@ export default function SwapPage({
       />
       <UnstakeModal
         open={unstakeModalOpen}
-        disabled={unstakeDisabled}
+        disabled={
+          !(unstakeAmount > 0 && unstakeAmount >= availableUnstakeAmount)
+        }
         amount={unstakeAmount}
         onAmountChange={(amount) => {
           setUnstakeAmount(amount);
-          if (amount > 0) setUnstakeDisabled(false);
         }}
         availableAmount={availableUnstakeAmount}
         onClose={() => setUnstakeModalOpen(false)}
