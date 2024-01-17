@@ -302,7 +302,7 @@ export default function SwapPage({
       setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      setTimeout(() => appStore.fetchTokenBalance(tokenLPInfo), 1000);
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -351,11 +351,15 @@ export default function SwapPage({
         ]
       );
 
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(tokenA),
-        tokenToTokenInfo(tokenB),
-        tokenLPInfo,
-      ]);
+      setTimeout(
+        () =>
+          appStore.fetchTokenBalances([
+            tokenToTokenInfo(tokenA),
+            tokenToTokenInfo(tokenB),
+            tokenLPInfo,
+          ]),
+        1000
+      );
 
       // Set Status
       setStatusModalType("success");
@@ -410,11 +414,15 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(tokenA),
-        tokenToTokenInfo(tokenB),
-        tokenLPInfo,
-      ]);
+      setTimeout(
+        () =>
+          appStore.fetchTokenBalances([
+            tokenToTokenInfo(tokenA),
+            tokenToTokenInfo(tokenB),
+            tokenLPInfo,
+          ]),
+        1000
+      );
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
