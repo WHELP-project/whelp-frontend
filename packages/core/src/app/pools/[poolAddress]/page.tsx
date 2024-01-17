@@ -101,6 +101,15 @@ export default function SwapPage({
   const [stakingModalOpen, setStakingModalOpen] = useState<boolean>(false);
   const [userClaims, setUserClaims] = useState<WhelpStakeTypes.Claim[]>([]);
 
+  const [addLiquidityButtonDisabled, setAddLiquidityButtonDisabled] =
+    useState<boolean>(false);
+
+  const [removeLiquidityButtonDisabled, setRemoveLiquidityButtonDisabled] =
+    useState<boolean>(false);
+
+  const [stakeButtonDisabled, setStakeButtonDisabled] =
+    useState<boolean>(false);
+
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
     WhelpPoolQueryClient | undefined
@@ -420,6 +429,31 @@ export default function SwapPage({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appStore.wallet.address]);
 
+  useEffect(() => {
+    setAddLiquidityButtonDisabled(
+      !(appStore.wallet.address && tokenAValue !== "" && tokenBValue !== "")
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appStore.wallet.address, tokenAValue, tokenBValue]);
+
+  useEffect(() => {
+    setRemoveLiquidityButtonDisabled(
+      !(appStore.wallet.address && tokenLPValue !== "")
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appStore.wallet.address, tokenLPValue]);
+
+  useEffect(() => {
+    setStakeButtonDisabled(
+      !(
+        appStore.wallet.address &&
+        stakingAmount !== "" &&
+        Number(stakingAmount) > tokenLP.balance
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appStore.wallet.address, stakingAmount]);
+
   const provideLiquidityProps = {
     addLiquidityClick: () => provideLiquidity(),
     removeLiquidityClick: () => removeLiquidity(),
@@ -556,12 +590,14 @@ export default function SwapPage({
                 </Box>
                 <PoolLiquidityForm
                   {...provideLiquidityProps}
+                  addLiquidityButtonDisabled={addLiquidityButtonDisabled}
+                  removeLiquidityButtonDisabled={removeLiquidityButtonDisabled}
                   addLiquidityProps={[
                     {
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
-                        setTokenBValue((Number(e) / assetRatio).toFixed(3));
+                        setTokenBValue((Number(e) / assetRatio).toFixed(5));
                       },
                       value: tokenAValue,
                       loading: loadBalances,
@@ -570,7 +606,7 @@ export default function SwapPage({
                       token: tokenB,
                       onChange: (e) => {
                         setTokenBValue(e);
-                        setTokenAValue((Number(e) * assetRatio).toFixed(3));
+                        setTokenAValue((Number(e) * assetRatio).toFixed(5));
                       },
                       value: tokenBValue,
                       loading: loadBalances,
@@ -611,6 +647,7 @@ export default function SwapPage({
                     </Typography>
                   </Box>
                   <PoolStakeForm
+                    disabled={stakeButtonDisabled}
                     tokenBoxProps={{
                       token: tokenLP,
                       onChange: (e) => {

@@ -6,6 +6,7 @@ import { Button } from "../../Button";
 import { UiTypes } from "@whelp/types";
 
 const PoolStakeForm = ({
+  disabled,
   tokenBoxProps,
   stakeRewards = 0,
   changeStakePercentage,
@@ -79,7 +80,7 @@ const PoolStakeForm = ({
             />
           </Grid>
         </Grid>
-        <Button sx={{width: "100%"}} onClick={stakeClick} label="Stake" />
+        <Button sx={{width: "100%"}} onClick={stakeClick} label="Stake" disabled={disabled} />
       </Box>
 
       <Box
