@@ -39,6 +39,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { AssetValidated } from "@whelp/contracts/build/types/WhelpPool.types";
 
 const typeSx = {
   color: palette.textLoud,
@@ -102,6 +103,9 @@ export default function SwapPage({
   const [stakingModalOpen, setStakingModalOpen] = useState<boolean>(false);
   const [userClaims, setUserClaims] = useState<WhelpStakeTypes.Claim[]>([]);
 
+  // Staking rewards
+  const [rewards, setRewards] = useState<UiTypes.StakeReward[]>([]);
+  
   // Unstake Values
   const [unstakeModalOpen, setUnstakeModalOpen] = useState<boolean>(false);
   const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
@@ -158,6 +162,32 @@ export default function SwapPage({
     // Get user stakes
     if (appStore.wallet.address) {
       await getUserStakes(pairInfo.staking_addr, asset_lp_info);
+    }
+
+    // Get user rewards
+    if (appStore.wallet.address) {
+      // Fetch all withdrawable rewards from stake contract
+      const { rewards: withdrawableRewards } =
+        await stakingQueryClient.withdrawableRewards({
+          owner: appStore.wallet.address,
+        });
+
+      // Get token info for each reward
+      const _withdrawableRewards = withdrawableRewards.map(async (reward) => {
+        const token = await appStore.fetchTokenBalance(reward.info);
+        const amount = microAmountToAmount({
+          ...token,
+          balance: Number(reward.amount),
+        });
+        return {
+          amount: amount.toString(),
+          symbol: token.name,
+        };
+      });
+
+      // Set rewards
+      const _rewards = await Promise.all(_withdrawableRewards);
+      setRewards(_rewards);
     }
 
     // Set Staking States
@@ -276,6 +306,28 @@ export default function SwapPage({
       setStatusModalType("error");
       setStatusModalTxType("stakeLp");
       setStatusModalTokens([]);
+      console.log(e);
+    }
+  };
+
+  // Claim Rewards
+  const claimRewards = async () => {
+    try {
+      const stakeClient = getStakeSigningClient();
+      await stakeClient.withdrawRewards({});
+
+      // TODO: Modal
+
+      // Wait for the next Block
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Update token balances
+      appStore.fetchTokenBalances([
+        tokenToTokenInfo(tokenA),
+        tokenToTokenInfo(tokenB),
+        tokenLPInfo,
+      ]);
+    } catch (e) {
       console.log(e);
     }
   };
@@ -662,9 +714,9 @@ export default function SwapPage({
                       isStakeToken: true,
                       loading: loadStaking,
                     }}
-                    stakeRewards={100}
+                    stakeRewards={rewards}
                     stakeClick={() => stake()}
-                    claimClick={() => {}}
+                    claimClick={() => claimRewards()}
                     changeStakePercentage={(percentage: number) => {
                       setStakingAmount(
                         (

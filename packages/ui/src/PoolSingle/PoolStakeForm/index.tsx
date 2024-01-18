@@ -8,7 +8,7 @@ import { UiTypes } from "@whelp/types";
 const PoolStakeForm = ({
   disabled,
   tokenBoxProps,
-  stakeRewards = 0,
+  stakeRewards = [],
   changeStakePercentage,
   stakeClick,
   claimClick,
@@ -45,7 +45,7 @@ const PoolStakeForm = ({
         >
           <Grid item xs={3}>
             <Button
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               size="small"
               type="secondary"
               label="25%"
@@ -54,7 +54,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               size="small"
               type="secondary"
               label="50%"
@@ -63,7 +63,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               size="small"
               type="secondary"
               label="75%"
@@ -72,7 +72,7 @@ const PoolStakeForm = ({
           </Grid>
           <Grid item xs={3}>
             <Button
-              sx={{width: "100%"}}
+              sx={{ width: "100%" }}
               size="small"
               type="secondary"
               label="100%"
@@ -116,10 +116,23 @@ const PoolStakeForm = ({
               fontSize: "20px",
             }}
           >
-            {stakeRewards}
+            {stakeRewards.map((reward) => (
+              <>
+                {reward.amount} {reward.symbol}
+              </>
+            ))}
+            {/* If stakeRewards is empty, show 0 */}
+            {stakeRewards.length === 0 && <>0</>}
           </Typography>
         </Box>
-        <Button type="secondary" label="Claim" onClick={claimClick} />
+        <Button
+          type="secondary"
+          // Disable button if there are no rewards to claim
+          // If wallet isnt collected, rewards is empty array
+          disabled={stakeRewards.length === 0}
+          label="Claim"
+          onClick={claimClick}
+        />
       </Box>
     </Box>
   );
