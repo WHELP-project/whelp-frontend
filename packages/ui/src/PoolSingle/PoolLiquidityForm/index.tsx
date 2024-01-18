@@ -35,6 +35,8 @@ function CustomTabPanel(props: TabPanelProps) {
 }
 
 const PoolLiquidityForm = ({
+  addLiquidityButtonDisabled,
+  removeLiquidityButtonDisabled,
   addLiquidityProps,
   removeLiquidityProps,
   addLiquidityClick,
@@ -104,6 +106,7 @@ const PoolLiquidityForm = ({
             sx={{ width: "100%" }}
             label="Add Liquidity"
             onClick={addLiquidityClick}
+            disabled={addLiquidityButtonDisabled}
           />
         </CustomTabPanel>
         <CustomTabPanel value={tabValue} index={1}>
@@ -121,6 +124,7 @@ const PoolLiquidityForm = ({
             sx={{ width: "100%" }}
             label="Remove Liquidity"
             onClick={removeLiquidityClick}
+            disabled={removeLiquidityButtonDisabled}
           />
         </CustomTabPanel>
       </Box>
