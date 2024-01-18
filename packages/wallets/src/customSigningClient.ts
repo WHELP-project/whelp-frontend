@@ -1,5 +1,5 @@
 import { WalletTypes } from "@whelp/types";
-import { getWalletClient } from "@whelp/wallets";
+import { getWalletClient } from "./walletClient";
 import { assets, chains } from "chain-registry";
 import { SigningStargateClient, GasPrice } from "@cosmjs/stargate";
 
@@ -25,7 +25,10 @@ const getConfig = (assetName: string) => {
   );
 
   const assetListAssetName = assetName;
-  const rpc = (assetListAssetName === "cosmos") ? "https://rpc.cosmos.directory:443/cosmoshub" : "";
+  const rpc =
+    assetListAssetName === "cosmos"
+      ? "https://rpc.cosmos.directory:443/cosmoshub"
+      : "";
 
   return { ...chain, gasPrice, rpc_endpoint: rpc };
 };

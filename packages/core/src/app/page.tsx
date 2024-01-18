@@ -5,9 +5,9 @@ import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
   TestnetConfig,
   WhelpFactoryAddress,
-  getCustomClient,
   amountToMicroAmount,
 } from "@whelp/utils";
+import { getCustomClient } from "@whelp/wallets";
 import { WhelpFactoryQueryClient } from "@whelp/contracts";
 import { Token, UiTypes } from "@whelp/types";
 import { useEffect, useState } from "react";
