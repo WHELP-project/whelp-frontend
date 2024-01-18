@@ -32,6 +32,7 @@ import {
   StakingTable,
   StatusModal,
   UnbondingModal,
+  UnstakeModal,
 } from "@whelp/ui";
 import { TestnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
@@ -100,6 +101,13 @@ export default function SwapPage({
     useState<number>(0);
   const [stakingModalOpen, setStakingModalOpen] = useState<boolean>(false);
   const [userClaims, setUserClaims] = useState<WhelpStakeTypes.Claim[]>([]);
+
+  // Unstake Values
+  const [unstakeModalOpen, setUnstakeModalOpen] = useState<boolean>(false);
+  const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
+  const [availableUnstakeAmount, setAvailableUnstakeAmount] =
+    useState<number>(0);
+  const [unbondingPeriod, setUnbondingPeriod] = useState<number>(0);
 
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
@@ -194,7 +202,7 @@ export default function SwapPage({
         APR: 0,
         lockedPeriod: stake.unbonding_period,
         unstake: (tokenAmount: string, unbondingPeriod: number) => {
-          unbond(tokenAmount, unbondingPeriod);
+          unbond(Number(tokenAmount), unbondingPeriod);
         },
       };
     });
@@ -273,12 +281,12 @@ export default function SwapPage({
   };
 
   // Unstake
-  const unbond = async (tokenAmount: string, unbondingPeriod: number) => {
+  const unbond = async (tokenAmount: number, unbondingPeriod: number) => {
     try {
       const stakeClient = getStakeSigningClient();
       await stakeClient.unbond(
         {
-          tokens: tokenAmount,
+          tokens: tokenAmount.toString(),
           unbondingPeriod: unbondingPeriod,
         },
         "auto",
@@ -287,14 +295,17 @@ export default function SwapPage({
 
       await getUserStakes(stakingAddress!, tokenLP);
 
+      setUnstakeModalOpen(false);
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("unstakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      setTimeout(() => appStore.fetchTokenBalance(tokenLPInfo), 1000);
     } catch (e) {
+      setUnstakeModalOpen(false);
+
       setStatusModalOpen(true);
       setStatusModalType("error");
       setStatusModalTxType("unstakeLp");
@@ -342,11 +353,15 @@ export default function SwapPage({
         ]
       );
 
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(tokenA),
-        tokenToTokenInfo(tokenB),
-        tokenLPInfo,
-      ]);
+      setTimeout(
+        () =>
+          appStore.fetchTokenBalances([
+            tokenToTokenInfo(tokenA),
+            tokenToTokenInfo(tokenB),
+            tokenLPInfo,
+          ]),
+        1000
+      );
 
       // Set Status
       setStatusModalType("success");
@@ -401,11 +416,15 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(tokenA),
-        tokenToTokenInfo(tokenB),
-        tokenLPInfo,
-      ]);
+      setTimeout(
+        () =>
+          appStore.fetchTokenBalances([
+            tokenToTokenInfo(tokenA),
+            tokenToTokenInfo(tokenB),
+            tokenLPInfo,
+          ]),
+        1000
+      );
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -702,9 +721,17 @@ export default function SwapPage({
               )}
               <StakingTable
                 entries={userStakes}
-                unstake={(tokenAmount, unbondingPeriod) =>
-                  unbond(tokenAmount, unbondingPeriod)
-                }
+                unstake={(tokenAmount, unbondingPeriod) => {
+                  setAvailableUnstakeAmount(
+                    microAmountToAmount({
+                      balance: Number(tokenAmount),
+                      decimals: 6,
+                    } as Token)
+                  );
+                  setUnbondingPeriod(unbondingPeriod);
+
+                  setUnstakeModalOpen(true);
+                }}
               />
             </Box>
           </Box>
@@ -725,6 +752,29 @@ export default function SwapPage({
         claim={() => {}}
         lpToken={tokenLP}
         entries={userClaims}
+      />
+      <UnstakeModal
+        open={unstakeModalOpen}
+        disabled={
+          !(unstakeAmount > 0 && unstakeAmount <= availableUnstakeAmount)
+        }
+        amount={unstakeAmount}
+        onAmountChange={(amount: any) => {
+          setUnstakeAmount(amount);
+        }}
+        availableAmount={availableUnstakeAmount}
+        onClose={() => setUnstakeModalOpen(false)}
+        onClick={() => {
+          unbond(
+            amountToMicroAmount({
+              balance: unstakeAmount,
+              decimals: 6,
+            } as Token),
+            unbondingPeriod
+          );
+
+          setTimeout(() => appStore.fetchTokenBalance(tokenLPInfo), 1000);
+        }}
       />
     </>
   );

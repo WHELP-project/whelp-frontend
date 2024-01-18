@@ -20,9 +20,9 @@
   "workspaces": [
     "packages/asset-list",
     "packages/types",
+    "packages/wallets",
     "packages/utils",
     "packages/contracts",
-    "packages/wallets",
     "packages/state",
     "packages/ui",
     "packages/core",
