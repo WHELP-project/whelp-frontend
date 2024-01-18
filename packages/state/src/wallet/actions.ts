@@ -3,21 +3,8 @@ import {
   SigningCosmWasmClient,
   CosmWasmClient,
 } from "@cosmjs/cosmwasm-stargate";
-import {
-  MainnetConfig,
-  TestnetConfig,
-  isCw20Token,
-  isSmartToken,
-} from "@whelp/utils";
-import {
-  Cosmostation,
-  Keplr,
-  Leap,
-  getCosmostationFromExtension,
-  getKeplrFromExtension,
-  getLeapFromExtension,
-  getWalletClient,
-} from "@whelp/wallets";
+import { MainnetConfig, TestnetConfig, isCw20Token } from "@whelp/utils";
+import { getWalletClient } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
 import { useAppStore, usePersistStore } from "../store";
 import { Cw20QueryClient, WhelpPoolTypes } from "@whelp/contracts";
