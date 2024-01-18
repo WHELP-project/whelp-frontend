@@ -5,7 +5,7 @@
   "scripts": {
     "build": "yarn build",
     "storybook": "yarn workspace @whelp/ui storybook",
-    "vercel": "yarn workspace @whelp/asset-list run build && yarn workspace @whelp/contracts run build && yarn workspace @whelp/types run build && yarn workspace @whelp/wallets run build && yarn workspace @whelp/utils run build && yarn workspace @whelp/state run build && yarn workspace @whelp/ui run build && yarn workspace @whelp/core run build"
+    "vercel": "yarn workspace @whelp/asset-list run build && yarn workspace @whelp/contracts run build && yarn workspace @whelp/types run build && yarn workspace @whelp/utils run build && yarn workspace @whelp/wallets run build && yarn workspace @whelp/state run build && yarn workspace @whelp/ui run build && yarn workspace @whelp/core run build"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
   "workspaces": [
     "packages/asset-list",
     "packages/types",
-    "packages/wallets",
     "packages/utils",
+    "packages/wallets",
     "packages/contracts",
     "packages/state",
     "packages/ui",
