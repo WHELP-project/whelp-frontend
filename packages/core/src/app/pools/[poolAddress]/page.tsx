@@ -105,7 +105,7 @@ export default function SwapPage({
 
   // Staking rewards
   const [rewards, setRewards] = useState<UiTypes.StakeReward[]>([]);
-  
+
   // Unstake Values
   const [unstakeModalOpen, setUnstakeModalOpen] = useState<boolean>(false);
   const [unstakeAmount, setUnstakeAmount] = useState<number>(0);
@@ -211,6 +211,20 @@ export default function SwapPage({
     setLoadStaking(false);
   };
 
+  const updateBalances = async () => {
+    // Wait for next block
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Fetch new token balances
+    const updatedLpToken = await appStore.fetchTokenBalance(tokenLPInfo);
+    const updatedTokenA = await appStore.fetchTokenBalance(tokenAInfo);
+    const updatedTokenB = await appStore.fetchTokenBalance(tokenBInfo);
+
+    // Set states
+    setTokenLP(updatedLpToken);
+    setTokenA(updatedTokenA);
+    setTokenB(updatedTokenB);
+  };
+
   const getUserStakes = async (address: string, token: Token) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
@@ -300,7 +314,7 @@ export default function SwapPage({
       setStatusModalTokens([{ ...tokenLP, balance: Number(stakingAmount) }]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -318,15 +332,7 @@ export default function SwapPage({
 
       // TODO: Modal
 
-      // Wait for the next Block
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Update token balances
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(tokenA),
-        tokenToTokenInfo(tokenB),
-        tokenLPInfo,
-      ]);
+      await updateBalances();
     } catch (e) {
       console.log(e);
     }
@@ -351,10 +357,15 @@ export default function SwapPage({
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("unstakeLp");
-      setStatusModalTokens([{ ...tokenLP, balance: Number(tokenAmount) }]);
+      setStatusModalTokens([
+        {
+          ...tokenLP,
+          balance: microAmountToAmount({ ...tokenLP, balance: tokenAmount }),
+        },
+      ]);
       setStatusModalOpen(true);
 
-      setTimeout(() => appStore.fetchTokenBalance(tokenLPInfo), 1000);
+      await updateBalances();
     } catch (e) {
       setUnstakeModalOpen(false);
 
@@ -405,16 +416,6 @@ export default function SwapPage({
         ]
       );
 
-      setTimeout(
-        () =>
-          appStore.fetchTokenBalances([
-            tokenToTokenInfo(tokenA),
-            tokenToTokenInfo(tokenB),
-            tokenLPInfo,
-          ]),
-        1000
-      );
-
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("addLiquidity");
@@ -424,7 +425,7 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      appStore.fetchTokenBalance(tokenLPInfo);
+      await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -468,15 +469,7 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      setTimeout(
-        () =>
-          appStore.fetchTokenBalances([
-            tokenToTokenInfo(tokenA),
-            tokenToTokenInfo(tokenB),
-            tokenLPInfo,
-          ]),
-        1000
-      );
+      await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
       setStatusModalType("error");
@@ -811,7 +804,7 @@ export default function SwapPage({
           !(unstakeAmount > 0 && unstakeAmount <= availableUnstakeAmount)
         }
         amount={unstakeAmount}
-        onAmountChange={(amount: any) => {
+        onAmountChange={(amount: number) => {
           setUnstakeAmount(amount);
         }}
         availableAmount={availableUnstakeAmount}

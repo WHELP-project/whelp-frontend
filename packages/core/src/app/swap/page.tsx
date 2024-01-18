@@ -58,6 +58,23 @@ export default function SwapPage() {
   const searchParams = useSearchParams();
   const _searchToken = searchParams.get("fromToken");
 
+  const updateBalances = async () => {
+    // Wait for next block
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Fetch Tokens
+    const updatedFromToken = await appStore.fetchTokenBalance(
+      tokenToTokenInfo(fromToken!)
+    );
+    const updatedToToken = await appStore.fetchTokenBalance(
+      tokenToTokenInfo(toToken!)
+    );
+
+    // Set States
+    setFromToken(updatedFromToken);
+    setToToken(updatedToToken);
+  };
+
   // Get pools to fetch all tokens from it
   const getPools = async () => {
     // Get Pool Query Client
@@ -253,43 +270,31 @@ export default function SwapPage() {
         ]);
         setStatusModalOpen(true);
         setSwapLoading(false);
-
-        appStore.fetchTokenBalances([
-          tokenToTokenInfo(fromToken),
-          tokenToTokenInfo(toToken as Token),
+      } else {
+        // Smart token swap
+        await multiHopClient.executeSwapOperations(
+          { operations, maxSpread: slippageTolerance.toString() },
+          "auto",
+          undefined,
+          [
+            {
+              amount: amountToMicroAmount({
+                ...fromToken!,
+                balance: fromAmount,
+              }).toString(),
+              denom: fromToken.tokenAddress!,
+            },
+          ]
+        );
+        setStatusModalType("success");
+        setStatusModalTxType("swap");
+        setStatusModalTokens([
+          { ...fromToken, balance: Number(fromAmount) },
+          { ...toToken!, balance: Number(toAmount) },
         ]);
-
-        return;
+        setStatusModalOpen(true);
+        setSwapLoading(false);
       }
-
-      // Smart token swap
-      await multiHopClient.executeSwapOperations(
-        { operations, maxSpread: slippageTolerance.toString() },
-        "auto",
-        undefined,
-        [
-          {
-            amount: amountToMicroAmount({
-              ...fromToken!,
-              balance: fromAmount,
-            }).toString(),
-            denom: fromToken.tokenAddress!,
-          },
-        ]
-      );
-      setStatusModalType("success");
-      setStatusModalTxType("swap");
-      setStatusModalTokens([
-        { ...fromToken, balance: Number(fromAmount) },
-        { ...toToken!, balance: Number(toAmount) },
-      ]);
-      setStatusModalOpen(true);
-      setSwapLoading(false);
-
-      appStore.fetchTokenBalances([
-        tokenToTokenInfo(fromToken),
-        tokenToTokenInfo(toToken as Token),
-      ]);
     } catch (e) {
       console.log(e);
       setStatusModalOpen(true);
@@ -298,6 +303,8 @@ export default function SwapPage() {
       setStatusModalTokens([]);
       setSwapLoading(false);
     }
+
+    await updateBalances();
   };
 
   // Init

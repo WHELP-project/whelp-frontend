@@ -38,13 +38,16 @@ const beautifyName = (name: string): string => {
 };
 
 // Function to add a new chain to the wallet client
-const addChain = async (WalletClient: WalletTypes.Wallet, chainAsset: string) => {
+const addChain = async (
+  WalletClient: WalletTypes.Wallet,
+  chainAsset: string
+) => {
   const { chain, assetList } = findChainAsset(chainAsset);
 
   return await WalletClient.addChain?.({
     name: chainAsset,
     chain: chain,
-    assetList
+    assetList,
   });
 };
 
@@ -103,11 +106,7 @@ export const createWalletActions = (
 
       const walletClient = await getWalletClient(walletId);
 
-      await connectWalletGeneric(
-        walletClient,
-        envConfig,
-        walletId,
-      );
+      await connectWalletGeneric(walletClient, envConfig, walletId);
 
       usePersistStore.setState((state: StateTypes.AppStorePersist) => ({
         type: getState().wallet.type,
@@ -146,7 +145,10 @@ export const createWalletActions = (
           cosmWasmClient,
           asset.cw20_token
         );
-        if (getState().wallet.address === "" || getState().wallet.address === undefined) {
+        if (
+          getState().wallet.address === "" ||
+          getState().wallet.address === undefined
+        ) {
           balance = 0;
         } else {
           balance = Number(
@@ -162,7 +164,10 @@ export const createWalletActions = (
         decimals = tokenInfo.decimals;
         denom = tokenInfo.symbol;
       } else {
-        if (getState().wallet.address === "" || getState().wallet.address === undefined) {
+        if (
+          getState().wallet.address === "" ||
+          getState().wallet.address === undefined
+        ) {
           balance = 0;
         } else {
           console.log(getState().wallet.address);
