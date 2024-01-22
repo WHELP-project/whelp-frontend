@@ -113,13 +113,9 @@ export default function SwapPage({
     useState<number>(0);
   const [unbondingPeriod, setUnbondingPeriod] = useState<number>(0);
 
-  // Loading Button Values
-  const [addLiquidityLoading, setAddLiquidityLoading] =
-    useState<boolean>(false);
-  const [removeLiquidityLoading, setRemoveLiquidityLoading] =
-    useState<boolean>(false);
-  const [stakeLoading, setStakeLoading] = useState<boolean>(false);
-  const [unstakeLoading, setUnstakeLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<
+    "add" | "remove" | "stake" | "unstake" | false
+  >(false);
 
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
@@ -294,7 +290,7 @@ export default function SwapPage({
 
   // Stake
   const stake = async () => {
-    setStakeLoading(true);
+    setLoading("stake");
     try {
       const stakeClient = getStakeSigningClient();
       await stakeClient.delegate(
@@ -322,12 +318,12 @@ export default function SwapPage({
       setStatusModalTxType("stakeLp");
       setStatusModalTokens([{ ...tokenLP, balance: Number(stakingAmount) }]);
       setStatusModalOpen(true);
-      setUnstakeLoading(false);
+      setLoading(false);
 
       await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
-      setStakeLoading(false);
+      setLoading(false);
       setStatusModalType("error");
       setStatusModalTxType("stakeLp");
       setStatusModalTokens([]);
@@ -351,7 +347,7 @@ export default function SwapPage({
 
   // Unstake
   const unbond = async (tokenAmount: number, unbondingPeriod: number) => {
-    setUnstakeLoading(true);
+    setLoading("unstake");
     try {
       const stakeClient = getStakeSigningClient();
       await stakeClient.unbond(
@@ -391,7 +387,7 @@ export default function SwapPage({
 
   // Provide liquidity
   const provideLiquidity = async () => {
-    setAddLiquidityLoading(true);
+    setLoading("add");
     try {
       const amounts: WhelpPoolTypes.Asset[] = [
         {
@@ -438,12 +434,12 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      setAddLiquidityLoading(false);
+      setLoading(false);
 
       await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
-      setAddLiquidityLoading(false);
+      setLoading(false);
       setStatusModalType("error");
       setStatusModalTxType("addLiquidity");
       setStatusModalTokens([]);
@@ -453,7 +449,7 @@ export default function SwapPage({
 
   // Remove Liquidity
   const removeLiquidity = async () => {
-    setRemoveLiquidityLoading(true);
+    setLoading("remove");
     try {
       const amounts: WhelpPoolTypes.Asset[] = [
         {
@@ -486,12 +482,12 @@ export default function SwapPage({
       ]);
       setStatusModalOpen(true);
 
-      setRemoveLiquidityLoading(false);
+      setLoading(false);
 
       await updateBalances();
     } catch (e) {
       setStatusModalOpen(true);
-      setRemoveLiquidityLoading(false);
+      setLoading(false);
       setStatusModalType("error");
       setStatusModalTxType("withdrawLiquidity");
       setStatusModalTokens([]);
@@ -649,7 +645,7 @@ export default function SwapPage({
                       Number(tokenBValue) <= microAmountToAmount(tokenB)
                     )
                   }
-                  addLiquidityLoading={addLiquidityLoading}
+                  addLiquidityLoading={loading === "add"}
                   removeLiquidityButtonDisabled={
                     !(
                       appStore.wallet.address &&
@@ -657,7 +653,7 @@ export default function SwapPage({
                       Number(tokenLPValue) <= microAmountToAmount(tokenLP)
                     )
                   }
-                  removeLiquidityLoading={removeLiquidityLoading}
+                  removeLiquidityLoading={loading === "remove"}
                   addLiquidityProps={[
                     {
                       token: tokenA,
@@ -720,7 +716,7 @@ export default function SwapPage({
                         Number(stakingAmount) <= microAmountToAmount(tokenLP)
                       )
                     }
-                    loading={stakeLoading}
+                    loading={loading === "stake"}
                     tokenBoxProps={{
                       token: tokenLP,
                       onChange: (e) => {
@@ -826,7 +822,7 @@ export default function SwapPage({
         disabled={
           !(unstakeAmount > 0 && unstakeAmount <= availableUnstakeAmount)
         }
-        loading={unstakeLoading}
+        loading={loading === "unstake"}
         amount={unstakeAmount}
         onAmountChange={(amount: number) => {
           setUnstakeAmount(amount);
