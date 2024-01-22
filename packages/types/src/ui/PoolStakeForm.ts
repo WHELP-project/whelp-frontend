@@ -8,6 +8,7 @@ export interface StakeReward {
 
 export interface PoolStakeProps {
   disabled: boolean;
+  loading: boolean;
   tokenBoxProps: TokenBoxProps;
   stakeRewards: StakeReward[];
   stakeClick: () => void;

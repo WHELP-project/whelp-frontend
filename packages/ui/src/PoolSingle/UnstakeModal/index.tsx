@@ -158,6 +158,7 @@ const UnstakeModal = ({ ...props }: UiTypes.UnstakeModalProps) => {
             label="Unstake"
             onClick={props.onClick}
             disabled={props.disabled}
+            loading={props.loading}
           />
         </Box>
       </Box>
