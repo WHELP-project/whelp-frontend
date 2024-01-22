@@ -20,11 +20,13 @@ import React from "react";
 const AssetListEntry = ({
   token,
   onClick,
-  onIbcClick
+  onIbcClick,
+  showIbc,
 }: {
   token: Token;
   onClick: (token: Token) => void;
   onIbcClick: (token: Token) => void;
+  showIbc: boolean;
 }) => {
   const tokenBalance = microAmountToAmount(token);
   const tokenBalanceSplit = splitNumber(tokenBalance, token.decimals);
@@ -140,6 +142,7 @@ const AssetListEntry = ({
               fontStyle: "normal",
               fontWeight: "500",
               lineHeight: "1rem",
+              display: showIbc ? "block" : "none"
             }}
           >
             <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> IBC Transfer
@@ -372,7 +375,7 @@ const AssetList = (params: UiTypes.AssetListProps) => {
       >
         {entries.map((entry, index) => (
           <Grid key={index} item xs={12} md={3}>
-            <AssetListEntry token={entry} onClick={params.onClick} onIbcClick={params.onIbcClick} />
+            <AssetListEntry token={entry} onClick={params.onClick} onIbcClick={params.onIbcClick} showIbc={params.showIbc} />
           </Grid>
         ))}
       </Grid>
