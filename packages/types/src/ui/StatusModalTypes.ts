@@ -6,7 +6,8 @@ export type TxType =
   | "withdrawLiquidity"
   | "swap"
   | "stakeLp"
-  | "unstakeLp";
+  | "unstakeLp"
+  | "claim";
 
 export interface StatusModalProps {
   tokens?: Token[];

@@ -341,7 +341,14 @@ export default function SwapPage({
       const stakeClient = getStakeSigningClient();
       await stakeClient.withdrawRewards({});
 
-      // TODO: Modal
+      setStatusModalType("success");
+      setStatusModalTxType("claim");
+      setStatusModalTokens([
+        {
+          ...tokenLP,
+        },
+      ]);
+      setStatusModalOpen(true);
 
       await updateBalances();
     } catch (e) {
