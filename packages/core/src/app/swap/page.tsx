@@ -73,6 +73,10 @@ export default function SwapPage() {
     // Set States
     setFromToken(updatedFromToken);
     setToToken(updatedToToken);
+
+    //reset input values
+    setFromAmount(0);
+    setToAmount(0);
   };
 
   // Get pools to fetch all tokens from it
