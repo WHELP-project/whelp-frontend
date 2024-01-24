@@ -72,6 +72,7 @@ const AppBar = ({ ...props }: UiTypes.AppBarProps) => {
                 <Avatar
                   onClick={props.disconnectWallet}
                   src={props.walletIcon}
+                  sx={{cursor: "pointer"}}
                 />
               </Tooltip>
             </Box>
