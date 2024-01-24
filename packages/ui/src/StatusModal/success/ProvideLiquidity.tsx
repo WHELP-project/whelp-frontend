@@ -20,7 +20,7 @@ export const ProvideLiquiditySuccess = ({
     </Typography>
     <Grid container>
       {props.tokens.map((token, index) => (
-        <Grid item key={index} xs={6}>
+        <Grid item key={index} xs={6} px={1}>
           <Box
             sx={{
               display: "flex",
