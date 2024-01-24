@@ -96,6 +96,7 @@ const TokenBox = ({
                 width: "44px",
                 height: "24px",
                 cursor: "pointer",
+                zIndex: 1
               }}
             >
               Max
