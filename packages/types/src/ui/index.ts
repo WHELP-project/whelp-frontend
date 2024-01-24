@@ -12,3 +12,4 @@ export * from "./Layout";
 export * from "./IbcModalTypes";
 export * from "./AssetListTypes";
 export * from "./UnstakeModalTypes";
+export * from "./InputTypes";

@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Input, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
+import { Input } from "../Input";
 import React from "react";
 import theme from "../../Theme";
 import { UiTypes } from "@whelp/types";
@@ -122,45 +123,10 @@ const TokenBox = ({
                 onChange(e.target.value);
                 setUsdPrice(Number(e.target.value) * Number(token.usdValue));
               }}
-              inputProps={{
-                min: 0,
-                max: microAmountToAmount(token).toString(),
-                style: {
-                  textAlign: "right",
-                  padding: 0,
-                },
-              }}
+              min={0}
+              max={microAmountToAmount(token)}
               type="number"
               placeholder="0.00"
-              sx={{
-                width: "100%",
-                color: "#FFF",
-                fontSize: "20px",
-                fontWeight: 500,
-                lineHeight: "120%",
-                "&:before": {
-                  content: "none",
-                },
-                "&:after": {
-                  content: "none",
-                },
-                "&:focus-within fieldset, &:focus-visible fieldset": {
-                  color: "white!important",
-                },
-                "& input[type=number]": {
-                  "-moz-appearance": "textfield",
-                },
-                "& input[type=number]::-webkit-outer-spin-button": {
-                  "-webkit-appearance": "none",
-                  margin: 0,
-                },
-                "& input[type=number]::-webkit-inner-spin-button": {
-                  "-webkit-appearance": "none",
-                  margin: 0,
-                },
-                overflowX: "auto", // Enable horizontal scrolling
-                whiteSpace: "nowrap",
-              }}
             />
           )}
           {!isStakeToken && (
