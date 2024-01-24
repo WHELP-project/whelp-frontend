@@ -217,6 +217,9 @@ const PoolMultiple = (params: UiTypes.PoolOverviewType) => {
               "&:after": {
                 content: "none",
               },
+              "&:hover": {
+                borderColor: "#fff"
+              }
             }}
             startAdornment={
               <img
@@ -241,6 +244,9 @@ const PoolMultiple = (params: UiTypes.PoolOverviewType) => {
                 background: theme.palette.bgAlpha25,
                 cursor: "pointer",
                 backdropFilter: "blur(20px)",
+                "& fieldset": {
+                  borderColor: "transparent"
+                }
               }}
               value={_sortBy}
               onChange={(e) => {
