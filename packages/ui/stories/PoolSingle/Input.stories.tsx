@@ -13,9 +13,17 @@ export default meta;
 // The story type for the component https://storybook.js.org/docs/react/api/csf#named-story-exports
 type Story = StoryObj<typeof Input>;
 
-export const Primary: Story = {
+export const Text: Story = {
   args: {
     value: "foo",
+    onChange: (e: any) => {},
+    placeholder: "bar"
+  },
+};
+
+export const Number: Story = {
+  args: {
+    value: 3,
     onChange: (e: any) => {},
     placeholder: "0.00"
   },
