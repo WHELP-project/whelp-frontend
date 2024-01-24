@@ -117,10 +117,10 @@ const PoolStakeForm = ({
               fontSize: "20px",
             }}
           >
-            {stakeRewards.map((reward) => (
-              <>
+            {stakeRewards.map((reward, index) => (
+              <Box key={index}>
                 {reward.amount} {reward.symbol}
-              </>
+              </Box>
             ))}
             {/* If stakeRewards is empty, show 0 */}
             {stakeRewards.length === 0 && <>0</>}
