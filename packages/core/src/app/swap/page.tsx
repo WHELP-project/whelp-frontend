@@ -364,29 +364,35 @@ export default function SwapPage() {
           >
             {/* Swap Container */}
             {fromToken && toToken && (
-              <SwapContainer
-                simulateLoading={simulateLoading}
-                from_token={fromToken}
-                to_token={toToken}
-                from_amount={fromAmount}
-                to_amount={toAmount}
-                tokens={allTokens}
-                onFromTokenChange={(token: Token) => setFromToken(token)}
-                onToTokenChange={(token: Token) => setToToken(token)}
-                onFromAmountChange={(amount: number) => setFromAmount(amount)}
-                onToAmountChange={(amount: number) => setToAmount(amount)}
-                onSwap={() => swap()}
-                slippageTolerance={slippageTolerance}
-                setSlippageTolerance={(slippageTolerance: number) =>
-                  setSlippageTolerance(slippageTolerance)
-                }
-                swapLoading={swapLoading}
-                maxFromAmount={microAmountToAmount(fromToken)}
-                switchTokens={() => {
-                  setFromToken(toToken);
-                  setToToken(fromToken);
+              <Box
+                sx={{
+                  pb: 2,
                 }}
-              />
+              >
+                <SwapContainer
+                  simulateLoading={simulateLoading}
+                  from_token={fromToken}
+                  to_token={toToken}
+                  from_amount={fromAmount}
+                  to_amount={toAmount}
+                  tokens={allTokens}
+                  onFromTokenChange={(token: Token) => setFromToken(token)}
+                  onToTokenChange={(token: Token) => setToToken(token)}
+                  onFromAmountChange={(amount: number) => setFromAmount(amount)}
+                  onToAmountChange={(amount: number) => setToAmount(amount)}
+                  onSwap={() => swap()}
+                  slippageTolerance={slippageTolerance}
+                  setSlippageTolerance={(slippageTolerance: number) =>
+                    setSlippageTolerance(slippageTolerance)
+                  }
+                  swapLoading={swapLoading}
+                  maxFromAmount={microAmountToAmount(fromToken)}
+                  switchTokens={() => {
+                    setFromToken(toToken);
+                    setToToken(fromToken);
+                  }}
+                />
+              </Box>
             )}
             <SwapStats
               exchangeRateText={exchangeRateText}
