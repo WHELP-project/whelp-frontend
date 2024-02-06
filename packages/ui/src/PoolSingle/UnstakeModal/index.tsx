@@ -96,7 +96,7 @@ const UnstakeModal = ({ ...props }: UiTypes.UnstakeModalProps) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  props.onAmountChange(props.availableAmount);
+                  props.onAmountChange(props.availableAmount.toString());
                 }}
               >
                 Available:{" "}
@@ -107,11 +107,11 @@ const UnstakeModal = ({ ...props }: UiTypes.UnstakeModalProps) => {
               disabled={false}
               value={props.amount}
               onChange={(e) => {
-                props.onAmountChange(Number(e.target.value));
+                props.onAmountChange(e.target.value);
               }}
               inputProps={{
                 min: 0,
-                max: props.availableAmount.toString(),
+                max: props.availableAmount,
                 style: {
                   textAlign: "right",
                   padding: 0,

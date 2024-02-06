@@ -3,8 +3,8 @@ export interface UnstakeModalProps {
   disabled: boolean;
   loading: boolean;
   availableAmount: number;
-  amount: number;
-  onAmountChange: (amount: number) => void;
+  amount: string;
+  onAmountChange: (amount: string) => void;
   onClose: () => void;
   onClick: () => void;
 }

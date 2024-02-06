@@ -3,13 +3,13 @@ import { Token } from "../general";
 export interface SwapContainerProps {
   from_token: Token;
   to_token: Token;
-  from_amount: number;
-  to_amount: number;
+  from_amount: string;
+  to_amount: string;
   tokens: Token[];
   onFromTokenChange: (token: Token) => void;
   onToTokenChange: (token: Token) => void;
-  onFromAmountChange: (amount: number) => void;
-  onToAmountChange: (amount: number) => void;
+  onFromAmountChange: (amount: string) => void;
+  onToAmountChange: (amount: string) => void;
   onSwap: () => void;
   buttonDisabled?: boolean;
   slippageTolerance: number;

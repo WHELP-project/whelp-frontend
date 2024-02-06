@@ -6,8 +6,8 @@ export interface IbcDepositModalProps {
   toAddress: string;
   availableAmountDeposit: number;
   availableAmountWithdraw: number;
-  amount: number;
-  onAmountChange: (amount: number) => void;
+  amount: string;
+  onAmountChange: (string: string) => void;
   onClose: () => void;
   onDepositClick: () => void;
   onWithdrawClick: () => void;

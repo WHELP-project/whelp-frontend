@@ -79,14 +79,14 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
           }}
         >
           <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="Deposit" />
-                <Tab label="Withdraw" />
-              </Tabs>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Deposit" />
+              <Tab label="Withdraw" />
+            </Tabs>
           </Box>
           <Typography
             sx={{
@@ -152,9 +152,10 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
                 }}
                 onClick={() => {
                   props.onAmountChange(
-                    value === 0
+                    (value === 0
                       ? props.availableAmountDeposit
                       : props.availableAmountWithdraw
+                    ).toString()
                   );
                 }}
               >
@@ -168,7 +169,7 @@ const IbcDepositModal = ({ ...props }: UiTypes.IbcDepositModalProps) => {
               disabled={false}
               value={props.amount}
               onChange={(e) => {
-                props.onAmountChange(Number(e.target.value));
+                props.onAmountChange(e.target.value);
               }}
               inputProps={{
                 min: 0,
