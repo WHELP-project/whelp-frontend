@@ -29,8 +29,8 @@ export default function SwapPage() {
   const [allTokens, setAllTokens] = useState<Token[]>([]);
   const [fromToken, setFromToken] = useState<Token>();
   const [toToken, setToToken] = useState<Token>();
-  const [fromAmount, setFromAmount] = useState<number>(0);
-  const [toAmount, setToAmount] = useState<number>(0);
+  const [fromAmount, setFromAmount] = useState<string>("");
+  const [toAmount, setToAmount] = useState<string>("");
   const [slippageTolerance, setSlippageTolerance] = useState<number>(0.5);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
   const [simulateLoading, setSimulateLoading] = useState<boolean>(false);
@@ -75,8 +75,8 @@ export default function SwapPage() {
     setToToken(updatedToToken);
 
     //reset input values
-    setFromAmount(0);
-    setToAmount(0);
+    setFromAmount("");
+    setToAmount("");
   };
 
   // Get pools to fetch all tokens from it
@@ -163,7 +163,7 @@ export default function SwapPage() {
       const result = await multiHopClient.simulateSwapOperations({
         offerAmount: amountToMicroAmount({
           ...fromToken!,
-          balance: fromAmount,
+          balance: Number(fromAmount),
         }).toString(),
         operations,
         referral: false,
@@ -173,7 +173,7 @@ export default function SwapPage() {
       setExchangeRateText(
         `${(
           microAmountToAmount({ ...toToken!, balance: Number(result.amount) }) /
-          fromAmount
+          Number(fromAmount)
         ).toFixed(2)} ${toToken?.name} per ${fromToken?.name}`
       );
       setNetworkFeeText(
@@ -204,7 +204,10 @@ export default function SwapPage() {
 
       // Set toAmount
       setToAmount(
-        microAmountToAmount({ ...toToken!, balance: Number(result.amount) })
+        microAmountToAmount({
+          ...toToken!,
+          balance: Number(result.amount),
+        }).toString()
       );
       // Set simulate loading
       setSimulateLoading(false);
@@ -252,7 +255,7 @@ export default function SwapPage() {
         await cw20Contract.send({
           amount: microAmountToAmount({
             ...fromToken!,
-            balance: fromAmount,
+            balance: Number(fromAmount),
           }).toString(),
           contract: WhelpMultihopAddress,
           msg: toBase64(
@@ -284,7 +287,7 @@ export default function SwapPage() {
             {
               amount: amountToMicroAmount({
                 ...fromToken!,
-                balance: fromAmount,
+                balance: Number(fromAmount),
               }).toString(),
               denom: fromToken.tokenAddress!,
             },
@@ -327,7 +330,7 @@ export default function SwapPage() {
 
   // Simulate Swap Hook
   useEffect(() => {
-    if (fromAmount > 0 && toToken) {
+    if (Number(fromAmount) > 0 && toToken) {
       simulateSwap();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -382,8 +385,8 @@ export default function SwapPage() {
                   tokens={allTokens}
                   onFromTokenChange={(token: Token) => setFromToken(token)}
                   onToTokenChange={(token: Token) => setToToken(token)}
-                  onFromAmountChange={(amount: number) => setFromAmount(amount)}
-                  onToAmountChange={(amount: number) => setToAmount(amount)}
+                  onFromAmountChange={(amount: string) => setFromAmount(amount)}
+                  onToAmountChange={(amount: string) => setToAmount(amount)}
                   onSwap={() => swap()}
                   slippageTolerance={slippageTolerance}
                   setSlippageTolerance={(slippageTolerance: number) =>
