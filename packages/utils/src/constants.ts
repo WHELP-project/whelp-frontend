@@ -11,6 +11,6 @@ export const TestnetConfig = {
 };
 
 export const WhelpFactoryAddress: string =
-  "testcore1jj9uftnlpjxchxs62z4hxfy94wdztrjezl49m634xv9ct9j2qh4qzkr9q8";
+  "testcore1eph0ruq7wtcnlt4znljevnrjrudp6h0468rm0evuzfw29u8z4h5s460rhk";
 export const WhelpMultihopAddress: string =
-  "testcore1xzr93z44m5demwazn2g5c97w8kqdelmqr6s6xk3zhwlka54845csug808s";
+  "testcore145p2xdkjrfdehr40tw4kd0uqqjna4mz2hjghr3vhekpezssmnunqj9ekuf";

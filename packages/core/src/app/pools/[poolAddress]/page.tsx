@@ -830,9 +830,9 @@ export default function SwapPage({
           !(unstakeAmount > 0 && unstakeAmount <= availableUnstakeAmount)
         }
         loading={loading === "unstake"}
-        amount={unstakeAmount}
-        onAmountChange={(amount: number) => {
-          setUnstakeAmount(amount);
+        amount={unstakeAmount.toString()}
+        onAmountChange={(amount: string) => {
+          setUnstakeAmount(Number(amount));
         }}
         availableAmount={availableUnstakeAmount}
         onClose={() => setUnstakeModalOpen(false)}
