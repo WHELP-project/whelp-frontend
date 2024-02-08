@@ -666,7 +666,6 @@ export default function SwapPage({
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
-                        setTokenBValue((Number(e) / assetRatio).toFixed(5));
                       },
                       value: tokenAValue,
                       loading: loadBalances,
@@ -675,7 +674,6 @@ export default function SwapPage({
                       token: tokenB,
                       onChange: (e) => {
                         setTokenBValue(e);
-                        setTokenAValue((Number(e) * assetRatio).toFixed(5));
                       },
                       value: tokenBValue,
                       loading: loadBalances,
