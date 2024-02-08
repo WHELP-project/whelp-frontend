@@ -7,6 +7,7 @@ import { Avatar, Box, Grid, Modal, Typography } from "@mui/material";
 import { Remove } from "react-huge-icons/solid";
 import { Button, palette } from "..";
 import {
+  ClaimSuccess,
   ProvideLiquiditySuccess,
   StakeLpSuccess,
   SwapSuccess,
@@ -35,6 +36,7 @@ const SuccessContent = ({ ...props }: UiTypes.StatusModalProps) => {
       {props.txType === "unstakeLp" && <UnStakeLpSuccess {...props} />}
       {props.txType === "stakeLp" && <StakeLpSuccess {...props} />}
       {props.txType === "swap" && <SwapSuccess {...props} />}
+      {props.txType === "claim" && <ClaimSuccess {...props} />}
       <Button
         onClick={props.onClose}
         fullWidth={true}
