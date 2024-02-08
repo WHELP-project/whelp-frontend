@@ -222,6 +222,7 @@ export default function Home() {
                   router.push(`/swap?fromToken=${token.tokenAddress}`)
                 }
                 onIbcClick={onIbcClick}
+                showIbc={appStore.wallet.isConnected as boolean}
               />
             </Box>
           </Box>
