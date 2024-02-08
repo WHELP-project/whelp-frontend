@@ -35,7 +35,7 @@ export default function Home() {
   const [pageLoaded, setPageLoaded] = useState<boolean>(false);
 
   const [ibcModalOpen, setIbcModalOpen] = useState<boolean>(false);
-  const [ibcModalAmount, setIbcModalAmount] = useState<number>(0.0);
+  const [ibcModalAmount, setIbcModalAmount] = useState<string>("");
 
   const [ibcAddress, setIbcAddress] = useState<string>("");
   const [ibcSigningClient, setIbcSigningClient] = useState<
@@ -237,7 +237,7 @@ export default function Home() {
         availableAmountDeposit={300}
         availableAmountWithdraw={500}
         amount={ibcModalAmount}
-        onAmountChange={(amount: number) => setIbcModalAmount(amount)}
+        onAmountChange={(amount: string) => setIbcModalAmount(amount)}
         onClose={() => setIbcModalOpen(false)}
         onDepositClick={onDeposit}
         onWithdrawClick={onWithdraw}

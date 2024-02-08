@@ -5,6 +5,7 @@ import { WhelpStakeTypes } from "@whelp/contracts";
 import { Token } from "@whelp/types";
 import React from "react";
 import { microAmountToAmount } from "@whelp/utils";
+import { palette } from "../..";
 
 interface UnbondingModalProps {
   open: boolean;
@@ -45,7 +46,16 @@ const UnbondingModal = ({ ...props }: UnbondingModalProps) => {
           }}
         >
           <Box>
-            <Typography sx={{ fontSize: "1.125rem", fontWeight: 600 }}>
+            <Typography
+              sx={{
+                color: palette.textLoud,
+                fontSize: "2rem",
+                fontStyle: "normal",
+                fontWeight: 600,
+                lineHeight: "2.5rem",
+                py: 2
+              }}
+            >
               You have unbonding stakes
             </Typography>
             <Typography sx={{ color: theme.palette.textMuted }}>

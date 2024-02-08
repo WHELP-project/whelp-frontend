@@ -120,7 +120,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                 disabled={false}
                 value={props.from_amount}
                 onChange={(e) => {
-                  props.onFromAmountChange(Number(e.target.value));
+                  props.onFromAmountChange(e.target.value);
                 }}
                 inputProps={{
                   min: 0,
@@ -276,7 +276,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
                   disabled={true}
                   value={props.to_amount}
                   onChange={(e) => {
-                    props.onToAmountChange(Number(e.target.value));
+                    props.onToAmountChange(e.target.value);
                   }}
                   inputProps={{
                     min: 0,
@@ -331,9 +331,9 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             fullWidth
             loading={props.swapLoading}
             disabled={
-              props.maxFromAmount < props.from_amount ||
-              props.from_amount === 0 ||
-              props.to_amount === 0
+              props.maxFromAmount < Number(props.from_amount) ||
+              Number(props.from_amount) === 0 ||
+              Number(props.to_amount) === 0
             }
           />
         </Box>

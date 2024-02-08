@@ -178,7 +178,7 @@ const StakingTableEntry = ({
     <Grid
       item
       xs={3}
-      sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+      sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", pr: 1 }}
     >
       <IconButton
         onClick={() =>

@@ -24,7 +24,7 @@ export const SwapSuccess = ({ ...props }: UiTypes.StatusModalProps) => (
         <Typography>To</Typography>
       </Grid>
       {props.tokens.map((token, index) => (
-        <Grid item key={index} xs={6} px={2}>
+        <Grid item key={index} xs={6} px={1}>
           <Box
             sx={{
               display: "flex",
