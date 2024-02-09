@@ -38,6 +38,7 @@ export default function PoolsPage() {
 
     const { pools: fetchedPools } = await factoryClient.pools({});
 
+    // @ts-ignore
     const allPools: Promise<UiTypes.Pool>[] = fetchedPools.map(async (pool) => {
       // Get Tokens
       const token_a = await appStore.fetchTokenBalance(pool.asset_infos[0]);
@@ -49,19 +50,14 @@ export default function PoolsPage() {
       // Get Pool Info
       const pairInfo = await _poolQueryClient.pair();
       const poolInfo = await _poolQueryClient.pool();
-      const asset_a = pairInfo.asset_infos[0];
-      const asset_b = pairInfo.asset_infos[1];
       const asset_lp = { smart_token: pairInfo.liquidity_token };
-
-      const asset_a_info = await appStore.fetchTokenBalance(asset_a);
-      const asset_b_info = await appStore.fetchTokenBalance(asset_b);
       const asset_lp_info = await appStore.fetchTokenBalance(asset_lp);
 
       const apr = await getAPR(
         pairInfo.staking_addr,
         asset_lp_info,
-        asset_a_info,
-        asset_b_info,
+        token_a,
+        token_b,
         Number(poolInfo.assets[0].amount),
         Number(poolInfo.assets[1].amount),
         Number(poolInfo.total_share)
@@ -105,9 +101,6 @@ export default function PoolsPage() {
 
     // Get Annualized Rewards
     const { rewards } = await stakingQueryClient.annualizedRewards();
-
-    // Get infos per bucket
-    const { bonding } = await stakingQueryClient.bondingInfo();
 
     // Get total staked lp tokens
     const { total_staked: totalStakedLpTokens } =
