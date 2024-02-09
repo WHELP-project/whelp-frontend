@@ -9,6 +9,8 @@ import {
   Link,
 } from "@mui/material";
 import {
+  WhelpFactoryQueryClient,
+  WhelpMultiHopQueryClient,
   WhelpPoolClient,
   WhelpPoolQueryClient,
   WhelpPoolTypes,
@@ -19,7 +21,10 @@ import {
 import { useAppStore } from "@whelp/state";
 import { Token, UiTypes } from "@whelp/types";
 import {
+  WhelpFactoryAddress,
+  WhelpMultihopAddress,
   amountToMicroAmount,
+  findBestPath,
   microAmountToAmount,
   tokenToTokenInfo,
 } from "@whelp/utils";
@@ -92,6 +97,9 @@ export default function SwapPage({
   const [tokenAValue, setTokenAValue] = useState<string>("");
   const [tokenBValue, setTokenBValue] = useState<string>("");
   const [tokenLPValue, setTokenLPValue] = useState<string>("");
+
+  // APr
+  const [aprFinal, setAprFinal] = useState<number>(0);
 
   // Staking Values
   const [stakingAmount, setStakingAmount] = useState<string>("0");
@@ -167,6 +175,15 @@ export default function SwapPage({
     if (appStore.wallet.address) {
       await getUserStakes(pairInfo.staking_addr, asset_lp_info);
     }
+    await getAPR(
+      pairInfo.staking_addr,
+      asset_lp_info,
+      asset_a_info,
+      asset_b_info,
+      Number(poolInfo.assets[0].amount),
+      Number(poolInfo.assets[1].amount),
+      Number(poolInfo.total_share)
+    );
 
     // Get user rewards
     if (appStore.wallet.address) {
@@ -227,6 +244,188 @@ export default function SwapPage({
     setTokenLP(updatedLpToken);
     setTokenA(updatedTokenA);
     setTokenB(updatedTokenB);
+  };
+
+  // Get APR
+  const getAPR = async (
+    address: string,
+    lp_token: Token,
+    token_a: Token,
+    token_b: Token,
+    token_a_amount: number,
+    token_b_amount: number,
+    total_lp_issued: number
+  ) => {
+    // Get Clients
+    const cosmWasmClient = await CosmWasmClient.connect(
+      TestnetConfig.rpc_endpoint
+    );
+    const stakingQueryClient = new WhelpStakeQueryClient(
+      cosmWasmClient,
+      address
+    );
+
+    // Get Annualized Rewards
+    const { rewards } = await stakingQueryClient.annualizedRewards();
+
+    // Get infos per bucket
+    const { bonding } = await stakingQueryClient.bondingInfo();
+
+    // Get total staked lp tokens
+    const { total_staked: totalStakedLpTokens } =
+      await stakingQueryClient.totalStaked();
+
+    // Iterate over rewards buckets
+    rewards.map(async (reward) => {
+      // Absolute amount of rewards in this bucket
+      const absoluteRewards = reward[1];
+
+      const aprs = absoluteRewards.map(async (absoluteReward) => {
+        // Check if the reward token is in the pool
+        let rewardTokenInPool = undefined;
+        let rewardTokenAmountInPool = 0;
+
+        if (absoluteReward.amount === "0") {
+          return {
+            unbondingPeriod: reward[0],
+            apr: 0,
+          };
+        }
+
+        // If the reward token is in the pool, we can use the pool ratio to calculate the value
+        // If the reward token is not in the pool, we can use the token price from simulating a swap
+        if (
+          // @ts-ignore
+          tokenToTokenInfo(token_a).smart_token ===
+          // @ts-ignore
+          absoluteReward.info.smart_token
+        ) {
+          rewardTokenInPool = token_a;
+          rewardTokenAmountInPool = token_a_amount;
+        } else if (
+          // @ts-ignore
+          tokenToTokenInfo(token_b).smart_token ===
+          // @ts-ignore
+          absoluteReward.info.smart_token
+        ) {
+          rewardTokenInPool = token_b;
+          rewardTokenAmountInPool = token_b_amount;
+        }
+        if (rewardTokenInPool) {
+          // Easy, our reward token is part of the pool.
+          // Means 1% tokens of total staked tokens of the reward token is worth 2% token of the LP token
+          // So, we need to get the difference between the total staked tokens and the unstaked tokens
+          const stakedUnstakedRatio =
+            Number(totalStakedLpTokens) / total_lp_issued;
+
+          // Calculate the value of one lp token by the value of the total amount of staked tokens
+          // And total amount of unstaked tokens and the total amount of rewardTokens times 2 (because we have 2 tokens in the pool)
+          const oneLpTokenValueInRewardToken =
+            ((stakedUnstakedRatio * rewardTokenAmountInPool) /
+              Number(totalStakedLpTokens)) *
+            2;
+
+          // Calculate APR
+          const apr =
+            (Number(absoluteReward.amount) / oneLpTokenValueInRewardToken) *
+            100;
+
+          return {
+            unbondingPeriod: reward[0],
+            apr,
+          };
+        } else {
+          // The reward token is not in the pool, we need to simulate a swap
+          // to get the value of the reward token in the pool
+          // This solution only works when the reward token is paired with the staked token
+          // We need to implement a solution for when the reward token is not paired with the staked token
+          const multiHopClient = new WhelpMultiHopQueryClient(
+            cosmWasmClient,
+            WhelpMultihopAddress
+          );
+
+          const factoryClient = new WhelpFactoryQueryClient(
+            cosmWasmClient,
+            WhelpFactoryAddress
+          );
+
+          const { pools: fetchedPools } = await factoryClient.pools({});
+
+          const allPools: Promise<UiTypes.Pool>[] = fetchedPools.map(
+            async (pool) => {
+              // Get Tokens
+              const token_a = await appStore.fetchTokenBalance(
+                pool.asset_infos[0]
+              );
+              const token_b = await appStore.fetchTokenBalance(
+                pool.asset_infos[1]
+              );
+
+              // Return Pool
+              return {
+                token_a,
+                token_b,
+                tvl: 0,
+                apr: 0,
+                poolAddress: pool.contract_addr,
+              };
+            }
+          );
+
+          // Await all promises
+          const resolvedPools = await Promise.all(allPools);
+
+          const { operations } = findBestPath(
+            tokenToTokenInfo(token_a),
+            absoluteReward.info,
+            resolvedPools.map((pool) => {
+              return {
+                asset_a: pool.token_a.tokenAddress!,
+                asset_b: pool.token_b.tokenAddress!,
+              };
+            })
+          );
+          // Simulate Swap
+          const result = await multiHopClient.simulateSwapOperations({
+            offerAmount: "1000000",
+            operations,
+            referral: false,
+          });
+
+          // One token in the pool is worth the result.amount of the reward token
+          const oneATokenAmountInRewardToken = Number(result.amount) / 1000000;
+
+          rewardTokenInPool = token_a;
+          rewardTokenAmountInPool =
+            token_a_amount * oneATokenAmountInRewardToken;
+
+          const stakedUnstakedRatio =
+            Number(totalStakedLpTokens) / total_lp_issued;
+
+          // Calculate the value of one lp token by the value of the total amount of staked tokens
+          // And total amount of unstaked tokens and the total amount of rewardTokens times 2 (because we have 2 tokens in the pool)
+          const oneLpTokenValueInRewardToken =
+            ((stakedUnstakedRatio * rewardTokenAmountInPool) /
+              Number(totalStakedLpTokens)) *
+            2;
+
+          // Calculate APR
+          const apr =
+            (Number(absoluteReward.amount) / oneLpTokenValueInRewardToken) *
+            100;
+
+          return {
+            unbondingPeriod: reward[0],
+            apr,
+          };
+        }
+      });
+
+      // Set APRs
+      const _aprs = await Promise.all(aprs);
+      setAprFinal(_aprs[0].apr);
+      return;
+    });
   };
 
   const getUserStakes = async (address: string, token: Token) => {
@@ -413,6 +612,19 @@ export default function SwapPage({
         },
       ];
 
+      // Sort Amounts by info.smart_token
+      amounts.sort((a, b) => {
+        // @ts-ignore
+        if (a.info.smart_token < b.info.smart_token) {
+          return -1;
+        }
+        // @ts-ignore
+        if (a.info.smart_token > b.info.smart_token) {
+          return 1;
+        }
+        return 0;
+      });
+
       const poolClient = getPoolSigningClient();
       await poolClient.provideLiquidity(
         { assets: amounts },
@@ -530,8 +742,8 @@ export default function SwapPage({
       content: <Typography sx={typeSx}>-</Typography>,
     },
     {
-      title: "Swap Fee",
-      content: <Typography sx={typeSx}>-</Typography>,
+      title: "APR",
+      content: <Typography sx={typeSx}>{aprFinal.toFixed(2)}%</Typography>,
     },
   ];
   return (
