@@ -413,6 +413,19 @@ export default function SwapPage({
         },
       ];
 
+      // Sort Amounts by info.smart_token
+      amounts.sort((a, b) => {
+        // @ts-ignore
+        if (a.info.smart_token < b.info.smart_token) {
+          return -1;
+        }
+        // @ts-ignore
+        if (a.info.smart_token > b.info.smart_token) {
+          return 1;
+        }
+        return 0;
+      });
+
       const poolClient = getPoolSigningClient();
       await poolClient.provideLiquidity(
         { assets: amounts },
