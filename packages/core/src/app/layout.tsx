@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppStore, usePersistStore } from "@whelp/state";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({
   children,
@@ -123,6 +124,7 @@ export default function RootLayout({
             open={open}
           />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
