@@ -5,4 +5,5 @@ export interface AssetListProps {
   showIbc: boolean;
   onClick: (token: Token) => void;
   onIbcClick: (token: Token) => void;
+  onOnRampClick: () => void;
 }
