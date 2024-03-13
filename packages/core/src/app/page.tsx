@@ -11,7 +11,7 @@ import { getCustomClient } from "@whelp/wallets";
 import { WhelpFactoryQueryClient } from "@whelp/contracts";
 import { Token, UiTypes } from "@whelp/types";
 import { useEffect, useState } from "react";
-import { AssetList, Card, LoaderVideo, IbcDepositModal } from "@whelp/ui";
+import { AssetList, Card, LoaderVideo, IbcDepositModal, OnRampModal } from "@whelp/ui";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { palette } from "@whelp/ui";
 import { useRouter } from "next/navigation";
@@ -33,6 +33,8 @@ export default function Home() {
   const [allTokens, setAllTokens] = useState<Token[]>([]);
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
   const [pageLoaded, setPageLoaded] = useState<boolean>(false);
+
+  const [onRampOpen, setOnRampOpen] = useState<boolean>(false);
 
   const [ibcModalOpen, setIbcModalOpen] = useState<boolean>(false);
   const [ibcModalAmount, setIbcModalAmount] = useState<string>("");
@@ -222,6 +224,7 @@ export default function Home() {
                   router.push(`/swap?fromToken=${token.tokenAddress}`)
                 }
                 onIbcClick={onIbcClick}
+                onOnRampClick={() => {setOnRampOpen(true)}}
                 showIbc={appStore.wallet.isConnected as boolean}
               />
             </Box>
@@ -241,6 +244,13 @@ export default function Home() {
         onClose={() => setIbcModalOpen(false)}
         onDepositClick={onDeposit}
         onWithdrawClick={onWithdraw}
+      />
+      <OnRampModal
+        open={onRampOpen}
+        onClose={() => setOnRampOpen(false)}
+        walletAddress={appStore.wallet.address}
+        apiKey=""
+        network=""
       />
     </>
   );
