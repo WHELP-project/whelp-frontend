@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   FormControl,
   Grid,
   Input,
@@ -117,7 +118,7 @@ const AssetListEntry = ({
             width: "100%",
             overflow: "hidden",
             borderRadius: "0 0 1rem 1rem",
-            justifyContent: "space-around"
+            justifyContent: "space-around",
           }}
         >
           <Typography
@@ -142,7 +143,7 @@ const AssetListEntry = ({
               fontStyle: "normal",
               fontWeight: "500",
               lineHeight: "1rem",
-              display: showIbc ? "block" : "none"
+              display: showIbc ? "block" : "none",
             }}
           >
             <Repeat sx={{ width: "0.75rem", height: "0.75rem" }} /> IBC Transfer
@@ -229,6 +230,33 @@ const AssetList = (params: UiTypes.AssetListProps) => {
 
         <Box>
           <Box sx={{ display: { md: "flex", xs: "block" } }}>
+            <Button
+              onClick={params.onOnRampClick}
+              sx={{
+                minWidth: "200px",
+                mr: 2,
+                borderRadius: "0.625rem",
+                border: "1px solid rgba(255, 255, 255, 0.10)",
+                background: "rgba(255, 255, 255, 0.04)",
+                backgroundFilter: "blur(20px)",
+                color: "#FFF",
+                ":hover": {
+                  background: "rgba(255, 255, 255, 0.04)",
+                  border: "1px solid #FFF",
+                  transition: "none !important"
+                }
+              }}
+            >
+              <img
+                style={{
+                  marginRight: "-16px",
+                  height: "3rem",
+                  width: "3rem",
+                }}
+                src="/images/Kado.svg"
+              />
+              Need more crypto?
+            </Button>
             <Input
               placeholder="Search"
               fullWidth
@@ -249,6 +277,9 @@ const AssetList = (params: UiTypes.AssetListProps) => {
                 "&:after": {
                   content: "none",
                 },
+                ":hover": {
+                  border: "1px solid #FFF"
+                }
               }}
               startAdornment={
                 <img
@@ -273,6 +304,9 @@ const AssetList = (params: UiTypes.AssetListProps) => {
                   background: palette.bgAlpha25,
                   cursor: "pointer",
                   backdropFilter: "blur(20px)",
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'transparent'
+                  }
                 }}
                 value={_sortBy}
                 onChange={(e) => {
@@ -375,7 +409,12 @@ const AssetList = (params: UiTypes.AssetListProps) => {
       >
         {entries.map((entry, index) => (
           <Grid key={index} item xs={12} md={3}>
-            <AssetListEntry token={entry} onClick={params.onClick} onIbcClick={params.onIbcClick} showIbc={params.showIbc} />
+            <AssetListEntry
+              token={entry}
+              onClick={params.onClick}
+              onIbcClick={params.onIbcClick}
+              showIbc={params.showIbc}
+            />
           </Grid>
         ))}
       </Grid>
