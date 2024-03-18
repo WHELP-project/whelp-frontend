@@ -249,7 +249,7 @@ export default function Home() {
         open={onRampOpen}
         onClose={() => setOnRampOpen(false)}
         walletAddress={appStore.wallet.address}
-        apiKey=""
+        apiKey="f5a50ff9-5301-4181-8129-2a04910d593e"
         network=""
       />
     </>
