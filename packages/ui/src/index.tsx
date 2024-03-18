@@ -13,6 +13,7 @@ export { palette };
  */
 export * from "./Button";
 export * from "./Card";
+export * from "./OnRampModal";
 
 /**
  * Layout Components

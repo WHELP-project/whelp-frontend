@@ -3,8 +3,15 @@
   "description": "Whelp!",
   "version": "0.0.1",
   "scripts": {
-    "build": "yarn build",
+    "build": "yarn workspace @whelp/asset-list run build && yarn workspace @whelp/contracts run build && yarn workspace @whelp/types run build && yarn workspace @whelp/utils run build && yarn workspace @whelp/wallets run build && yarn workspace @whelp/state run build && yarn workspace @whelp/ui run build && yarn workspace @whelp/core run build",
     "storybook": "yarn workspace @whelp/ui storybook",
+    "dev": "yarn workspace @whelp/core dev",
+    "build:core": "yarn workspace @whelp/core build",
+    "build:contracts": "yarn workspace @whelp/contracts build",
+    "build:state": "yarn workspace @whelp/state build",
+    "build:ui": "yarn workspace @whelp/ui build",
+    "build:utils": "yarn workspace @whelp/utils build",
+    "build:types": "yarn workspace @whelp/types build",
     "vercel": "yarn workspace @whelp/asset-list run build && yarn workspace @whelp/contracts run build && yarn workspace @whelp/types run build && yarn workspace @whelp/utils run build && yarn workspace @whelp/wallets run build && yarn workspace @whelp/state run build && yarn workspace @whelp/ui run build && yarn workspace @whelp/core run build"
   },
   "repository": {
