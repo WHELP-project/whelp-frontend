@@ -27,7 +27,7 @@ const PoolStakeForm = ({
           background: theme.palette.bgAlpha0,
           backdropFilter: "blur(20px)",
           padding: "24px",
-          marginBottom: "8px",
+          marginBottom: "16px",
         }}
       >
         <Box
