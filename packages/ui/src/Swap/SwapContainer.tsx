@@ -204,7 +204,7 @@ const SwapContainer = (props: UiTypes.SwapContainerProps) => {
             <Box
               onClick={props.switchTokens}
               sx={{
-                my: "-2rem",
+                my: "-1rem",
                 display: "flex",
                 maxWidth: "80%",
                 padding: "1rem",
