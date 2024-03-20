@@ -249,6 +249,9 @@ const AssetList = (params: UiTypes.AssetListProps) => {
                 "&:after": {
                   content: "none",
                 },
+                "&:hover": {
+                  borderColor: "#FFF",
+                }
               }}
               startAdornment={
                 <img
@@ -269,10 +272,18 @@ const AssetList = (params: UiTypes.AssetListProps) => {
                   alignItems: "center",
                   gap: "0.5rem",
                   borderRadius: "0.625rem",
-                  border: `1px solid ${palette.strokePrimary}`,
                   background: palette.bgAlpha25,
                   cursor: "pointer",
                   backdropFilter: "blur(20px)",
+                  "&& fieldset": {
+                    border: `1px solid ${palette.strokePrimary}`,
+                    borderRadius: "0.625rem",
+                  },
+                  "&:hover": {
+                    "&& fieldset": {
+                      borderColor: `#FFF`,
+                    }
+                  }
                 }}
                 value={_sortBy}
                 onChange={(e) => {
@@ -369,12 +380,15 @@ const AssetList = (params: UiTypes.AssetListProps) => {
           border: `1px solid ${palette.strokePrimary}`,
           background: palette.bgSecondary,
           padding: "1.5rem",
+          paddingLeft: "8px",
+          width: "100%",
+          marginLeft: 0
         }}
         spacing={2}
         container
       >
         {entries.map((entry, index) => (
-          <Grid key={index} item xs={12} md={3}>
+          <Grid key={index} item xs={12} md={3} mb={2}>
             <AssetListEntry token={entry} onClick={params.onClick} onIbcClick={params.onIbcClick} showIbc={params.showIbc} />
           </Grid>
         ))}
