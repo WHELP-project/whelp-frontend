@@ -13,6 +13,8 @@ import {
 import { Remove } from "react-huge-icons/solid";
 import theme from "../Theme";
 import { Button } from "../Button";
+import { palette, TokenBox } from "..";
+import { TokenBoxProps } from "@whelp/types/build/ui";
 
 export interface NewToken {
   address: string;
@@ -21,15 +23,20 @@ export interface NewToken {
 
 export interface CreatePoolModalProps {
   isOpen: boolean;
-  poolCreated: boolean;
+  isCreatePoolLoading: boolean;
+  isProvideLiquidityLoading: boolean;
   setOpen: (val: boolean) => void;
   onCreatePoolClick: (tokenA: NewToken, tokenB: NewToken) => void;
+  onProvideLiquidityClick: () => void;
+  tokenBoxProps: TokenBoxProps[] | undefined;
 }
 
 const Create = ({
   onCreatePoolClick,
+  isCreatePoolLoading
 }: {
   onCreatePoolClick: (tokenA: NewToken, tokenB: NewToken) => void;
+  isCreatePoolLoading: boolean;
 }) => {
   const [tokenAddressA, setTokenAddressA] = React.useState<string>("");
   const [tokenTypeA, setTokenTypeA] = React.useState<string>("cw20");
@@ -52,7 +59,7 @@ const Create = ({
           width: "100%",
           padding: "1rem 1rem",
           position: "relative",
-          background: "rgba(255, 255, 255, 0.02)"
+          background: "rgba(255, 255, 255, 0.02)",
         }}
       >
         <Typography
@@ -112,7 +119,7 @@ const Create = ({
           width: "100%",
           padding: "1rem 1rem",
           position: "relative",
-          background: "rgba(255, 255, 255, 0.02)"
+          background: "rgba(255, 255, 255, 0.02)",
         }}
       >
         <Typography
@@ -171,6 +178,7 @@ const Create = ({
       </Typography>
 
       <Button
+        loading={isCreatePoolLoading}
         onClick={() =>
           onCreatePoolClick(
             {
@@ -190,15 +198,40 @@ const Create = ({
   );
 };
 
-const ProvoideLiquidity = () => {
-  return <Box></Box>;
+const ProvoideLiquidity = ({
+  onProvideLiquidityClick,
+  tokenBoxProps,
+  isProvideLiquidityLoading
+}: {
+  onProvideLiquidityClick: () => void;
+  tokenBoxProps: TokenBoxProps[];
+  isProvideLiquidityLoading: boolean;
+}) => {
+  return (
+    <Box sx={{
+      width: "100%"
+    }}>
+      <TokenBox {...tokenBoxProps[0]} />
+      <Box mb={2} />
+      <TokenBox {...tokenBoxProps[0]} />
+      <Button
+        sx={{ width: "100%", mt: 3 }}
+        label="Add Liquidity"
+        onClick={onProvideLiquidityClick}
+        loading={isProvideLiquidityLoading}
+      />
+    </Box>
+  );
 };
 
 const CreatePoolModal = ({
   isOpen,
-  poolCreated,
+  tokenBoxProps,
   setOpen,
   onCreatePoolClick,
+  onProvideLiquidityClick,
+  isCreatePoolLoading,
+  isProvideLiquidityLoading
 }: CreatePoolModalProps) => {
   const style = {
     position: "absolute",
@@ -238,7 +271,7 @@ const CreatePoolModal = ({
               color: theme.palette.textLoud,
             }}
           >
-            {poolCreated ? "Provide Liquidity" : "Create Pool"}
+            {tokenBoxProps ? "Provide Liquidity" : "Create Pool"}
           </Typography>
           <Remove
             style={{ fontSize: "1.25rem", cursor: "pointer" }}
@@ -254,7 +287,15 @@ const CreatePoolModal = ({
             gap: "1.5rem",
           }}
         >
-          {poolCreated ? <ProvoideLiquidity /> : <Create onCreatePoolClick={onCreatePoolClick} />}
+          {tokenBoxProps ? (
+            <ProvoideLiquidity
+              tokenBoxProps={tokenBoxProps}
+              onProvideLiquidityClick={onProvideLiquidityClick}
+              isProvideLiquidityLoading={isProvideLiquidityLoading}
+            />
+          ) : (
+            <Create isCreatePoolLoading={isCreatePoolLoading} onCreatePoolClick={onCreatePoolClick} />
+          )}
         </Box>
       </Box>
     </Modal>
