@@ -195,7 +195,9 @@ export const createWalletActions = (
         ) {
           updatedTokens.push({
             name: prettyName,
-            icon: `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
+            icon: prettyName.endsWith("lp")
+              ? "/cryptoIcons/lp.svg"
+              : `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
             usdValue: 1,
             balance: balance,
             category: "",
@@ -211,7 +213,9 @@ export const createWalletActions = (
 
       return {
         name: prettyName,
-        icon: `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
+        icon: prettyName.endsWith("lp")
+          ? "/cryptoIcons/lp.svg"
+          : `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
         usdValue: 1,
         balance: balance,
         category: "",
