@@ -774,12 +774,12 @@ export default function SwapPage({
               />
               <Box sx={{ display: "flex", ml: "1.5rem" }}>
                 <Avatar
-                  src="/cryptoIcons/usdt.svg"
+                  src={tokenA.icon}
                   alt="USDT"
                   sx={{ height: "3rem", width: "3rem" }}
                 />
                 <Avatar
-                  src="/cryptoIcons/usdc.svg"
+                  src={tokenB.icon}
                   sx={{ ml: "-0.5rem", height: "3rem", width: "3rem" }}
                   alt="USDC"
                 />
