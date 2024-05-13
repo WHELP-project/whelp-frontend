@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { PoolMultiple } from "@whelp/ui";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
-  TestnetConfig,
+  MainnetConfig,
   WhelpFactoryAddress,
   WhelpMultihopAddress,
   findBestPath,
@@ -29,7 +29,7 @@ export default function PoolsPage() {
   const getPools = async () => {
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const factoryClient = new WhelpFactoryQueryClient(
       cosmWasmClient,
@@ -92,7 +92,7 @@ export default function PoolsPage() {
   ) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,

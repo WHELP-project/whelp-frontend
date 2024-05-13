@@ -39,7 +39,7 @@ import {
   UnbondingModal,
   UnstakeModal,
 } from "@whelp/ui";
-import { TestnetConfig } from "@whelp/utils";
+import { MainnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
@@ -138,7 +138,7 @@ export default function SwapPage({
 
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const _poolQueryClient = new WhelpPoolQueryClient(
       cosmWasmClient,
@@ -258,7 +258,7 @@ export default function SwapPage({
   ) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,
@@ -431,7 +431,7 @@ export default function SwapPage({
   const getUserStakes = async (address: string, token: Token) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,

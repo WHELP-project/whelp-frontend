@@ -3,7 +3,7 @@
 import { useAppStore } from "@whelp/state";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
-  TestnetConfig,
+  MainnetConfig,
   WhelpFactoryAddress,
   amountToMicroAmount,
 } from "@whelp/utils";
@@ -11,7 +11,7 @@ import { getCustomClient } from "@whelp/wallets";
 import { WhelpFactoryQueryClient } from "@whelp/contracts";
 import { Token, UiTypes } from "@whelp/types";
 import { useEffect, useState } from "react";
-import { AssetList, Card, LoaderVideo, IbcDepositModal } from "@whelp/ui";
+import { AssetList, Card, LoaderVideo, IbcDepositModal, Button } from "@whelp/ui";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { palette } from "@whelp/ui";
 import { useRouter } from "next/navigation";
@@ -49,7 +49,7 @@ export default function Home() {
   const getPools = async () => {
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const factoryClient = new WhelpFactoryQueryClient(
       cosmWasmClient,
@@ -171,6 +171,20 @@ export default function Home() {
     }
   };
 
+  const AddPoolBox = () => {
+    return (
+      <Box
+        sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+      >
+        <Typography>
+          Whelp is happy to introduce the first <br />
+          <strong>Permissionless DEX </strong>on Coreum!
+        </Typography>
+        <Button onClick={() => router.push("/pools?create_pool")} label={"Create a new pool!"} />
+      </Box>
+    );
+  };
+
   return (
     <>
       <main>
@@ -191,24 +205,10 @@ export default function Home() {
                     warning={false}
                   />
                 </Grid>
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={9}>
                   <Card
-                    title={"Total Balance"}
-                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                    warning={false}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <Card
-                    title={"Total Balance"}
-                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
-                    warning={false}
-                  />
-                </Grid>
-                <Grid item xs={12} md={3}>
-                  <Card
-                    title={"Total Balance"}
-                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    title={"Empty here?"}
+                    content={<AddPoolBox />}
                     warning={false}
                   />
                 </Grid>
