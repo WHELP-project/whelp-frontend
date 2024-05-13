@@ -365,7 +365,7 @@ export default function SwapPage({
               return {
                 token_a,
                 token_b,
-                tvl: 0,
+                tvl: "0",
                 apr: 0,
                 poolAddress: pool.contract_addr,
               };
@@ -680,13 +680,15 @@ export default function SwapPage({
         },
       ];
       const poolClient = getPoolSigningClient();
-      await poolClient.withdrawLiquidity([
-        {
-          // @ts-ignore
-          denom: amounts[0].info.smart_token,
-          amount: amounts[0].amount,
-        },
-      ]);
+      await poolClient.withdrawLiquidity({
+        assets: [
+          {
+            // @ts-ignore
+            denom: amounts[0].info.smart_token,
+            amount: amounts[0].amount,
+          },
+        ],
+      });
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("withdrawLiquidity");
@@ -735,7 +737,9 @@ export default function SwapPage({
     },
     {
       title: "APR",
-      content: <Typography sx={typeSx}>{Number(aprFinal).toFixed(2)}%</Typography>,
+      content: (
+        <Typography sx={typeSx}>{Number(aprFinal).toFixed(2)}%</Typography>
+      ),
     },
   ];
   return (

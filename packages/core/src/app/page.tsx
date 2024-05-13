@@ -76,7 +76,7 @@ export default function Home() {
       return {
         token_a,
         token_b,
-        tvl: 0,
+        tvl: "0",
         apr: 0,
         poolAddress: pool.contract_addr,
       };
