@@ -32,7 +32,8 @@ export const Create: Story = {
     },
     onProvideLiquidityClick: () => {
       console.log("Provide");
-    }
+    },
+    error: "",
   },
 };
 

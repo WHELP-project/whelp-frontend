@@ -423,7 +423,7 @@ export default function SwapPage({
 
       // Set APRs
       const _aprs = await Promise.all(aprs);
-      setAprFinal(_aprs[0].apr);
+      setAprFinal(Number(_aprs[0].apr));
       return;
     });
   };
@@ -726,10 +726,6 @@ export default function SwapPage({
 
   const infoCardDetails = [
     {
-      title: "My Share",
-      content: <Typography sx={typeSx}>-</Typography>,
-    },
-    {
       title: "Lp Tokens",
       content: (
         <Typography sx={typeSx}>
@@ -738,12 +734,8 @@ export default function SwapPage({
       ),
     },
     {
-      title: "TVL",
-      content: <Typography sx={typeSx}>-</Typography>,
-    },
-    {
       title: "APR",
-      content: <Typography sx={typeSx}>{aprFinal.toFixed(2)}%</Typography>,
+      content: <Typography sx={typeSx}>{Number(aprFinal).toFixed(2)}%</Typography>,
     },
   ];
   return (
@@ -818,7 +810,7 @@ export default function SwapPage({
                 <Grid
                   sx={{ pl: { lg: index === 0 ? 0 : "1.5rem" } }}
                   item
-                  lg={3}
+                  lg={6}
                   md={6}
                   xs={12}
                   key={card.title}

@@ -11,7 +11,14 @@ import { getCustomClient } from "@whelp/wallets";
 import { WhelpFactoryQueryClient } from "@whelp/contracts";
 import { Token, UiTypes } from "@whelp/types";
 import { useEffect, useState } from "react";
-import { AssetList, Card, LoaderVideo, IbcDepositModal, Button } from "@whelp/ui";
+import {
+  AssetList,
+  Card,
+  LoaderVideo,
+  IbcDepositModal,
+  Button,
+  ConnectWalletButton,
+} from "@whelp/ui";
 import { Box, Divider, Grid, Typography } from "@mui/material";
 import { palette } from "@whelp/ui";
 import { useRouter } from "next/navigation";
@@ -41,6 +48,8 @@ export default function Home() {
   const [ibcSigningClient, setIbcSigningClient] = useState<
     SigningStargateClient | undefined
   >(undefined);
+
+  const [usdSum, setUsdSum] = useState<string>("0.00");
 
   // Router
   const router = useRouter();
@@ -95,6 +104,13 @@ export default function Home() {
       (token, index, self) =>
         index === self.findIndex((t) => t.tokenAddress === token.tokenAddress)
     );
+
+    const _usdSum = uniqueTokens
+      .reduce((acc, token) => {
+        return acc + (token.usdValue * token.balance) / 10 ** token.decimals;
+      }, 0)
+      .toFixed(2);
+    setUsdSum(_usdSum);
     setPageLoaded(true);
     return uniqueTokens;
   };
@@ -174,13 +190,20 @@ export default function Home() {
   const AddPoolBox = () => {
     return (
       <Box
-        sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
       >
         <Typography>
           Whelp is happy to introduce the first <br />
           <strong>Permissionless DEX </strong>on Coreum!
         </Typography>
-        <Button onClick={() => router.push("/pools?create_pool")} label={"Create a new pool!"} />
+        <Button
+          onClick={() => router.push("/pools?create_pool")}
+          label={"Create a new pool!"}
+        />
       </Box>
     );
   };
@@ -200,8 +223,10 @@ export default function Home() {
               <Grid container spacing={2}>
                 <Grid item xs={12} md={3}>
                   <Card
-                    title={"Total Balance"}
-                    content={<Typography sx={CardTitleStyles}>$0</Typography>}
+                    title={"Welcome!"}
+                    content={
+                      <Typography>Great that you{"'"}re here!</Typography>
+                    }
                     warning={false}
                   />
                 </Grid>

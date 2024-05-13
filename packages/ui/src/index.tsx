@@ -33,6 +33,7 @@ export * from "./CreatePoolModal";
  */
 export * from "./PoolSingle";
 export * from "./PoolMultiple";
+export * from "./CreatePoolModal";
 
 /**
  * Swap Components

@@ -9,6 +9,8 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Remove } from "react-huge-icons/solid";
 import theme from "../Theme";
@@ -28,15 +30,27 @@ export interface CreatePoolModalProps {
   setOpen: (val: boolean) => void;
   onCreatePoolClick: (tokenA: NewToken, tokenB: NewToken) => void;
   onProvideLiquidityClick: () => void;
-  tokenBoxProps: TokenBoxProps[] | undefined;
+  tokenBoxProps?: TokenBoxProps[] | undefined;
+  error: string;
+  poolType: "stable" | "xyk";
+  setPoolType: (val: "stable" | "xyk") => void;
+  disabled?: boolean;
 }
 
 const Create = ({
   onCreatePoolClick,
-  isCreatePoolLoading
+  isCreatePoolLoading,
+  poolType,
+  setPoolType,
+  error,
+  disabled,
 }: {
   onCreatePoolClick: (tokenA: NewToken, tokenB: NewToken) => void;
   isCreatePoolLoading: boolean;
+  poolType: "stable" | "xyk";
+  setPoolType: (val: "stable" | "xyk") => void;
+  error: string;
+  disabled?: boolean;
 }) => {
   const [tokenAddressA, setTokenAddressA] = React.useState<string>("");
   const [tokenTypeA, setTokenTypeA] = React.useState<string>("cw20");
@@ -44,12 +58,15 @@ const Create = ({
   const [tokenAddressB, setTokenAddressB] = React.useState("");
   const [tokenTypeB, setTokenTypeB] = React.useState<string>("cw20");
 
+  const isValidSmartToken = /^u[a-z]+-core1[a-z0-9]{71}$/.test(tokenAddressB);
+
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         gap: "1.5rem",
+        width: "100%",
       }}
     >
       <Box
@@ -85,7 +102,7 @@ const Create = ({
           />
         </RadioGroup>
         <Input
-          placeholder="Token Address"
+          placeholder="Token Address or Smart Token Denom + Address"
           fullWidth
           value={tokenAddressA}
           onChange={(e: any) => setTokenAddressA(e.target.value)}
@@ -145,7 +162,7 @@ const Create = ({
           />
         </RadioGroup>
         <Input
-          placeholder="Token Address"
+          placeholder="Token Address or Smart Token Denom + Address"
           fullWidth
           value={tokenAddressB}
           onChange={(e: any) => setTokenAddressB(e.target.value)}
@@ -171,13 +188,114 @@ const Create = ({
           }}
         />
       </Box>
-
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography>
+          Pool Type{" "}
+          <Typography
+            sx={{
+              display: "inline",
+              color: theme.palette.textMuted,
+              fontSize: "0.875rem",
+            }}
+          >
+            (Stable or XYK)
+          </Typography>
+        </Typography>
+        <Select
+          sx={{
+            display: "flex",
+            width: "12.25rem",
+            alignItems: "center",
+            gap: "0.75rem",
+            flexShrink: 0,
+            borderRadius: "0.625rem",
+            border: `1px solid ${theme.palette.strokePrimary}`,
+            background: theme.palette.bgAlpha25,
+            backdropFilter: "blur(20px)",
+            color: theme.palette.textMuted,
+            textOverflow: "ellipsis",
+            fontFamily: "Inter",
+            fontSize: "1rem",
+            fontStyle: "normal",
+            fontWeight: 400,
+            lineHeight: "1.5rem",
+            "& .MuiSelect-select": {
+              padding: "0.25rem 0.5rem",
+            },
+          }}
+          value={poolType}
+          onChange={(e) => {
+            const value = e.target.value.toLowerCase();
+            setPoolType(value.toLowerCase() as "stable" | "xyk");
+          }}
+          MenuProps={{
+            anchorOrigin: {
+              vertical: "top",
+              horizontal: "right",
+            },
+            sx: {
+              "& .MuiMenu-paper": {
+                display: "flex",
+                padding: "0.25rem 0rem",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                position: "absolute",
+                left: "8rem",
+                top: "-2.5rem",
+                borderRadius: "1rem",
+                background: theme.palette.bgAlpha25,
+                backdropFilter: "blur(20px)",
+              },
+              "&& .Mui-selected": {
+                background: theme.palette.bgAlpha200,
+              },
+              "&& .MuiMenuItem-root:hover": {
+                background: theme.palette.bgAlpha100,
+              },
+            },
+          }}
+          label=""
+          id="sort-table"
+        >
+          {["stable", "xyk"].map((type, index) => (
+            <MenuItem key={index} value={type}>
+              <Box
+                sx={{
+                  display: "flex",
+                  width: "15rem",
+                  padding: "0.5rem 0.75rem",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: theme.palette.textLoud,
+                    fontSize: "0.875rem",
+                    fontWeight: 400,
+                  }}
+                >
+                  {type.toUpperCase()}
+                </Typography>
+              </Box>
+            </MenuItem>
+          ))}
+        </Select>
+      </Box>
       <Typography sx={{ fontSize: "0.875rem", opacity: 0.7, px: 0.5 }}>
-        Please note that pools are not activated until liquidity is provided.
-        Pools inactive for 7 days will be automatically removed.
+        Please note that creating a pool will cost you 230 CORE.
       </Typography>
 
+      <Typography sx={{ color: "red" }}>{error}</Typography>
+
       <Button
+        disabled={disabled}
         loading={isCreatePoolLoading}
         onClick={() =>
           onCreatePoolClick(
@@ -201,16 +319,18 @@ const Create = ({
 const ProvoideLiquidity = ({
   onProvideLiquidityClick,
   tokenBoxProps,
-  isProvideLiquidityLoading
+  isProvideLiquidityLoading,
 }: {
   onProvideLiquidityClick: () => void;
   tokenBoxProps: TokenBoxProps[];
   isProvideLiquidityLoading: boolean;
 }) => {
   return (
-    <Box sx={{
-      width: "100%"
-    }}>
+    <Box
+      sx={{
+        width: "100%",
+      }}
+    >
       <TokenBox {...tokenBoxProps[0]} />
       <Box mb={2} />
       <TokenBox {...tokenBoxProps[0]} />
@@ -224,14 +344,18 @@ const ProvoideLiquidity = ({
   );
 };
 
-const CreatePoolModal = ({
+export const CreatePoolModal = ({
   isOpen,
   tokenBoxProps,
   setOpen,
   onCreatePoolClick,
   onProvideLiquidityClick,
   isCreatePoolLoading,
-  isProvideLiquidityLoading
+  poolType,
+  setPoolType,
+  isProvideLiquidityLoading,
+  error,
+  disabled,
 }: CreatePoolModalProps) => {
   const style = {
     position: "absolute",
@@ -294,12 +418,16 @@ const CreatePoolModal = ({
               isProvideLiquidityLoading={isProvideLiquidityLoading}
             />
           ) : (
-            <Create isCreatePoolLoading={isCreatePoolLoading} onCreatePoolClick={onCreatePoolClick} />
+            <Create
+              error={error}
+              poolType={poolType}
+              setPoolType={setPoolType}
+              isCreatePoolLoading={isCreatePoolLoading}
+              onCreatePoolClick={onCreatePoolClick}
+            />
           )}
         </Box>
       </Box>
     </Modal>
   );
 };
-
-export default CreatePoolModal;
