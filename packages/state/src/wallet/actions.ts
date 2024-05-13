@@ -3,7 +3,7 @@ import {
   SigningCosmWasmClient,
   CosmWasmClient,
 } from "@cosmjs/cosmwasm-stargate";
-import { MainnetConfig, TestnetConfig, isCw20Token } from "@whelp/utils";
+import { MainnetConfig, isCw20Token } from "@whelp/utils";
 import { getWalletClient } from "@whelp/wallets";
 import { assets, chains } from "chain-registry";
 import { useAppStore, usePersistStore } from "../store";
@@ -89,7 +89,7 @@ export const createWalletActions = (
       env: "prod" | "dev"
     ) => {
       // Determine environment configuration
-      const envConfig = env === "prod" ? MainnetConfig : TestnetConfig;
+      const envConfig = MainnetConfig;
 
       const walletClient = await getWalletClient(walletId);
 
@@ -121,7 +121,7 @@ export const createWalletActions = (
     // Fetch token
     fetchTokenBalance: async (asset: WhelpPoolTypes.AssetInfo) => {
       const cosmWasmClient = await CosmWasmClient.connect(
-        TestnetConfig.rpc_endpoint
+        MainnetConfig.rpc_endpoint
       );
       let balance: number;
       let denom: string;
@@ -170,7 +170,13 @@ export const createWalletActions = (
         denom = asset.smart_token;
       }
 
-      const prettyName = beautifyName(denom);
+      let prettyName = beautifyName(denom);
+
+      if (prettyName.toLowerCase() === "core") {
+        prettyName = "Coreum";
+      } else if (prettyName.toLowerCase() === "drop") {
+        prettyName = "XRP";
+      }
       // Update token balance
       useAppStore.setState((state: StateTypes.AppStore) => {
         const updatedTokens: Token[] = state.tokens.map((token: Token) =>
@@ -189,8 +195,10 @@ export const createWalletActions = (
         ) {
           updatedTokens.push({
             name: prettyName,
-            icon: "/cryptoIcons/btc.svg",
-            usdValue: 0,
+            icon: prettyName.endsWith("lp")
+              ? "/cryptoIcons/lp.svg"
+              : `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
+            usdValue: 1,
             balance: balance,
             category: "",
             decimals,
@@ -205,8 +213,10 @@ export const createWalletActions = (
 
       return {
         name: prettyName,
-        icon: "/cryptoIcons/btc.svg",
-        usdValue: 0,
+        icon: prettyName.endsWith("lp")
+          ? "/cryptoIcons/lp.svg"
+          : `/cryptoIcons/${prettyName.toLowerCase()}.svg`,
+        usdValue: 1,
         balance: balance,
         category: "",
         decimals,

@@ -26,12 +26,14 @@ export * from "./StatusModal";
 export * from "./MobileNav";
 export * from "./Loader";
 export * from "./IbcDepositModal";
+export * from "./CreatePoolModal";
 
 /**
  * Pool Components
  */
 export * from "./PoolSingle";
 export * from "./PoolMultiple";
+export * from "./CreatePoolModal";
 
 /**
  * Swap Components

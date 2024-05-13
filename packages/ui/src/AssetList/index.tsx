@@ -95,17 +95,6 @@ const AssetListEntry = ({
             {tokenBalanceSplit.decimal}
           </Typography>
         </Box>
-        <Typography
-          sx={{
-            color: palette.textNormal,
-            fontSize: "1rem",
-            fontStyle: "normal",
-            fontWeight: "500",
-            lineHeight: "1.5rem",
-          }}
-        >
-          ${token.usdValue * tokenBalance}
-        </Typography>
         <Box
           className="hover-box"
           sx={{

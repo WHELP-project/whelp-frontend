@@ -176,7 +176,7 @@ const TokenBox = ({
               {loading ? (
                 <Skeleton variant="text" width={60} />
               ) : (
-                "$" + usdPrice
+                ""
               )}
             </Typography>
           )}

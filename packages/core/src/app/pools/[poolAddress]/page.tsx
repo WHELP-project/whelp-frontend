@@ -39,7 +39,7 @@ import {
   UnbondingModal,
   UnstakeModal,
 } from "@whelp/ui";
-import { TestnetConfig } from "@whelp/utils";
+import { MainnetConfig } from "@whelp/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-huge-icons/outline";
@@ -138,7 +138,7 @@ export default function SwapPage({
 
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const _poolQueryClient = new WhelpPoolQueryClient(
       cosmWasmClient,
@@ -258,7 +258,7 @@ export default function SwapPage({
   ) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,
@@ -365,7 +365,7 @@ export default function SwapPage({
               return {
                 token_a,
                 token_b,
-                tvl: 0,
+                tvl: "0",
                 apr: 0,
                 poolAddress: pool.contract_addr,
               };
@@ -423,7 +423,7 @@ export default function SwapPage({
 
       // Set APRs
       const _aprs = await Promise.all(aprs);
-      setAprFinal(_aprs[0].apr);
+      setAprFinal(Number(_aprs[0].apr));
       return;
     });
   };
@@ -431,7 +431,7 @@ export default function SwapPage({
   const getUserStakes = async (address: string, token: Token) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,
@@ -680,13 +680,15 @@ export default function SwapPage({
         },
       ];
       const poolClient = getPoolSigningClient();
-      await poolClient.withdrawLiquidity([
-        {
-          // @ts-ignore
-          denom: amounts[0].info.smart_token,
-          amount: amounts[0].amount,
-        },
-      ]);
+      await poolClient.withdrawLiquidity({
+        assets: [
+          {
+            // @ts-ignore
+            denom: amounts[0].info.smart_token,
+            amount: amounts[0].amount,
+          },
+        ],
+      });
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("withdrawLiquidity");
@@ -726,10 +728,6 @@ export default function SwapPage({
 
   const infoCardDetails = [
     {
-      title: "My Share",
-      content: <Typography sx={typeSx}>-</Typography>,
-    },
-    {
       title: "Lp Tokens",
       content: (
         <Typography sx={typeSx}>
@@ -738,12 +736,10 @@ export default function SwapPage({
       ),
     },
     {
-      title: "TVL",
-      content: <Typography sx={typeSx}>-</Typography>,
-    },
-    {
       title: "APR",
-      content: <Typography sx={typeSx}>{aprFinal.toFixed(2)}%</Typography>,
+      content: (
+        <Typography sx={typeSx}>{Number(aprFinal).toFixed(2)}%</Typography>
+      ),
     },
   ];
   return (
@@ -818,7 +814,7 @@ export default function SwapPage({
                 <Grid
                   sx={{ pl: { lg: index === 0 ? 0 : "1.5rem" } }}
                   item
-                  lg={3}
+                  lg={6}
                   md={6}
                   xs={12}
                   key={card.title}

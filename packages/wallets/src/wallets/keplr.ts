@@ -9,7 +9,7 @@ import {
   Window as KeplrWindow,
 } from "@keplr-wallet/types";
 import { WalletTypes } from "@whelp/types";
-import { TestnetConfig } from "@whelp/utils";
+import { MainnetConfig } from "@whelp/utils";
 
 export class Keplr implements WalletTypes.Wallet {
   readonly client: K;
@@ -37,8 +37,8 @@ export class Keplr implements WalletTypes.Wallet {
 
   async getSigningCosmWasmClient(): Promise<SigningCosmWasmClient> {
     return SigningCosmWasmClient.connectWithSigner(
-      TestnetConfig.rpc_endpoint,
-      this.getOfflineSigner(TestnetConfig.chain_id),
+      MainnetConfig.rpc_endpoint,
+      this.getOfflineSigner(MainnetConfig.chain_id),
       {
         gasPrice: GasPrice.fromString("0.025utestcore"),
       }
@@ -47,8 +47,8 @@ export class Keplr implements WalletTypes.Wallet {
 
   async getSigningStargateClient(envConfig: any): Promise<SigningStargateClient> {
     return SigningStargateClient.connectWithSigner(
-      TestnetConfig.rpc_endpoint,
-      this.getOfflineSigner(TestnetConfig.chain_id),
+      MainnetConfig.rpc_endpoint,
+      this.getOfflineSigner(MainnetConfig.chain_id),
       {
         gasPrice: GasPrice.fromString("0.025utestcore"),
       }

@@ -49,7 +49,7 @@ const TableHead = () => (
     </Grid>
     <Grid item xs={3}>
       <Typography sx={{ ...HeadingStyles, textAlign: "center" }}>
-        TVL
+        Liquidity
       </Typography>
     </Grid>
     <Grid item xs={3}>
@@ -91,7 +91,7 @@ const PoolEntry = ({ entry }: { entry: UiTypes.Pool }) => {
       </Grid>
       <Grid item xs={3}>
         <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-          ${entry.tvl}
+          {entry.tvl}
         </Typography>
       </Grid>
       <Grid item xs={3}>
@@ -194,6 +194,12 @@ const PoolMultiple = (params: UiTypes.PoolOverviewType) => {
             >
               All Pools
             </Typography>
+            <Button
+              onClick={params.onCreatePoolOpen}
+              label="Create Pool"
+              type="primary"
+              size="small"
+            />
           </Box>
         </Box>
         <Box sx={{ display: { md: "flex", xs: "block" } }}>
@@ -218,8 +224,8 @@ const PoolMultiple = (params: UiTypes.PoolOverviewType) => {
                 content: "none",
               },
               "&:hover": {
-                borderColor: "#fff"
-              }
+                borderColor: "#fff",
+              },
             }}
             startAdornment={
               <img
@@ -245,8 +251,8 @@ const PoolMultiple = (params: UiTypes.PoolOverviewType) => {
                 cursor: "pointer",
                 backdropFilter: "blur(20px)",
                 "& fieldset": {
-                  borderColor: "transparent"
-                }
+                  borderColor: "transparent",
+                },
               }}
               value={_sortBy}
               onChange={(e) => {

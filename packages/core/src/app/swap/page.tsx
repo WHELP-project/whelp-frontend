@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 import { use, useEffect, useState } from "react";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
-  TestnetConfig,
+  MainnetConfig,
   WhelpFactoryAddress,
   WhelpMultihopAddress,
   amountToMicroAmount,
@@ -83,7 +83,7 @@ export default function SwapPage() {
   const getPools = async () => {
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const factoryClient = new WhelpFactoryQueryClient(
       cosmWasmClient,
@@ -101,7 +101,7 @@ export default function SwapPage() {
       return {
         token_a,
         token_b,
-        tvl: 0,
+        tvl: "0",
         apr: 0,
         poolAddress: pool.contract_addr,
       };
@@ -139,7 +139,7 @@ export default function SwapPage() {
     setSimulateLoading(true);
     // Get Multihop Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
 
     const multiHopClient = new WhelpMultiHopQueryClient(

@@ -4,13 +4,14 @@ import { Box } from "@mui/material";
 import { PoolMultiple } from "@whelp/ui";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import {
-  TestnetConfig,
+  MainnetConfig,
   WhelpFactoryAddress,
   WhelpMultihopAddress,
   findBestPath,
   tokenToTokenInfo,
 } from "@whelp/utils";
 import {
+  WhelpFactoryClient,
   WhelpFactoryQueryClient,
   WhelpMultiHopQueryClient,
   WhelpPoolQueryClient,
@@ -19,17 +20,26 @@ import {
 import { useEffect, useState } from "react";
 import { Token, UiTypes } from "@whelp/types";
 import { useAppStore } from "@whelp/state";
+import { CreatePoolModal } from "@whelp/ui";
 
 export default function PoolsPage() {
   const appStore = useAppStore();
 
   const [pools, setPools] = useState<UiTypes.Pool[]>([]);
 
+  const [poolType, setPoolType] = useState<"stable" | "xyk">("xyk");
+  const [poolCreationOpen, setPoolCreationOpen] = useState<boolean>(false);
+  const [poolCreationError, setPoolCreationError] = useState<string>("");
+  const [isPoolCreationDisabled, setIsPoolCreationDisabled] =
+    useState<boolean>(false);
+  const [isPoolCreationLoading, setIsPoolCreationLoading] =
+    useState<boolean>(false);
+
   // Get Pools
   const getPools = async () => {
     // Get Pool Query Client
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const factoryClient = new WhelpFactoryQueryClient(
       cosmWasmClient,
@@ -67,7 +77,11 @@ export default function PoolsPage() {
       return {
         token_a,
         token_b,
-        tvl: 0,
+        tvl: `${
+          Number(Number(poolInfo.assets[0].amount)) / 10 ** token_a.decimals
+        } ${token_a.name} + ${
+          Number(Number(poolInfo.assets[1].amount)) / 10 ** token_b.decimals
+        } ${token_b.name}`,
         apr: apr[apr.length - 1].toFixed(2),
         poolAddress: pool.contract_addr,
       };
@@ -78,6 +92,103 @@ export default function PoolsPage() {
 
     // Set pools to state
     setPools(resolvedPools);
+  };
+
+  useEffect(() => {
+    // Check get param for create_pool
+    const urlParams = new URLSearchParams(window.location.search);
+    const createPoolParam = urlParams.get("create_pool");
+    if (createPoolParam !== null) {
+      setPoolCreationOpen(true);
+    }
+
+    if (!appStore.wallet.address) {
+      setIsPoolCreationDisabled(true);
+    } else if (appStore.wallet.address) {
+      // Check ucore balance
+      appStore.fetchTokenBalance({ cw20_token: "ucore" }).then((ucore) => {
+        if (Number(ucore.balance) < 32000000) {
+          setIsPoolCreationDisabled(true);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appStore.wallet.address]);
+
+  // Get Signing Client
+  const getFactorySigningClient = (): WhelpFactoryClient => {
+    const cosmWasmSigningClient = appStore.cosmWasmSigningClient!;
+    return new WhelpFactoryClient(
+      cosmWasmSigningClient,
+      appStore.wallet.address,
+      WhelpMultihopAddress
+    );
+  };
+
+  const createPool = async (
+    newTokenA: {
+      address: string;
+      type: string;
+    },
+    newTokenB: {
+      address: string;
+      type: string;
+    }
+  ) => {
+    setIsPoolCreationLoading(true);
+    // Instantiate new
+    const factoryClient = getFactorySigningClient();
+
+    const tokenAInfo =
+      newTokenA.type === "cw20"
+        ? { cw20_token: newTokenA.address }
+        : { smart_token: newTokenA.address };
+    const tokenBInfo =
+      newTokenB.type === "cw20"
+        ? { cw20_token: newTokenB.address }
+        : { smart_token: newTokenB.address };
+
+    if (tokenAInfo === tokenBInfo) {
+      setPoolCreationError("Tokens cannot be the same");
+      setIsPoolCreationLoading(false);
+      return;
+    }
+
+    // Check if tokens are valid
+    try {
+      const tokenA = await appStore.fetchTokenBalance(tokenAInfo);
+      const tokenB = await appStore.fetchTokenBalance(tokenBInfo);
+    } catch (e) {
+      setPoolCreationError("Invalid token");
+      setIsPoolCreationLoading(false);
+      return;
+    }
+
+    // Get pooltype
+    const _poolType = poolType === "xyk" ? { xyk: {} } : { stable: {} };
+    try {
+      await factoryClient.createPool(
+        {
+          assetInfos: [tokenAInfo, tokenBInfo],
+          poolType: _poolType,
+        },
+        "auto",
+        undefined,
+        [
+          {
+            denom: "ucore",
+            amount: "320000000",
+          },
+        ]
+      );
+      setPoolCreationError("Success!");
+    } catch (e: any) {
+      setPoolCreationError(e.message);
+      setIsPoolCreationLoading(false);
+      return;
+    }
+
+    setIsPoolCreationLoading(false);
   };
 
   // Get APR
@@ -92,7 +203,7 @@ export default function PoolsPage() {
   ) => {
     // Get Clients
     const cosmWasmClient = await CosmWasmClient.connect(
-      TestnetConfig.rpc_endpoint
+      MainnetConfig.rpc_endpoint
     );
     const stakingQueryClient = new WhelpStakeQueryClient(
       cosmWasmClient,
@@ -195,7 +306,7 @@ export default function PoolsPage() {
               return {
                 token_a,
                 token_b,
-                tvl: 0,
+                tvl: "0asds",
                 apr: 0,
                 poolAddress: pool.contract_addr,
               };
@@ -269,7 +380,24 @@ export default function PoolsPage() {
   return (
     <main>
       <Box sx={{ p: "2rem 4rem" }}>
-        <PoolMultiple pools={pools} />
+        <PoolMultiple
+          pools={pools}
+          onCreatePoolOpen={() => setPoolCreationOpen(true)}
+        />
+        <CreatePoolModal
+          isOpen={poolCreationOpen}
+          setOpen={() => setPoolCreationOpen(!poolCreationOpen)}
+          onCreatePoolClick={(tokenA, tokenB) => {
+            createPool(tokenA, tokenB);
+          }}
+          onProvideLiquidityClick={() => {}}
+          error={poolCreationError}
+          isCreatePoolLoading={false}
+          isProvideLiquidityLoading={false}
+          poolType={poolType}
+          setPoolType={(type) => setPoolType(type)}
+          disabled={isPoolCreationDisabled}
+        />
       </Box>
     </main>
   );
