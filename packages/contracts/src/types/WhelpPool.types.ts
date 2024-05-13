@@ -16,11 +16,12 @@ export type Uint128 = string;
 export interface InstantiateMsg {
   asset_infos: AssetInfo[];
   circuit_breaker?: string | null;
+  factory_addr: string;
   fee_config: FeeConfig;
   init_params?: Binary | null;
   staking_config: StakeConfig;
-  token_code_id: number;
   trading_starts: number;
+  verified: boolean;
 }
 export interface FeeConfig {
   protocol_fee_bps: number;
@@ -45,7 +46,9 @@ export type ExecuteMsg =
       };
     }
   | {
-      withdraw_liquidity: {};
+      withdraw_liquidity: {
+        assets: Asset[];
+      };
     }
   | {
       swap: {
@@ -194,6 +197,7 @@ export interface PairInfo {
   liquidity_token: string;
   pool_type: PoolType;
   staking_addr: Addr;
+  verified: boolean;
 }
 export interface PoolResponse {
   assets: AssetValidated[];

@@ -8,7 +8,6 @@ import {
   CosmWasmClient,
   SigningCosmWasmClient,
   ExecuteResult,
-  DeliverTxResponse,
 } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
 import {
@@ -282,10 +281,15 @@ export interface WhelpPoolInterface extends WhelpPoolReadOnlyInterface {
     _funds?: Coin[]
   ) => Promise<ExecuteResult>;
   withdrawLiquidity: (
-    _funds: Coin[],
+    {
+      assets,
+    }: {
+      assets: Asset[];
+    },
     fee?: number | StdFee | "auto",
-    memo?: string
-  ) => Promise<DeliverTxResponse>;
+    memo?: string,
+    _funds?: Coin[]
+  ) => Promise<ExecuteResult>;
   swap: (
     {
       askAssetInfo,
@@ -449,15 +453,26 @@ export class WhelpPoolClient
     );
   };
   withdrawLiquidity = async (
-    _funds: Coin[],
+    {
+      assets,
+    }: {
+      assets: Asset[];
+    },
     fee: number | StdFee | "auto" = "auto",
-    memo?: string
-  ): Promise<DeliverTxResponse> => {
-    return await this.client.sendTokens(
+    memo?: string,
+    _funds?: Coin[]
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
       this.sender,
       this.contractAddress,
-      _funds,
-      "auto"
+      {
+        withdraw_liquidity: {
+          assets,
+        },
+      },
+      fee,
+      memo,
+      _funds
     );
   };
   swap = async (
