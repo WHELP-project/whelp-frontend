@@ -683,8 +683,10 @@ export default function SwapPage({
       await poolClient.withdrawLiquidity({
         assets: [
           {
-            // @ts-ignore
-            denom: amounts[0].info.smart_token,
+            info: {
+              //@ts-ignore
+              smart_token: amounts[0].info.smart_token,
+            },
             amount: amounts[0].amount,
           },
         ],
