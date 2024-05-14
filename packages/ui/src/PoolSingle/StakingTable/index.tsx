@@ -160,18 +160,6 @@ const StakingTableEntry = ({
           <Typography sx={{ ...entryStyles, lineHeight: "1.2rem" }}>
             {microAmountToAmount(entry.lpToken)}
           </Typography>
-          <Typography
-            sx={{
-              ...entryStyles,
-              fontFamily: "Inter",
-              fontSize: "0.875rem",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "1.25rem",
-            }}
-          >
-            ${entry.lpToken.usdValue * entry.lpToken.balance}
-          </Typography>
         </Box>
       </Box>
     </Grid>
