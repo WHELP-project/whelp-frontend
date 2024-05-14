@@ -680,17 +680,21 @@ export default function SwapPage({
         },
       ];
       const poolClient = getPoolSigningClient();
-      await poolClient.withdrawLiquidity({
-        assets: [
+      console.log(amounts[0]);
+      await poolClient.withdrawLiquidity(
+        {
+          assets: [amounts[0]],
+        },
+        "auto",
+        undefined,
+        [
           {
-            info: {
-              //@ts-ignore
-              smart_token: amounts[0].info.smart_token,
-            },
-            amount: amounts[0].amount,
+            // @ts-ignore
+            denom: amounts[0].info.smart_token,
+            amount: Number(amounts[0].amount).toFixed(0),
           },
-        ],
-      });
+        ]
+      );
       // Set Status
       setStatusModalType("success");
       setStatusModalTxType("withdrawLiquidity");
