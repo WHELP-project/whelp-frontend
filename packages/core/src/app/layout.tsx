@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppStore, usePersistStore } from "@whelp/state";
 import { Analytics } from "@vercel/analytics/react";
+import { Typography, useMediaQuery } from "@mui/material";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -94,37 +97,47 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider>
-          <LayoutProvider
-            navMenu={navMenu}
-            pageTitle={
-              pathname === "/"
-                ? "Overview"
-                : (
-                    pathname.charAt(1).toUpperCase() + pathname.slice(2)
-                  ).substring(
-                    0,
-                    (
-                      pathname.charAt(1).toUpperCase() + pathname.slice(2)
-                    ).lastIndexOf("/")
-                  )
-            }
-            connectWallet={() => setOpen(true)}
-            disconnectWallet={() => appStore.disconnectWallet()}
-            isConnected={appStore.wallet.isConnected}
-            walletAddress={appStore.wallet.address}
-            walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}
-          >
-            <main>{children}</main>
-          </LayoutProvider>
-          <WalletModal
-            wallets={wallets}
-            onClose={() => {
-              setOpen(false);
-            }}
-            open={open}
-          />
+          {isMobile ? (
+            <Typography>
+              This application is not available on mobile devices. Please use a
+              desktop or laptop to access this application.
+            </Typography>
+          ) : (
+            <>
+              <LayoutProvider
+                navMenu={navMenu}
+                pageTitle={
+                  pathname === "/"
+                    ? "Overview"
+                    : (
+                        pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                      ).substring(
+                        0,
+                        (
+                          pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                        ).lastIndexOf("/")
+                      )
+                }
+                connectWallet={() => setOpen(true)}
+                disconnectWallet={() => appStore.disconnectWallet()}
+                isConnected={appStore.wallet.isConnected}
+                walletAddress={appStore.wallet.address}
+                walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}
+              >
+                <main>{children}</main>
+              </LayoutProvider>
+              <WalletModal
+                wallets={wallets}
+                onClose={() => {
+                  setOpen(false);
+                }}
+                open={open}
+              />
+
+              <Analytics />
+            </>
+          )}
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );
