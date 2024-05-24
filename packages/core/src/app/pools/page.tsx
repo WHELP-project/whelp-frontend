@@ -121,7 +121,7 @@ export default function PoolsPage() {
     return new WhelpFactoryClient(
       cosmWasmSigningClient,
       appStore.wallet.address,
-      WhelpMultihopAddress
+      WhelpFactoryAddress
     );
   };
 
