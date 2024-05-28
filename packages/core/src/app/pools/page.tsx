@@ -171,6 +171,7 @@ export default function PoolsPage() {
         {
           assetInfos: [tokenAInfo, tokenBInfo],
           poolType: _poolType,
+          initParams: poolType !== "xyk" ? "ewogICJhbXAiOiA2Cn0K" : undefined,
         },
         "auto",
         undefined,

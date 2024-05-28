@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import CreatePoolModal from "../../src/CreatePoolModal";
+import {CreatePoolModal} from "../../src/CreatePoolModal";
 import { Token } from "@whelp/types";
 
 const token: Token = {
