@@ -473,7 +473,7 @@ const Create = ({
             </Box>
 
         <Typography sx={{fontSize: "0.875rem", opacity: 0.7, px: 0.5}}>
-            Please note that creating a pool will cost you 230 COREUM.
+            Please note that creating a pool will cost you 320 COREUM.
         </Typography>
 
         <Typography sx={{color: "red"}}>{error}</Typography>
