@@ -125,6 +125,8 @@ export default function SwapPage({
     "add" | "remove" | "stake" | "unstake" | false
   >(false);
 
+  const [poolType, setPoolType] = useState<"Stable Pool" | "XYK Pool">("XYK Pool");
+
   // CosmWasmClient
   const [poolQueryClient, setPoolQueryClient] = useState<
     WhelpPoolQueryClient | undefined
@@ -153,6 +155,17 @@ export default function SwapPage({
 
     const ratio =
       Number(poolInfo.assets[0].amount) / Number(poolInfo.assets[1].amount);
+
+    // Pool Types
+    const _poolType = pairInfo.pool_type;
+
+    // Set Pool Type
+    if (_poolType.hasOwnProperty("stable")) {
+        setPoolType("Stable Pool");
+    } else {
+        setPoolType("XYK Pool");
+    }
+
 
     // Get Staking Infos
     const stakingQueryClient = new WhelpStakeQueryClient(
@@ -811,6 +824,15 @@ export default function SwapPage({
                 }}
               >
                 {tokenA.name}/{tokenB.name}
+              </Typography>
+              <Typography sx={{
+                  fontSize: "0.7rem",
+                  fontStyle: "normal",
+                  fontWeight: 600,
+                  lineHeight: "2rem",
+                  color: palette.textLoud,
+              }}>
+                {" "} - {poolType}
               </Typography>
             </Box>
 

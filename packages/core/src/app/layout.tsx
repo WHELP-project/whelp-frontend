@@ -94,51 +94,81 @@ export default function RootLayout({
   ];
 
   return (
-    <html lang="en">
+      <html lang="en">
+      <head>
+        {/* Title */}
+        <title>Whelp - Your permission-less DEX on Coreum</title>
+        <meta
+            name="description"
+            content="Explore Whelp's innovative permission-less DEX on Coreum - Your Enterprise-Grade Blockchain Solutions with Smart Tokens"
+        />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="https://app.whelp-hub.io"/>
+        <meta property="og:title" content="Whelp - Permissionless DEX"/>
+        <meta
+            property="og:description"
+            content="Explore Whelp's innovative permission-less DEX on Coreum - Your Enterprise-Grade Blockchain Solutions with Smart Tokens"
+        />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:url" content="https://app.whelp-hub.io"/>
+        <meta name="twitter:title" content="Whelp - Permissionless DEX"/>
+        <meta
+            name="twitter:description"
+            content="Explore Whelp's innovative permission-less DEX on Coreum - Your Enterprise-Grade Blockchain Solutions with Smart Tokens"
+        />
+
+        {/* Additional tags for responsiveness and browser compatibility */}
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
+      </head>
       <body>
-        <ThemeProvider>
-          {isMobile ? (
+      <ThemeProvider>
+        {isMobile ? (
             <Typography>
               This application is not available on mobile devices. Please use a
               desktop or laptop to access this application.
             </Typography>
-          ) : (
+        ) : (
             <>
               <LayoutProvider
-                navMenu={navMenu}
-                pageTitle={
-                  pathname === "/"
-                    ? "Overview"
-                    : (
-                        pathname.charAt(1).toUpperCase() + pathname.slice(2)
-                      ).substring(
-                        0,
-                        (
-                          pathname.charAt(1).toUpperCase() + pathname.slice(2)
-                        ).lastIndexOf("/")
-                      )
-                }
-                connectWallet={() => setOpen(true)}
-                disconnectWallet={() => appStore.disconnectWallet()}
-                isConnected={appStore.wallet.isConnected}
-                walletAddress={appStore.wallet.address}
-                walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}
+                  navMenu={navMenu}
+                  pageTitle={
+                    pathname === "/"
+                        ? "Overview"
+                        : (
+                            pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                        ).substring(
+                            0,
+                            (
+                                pathname.charAt(1).toUpperCase() + pathname.slice(2)
+                            ).lastIndexOf("/")
+                        )
+                  }
+                  connectWallet={() => setOpen(true)}
+                  disconnectWallet={() => appStore.disconnectWallet()}
+                  isConnected={appStore.wallet.isConnected}
+                  walletAddress={appStore.wallet.address}
+                  walletIcon={`/images/walletIcons/${appStore.wallet.type.toLowerCase()}.png`}
               >
                 <main>{children}</main>
               </LayoutProvider>
               <WalletModal
-                wallets={wallets}
-                onClose={() => {
-                  setOpen(false);
-                }}
-                open={open}
+                  wallets={wallets}
+                  onClose={() => {
+                    setOpen(false);
+                  }}
+                  open={open}
               />
 
-              <Analytics />
+              <Analytics/>
             </>
-          )}
-        </ThemeProvider>
+        )}
+      </ThemeProvider>
       </body>
-    </html>
+      </html>
   );
 }
