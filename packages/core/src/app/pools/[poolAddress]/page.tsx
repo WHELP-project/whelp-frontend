@@ -902,6 +902,7 @@ export default function SwapPage({
                       token: tokenA,
                       onChange: (e) => {
                         setTokenAValue(e);
+                        if (assetRatio === 0 || isNaN(assetRatio)) return;
                         setTokenBValue((Number(e) / assetRatio).toFixed(5));
                       },
                       value: tokenAValue,
@@ -911,6 +912,7 @@ export default function SwapPage({
                       token: tokenB,
                       onChange: (e) => {
                         setTokenBValue(e);
+                        if (assetRatio === 0 || isNaN(assetRatio)) return;
                         setTokenAValue((Number(e) * assetRatio).toFixed(5));
                       },
                       value: tokenBValue,
