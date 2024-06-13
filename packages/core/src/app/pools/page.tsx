@@ -107,7 +107,7 @@ export default function PoolsPage() {
     } else if (appStore.wallet.address) {
       // Check ucore balance
       appStore.fetchTokenBalance({ cw20_token: "ucore" }).then((ucore) => {
-        if (Number(ucore.balance) < 32000000) {
+        if (Number(ucore.balance) < 33000000) {
           setIsPoolCreationDisabled(true);
         }
       });
@@ -178,7 +178,7 @@ export default function PoolsPage() {
         [
           {
             denom: "ucore",
-            amount: "320000000",
+            amount: "330000000",
           },
         ]
       );
