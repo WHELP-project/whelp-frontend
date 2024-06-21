@@ -604,6 +604,40 @@ export default function SwapPage({
     }
   };
 
+  // Unstake
+  const claim = async (tokenAmount: number, unbondingPeriod: number) => {
+    setLoading("unstake");
+    try {
+      const stakeClient = getStakeSigningClient();
+      await stakeClient.claim(
+          "auto",
+          undefined
+      );
+
+      setUnstakeModalOpen(false);
+      // Set Status
+      setStatusModalType("success");
+      setStatusModalTxType("unstakeLp");
+      setStatusModalTokens([
+        {
+          ...tokenLP,
+          balance: microAmountToAmount({ ...tokenLP, balance: tokenAmount }),
+        },
+      ]);
+      setStatusModalOpen(true);
+
+      await updateBalances();
+    } catch (e) {
+      setUnstakeModalOpen(false);
+
+      setStatusModalOpen(true);
+      setStatusModalType("error");
+      setStatusModalTxType("unstakeLp");
+      setStatusModalTokens([]);
+      console.log(e);
+    }
+  };
+
   // Provide liquidity
   const provideLiquidity = async () => {
     setLoading("add");

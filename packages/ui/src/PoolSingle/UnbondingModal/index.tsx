@@ -5,7 +5,7 @@ import { WhelpStakeTypes } from "@whelp/contracts";
 import { Token } from "@whelp/types";
 import React from "react";
 import { microAmountToAmount } from "@whelp/utils";
-import { palette } from "../..";
+import {Button, palette} from "../..";
 
 interface UnbondingModalProps {
   open: boolean;
@@ -68,6 +68,9 @@ const UnbondingModal = ({ ...props }: UnbondingModalProps) => {
             onClick={props.onClose}
           />
         </Box>
+        <Button onClick={props.claim} sx={{ width: "100%" }} label={"Claim All"}>
+          Claim all
+        </Button>
         {props.entries.map((entry, index) => (
           <Box key={index} sx={{ px: 4, py: 1 }}>
             <Box
