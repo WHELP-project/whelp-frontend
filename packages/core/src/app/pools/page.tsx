@@ -367,7 +367,10 @@ export default function PoolsPage() {
 
       // Set APRs
       const _aprs = await Promise.all(aprs);
-      return _aprs[0].apr;
+      if (_aprs.length === 0) {
+        return 0;
+      }
+      return _aprs[0].apr ?? 0;
     });
     return await Promise.all(res);
   };

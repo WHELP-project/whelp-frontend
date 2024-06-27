@@ -96,7 +96,7 @@ const PoolEntry = ({ entry }: { entry: UiTypes.Pool }) => {
       </Grid>
       <Grid item xs={3}>
         <Typography sx={{ ...entryStyles, textAlign: "center" }}>
-          {entry.apr} %
+          {entry.apr ?? 0} %
         </Typography>
       </Grid>
       <Grid item xs={3}>
