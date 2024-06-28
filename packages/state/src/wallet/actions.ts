@@ -120,6 +120,7 @@ export const createWalletActions = (
 
     // Fetch token
     fetchTokenBalance: async (asset: WhelpPoolTypes.AssetInfo) => {
+      let beautifyNameRes: string | undefined;
       const cosmWasmClient = await CosmWasmClient.connect(
         MainnetConfig.rpc_endpoint
       );
@@ -165,12 +166,20 @@ export const createWalletActions = (
           balance = Number(query.amount);
         }
 
-        decimals = 6; // !TODO!
+
+
+        try {
+          const _res = (await (await fetch("https://full-node.mainnet-1.coreum.dev:1317/coreum/asset/ft/v1/tokens/" + asset.smart_token)).json())?.token;
+            decimals = _res.precision;
+            beautifyNameRes = _res.symbol;
+        } catch (error) {
+          decimals = 6;
+        }
 
         denom = asset.smart_token;
       }
 
-      let prettyName = beautifyName(denom);
+      let prettyName = beautifyNameRes ??  beautifyName(denom);
 
       if (prettyName.toLowerCase() === "core") {
         prettyName = "Coreum";
