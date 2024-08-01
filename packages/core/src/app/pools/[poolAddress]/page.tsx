@@ -605,7 +605,7 @@ export default function SwapPage({
   };
 
   // Unstake
-  const claim = async (tokenAmount: number, unbondingPeriod: number) => {
+  const claim = async () => {
     setLoading("unstake");
     try {
       const stakeClient = getStakeSigningClient();
@@ -621,7 +621,7 @@ export default function SwapPage({
       setStatusModalTokens([
         {
           ...tokenLP,
-          balance: microAmountToAmount({ ...tokenLP, balance: tokenAmount }),
+          balance: microAmountToAmount({ ...tokenLP }),
         },
       ]);
       setStatusModalOpen(true);
@@ -1092,7 +1092,7 @@ export default function SwapPage({
       <UnbondingModal
         open={stakingModalOpen}
         onClose={() => setStakingModalOpen(false)}
-        claim={() => {}}
+        claim={() => claim()}
         lpToken={tokenLP}
         entries={userClaims}
       />
